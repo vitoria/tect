@@ -60,7 +60,7 @@ void systemMenu() {
                 break;
         }
     
-        cout << "Pressione qualquer tecla para continuar..." << endl;
+        cout << "Pressione ENTER para continuar..." << endl;
         cin.get();
         system ("clear");
     } while (selectedOption != '5');

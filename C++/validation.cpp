@@ -24,7 +24,7 @@ bool isSelectedOptionValid(char option, char intervalBegin, char intervalEnd) {
 void printInvalidOptionMessage() {
     system ("clear");
     cout << "Opção inválida!" << endl;
-    cout << "Pressione qualquer tecla para continuar..." << endl;
+    cout << "Pressione ENTER para continuar..." << endl;
     cin.get();
     system ("clear");
 }
