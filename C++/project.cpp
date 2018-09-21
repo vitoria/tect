@@ -14,9 +14,10 @@ using namespace std;
 void createProject();
 void incializeIdProject();
 int idProject();
+bool verifyExistingProject();
 
 /*
-Insere o valor 0 no arquivo, que indica o número de projetos criados
+Insere o valor 0 no arquivo, que indica o número de projetos criados.
 */
 void incializeIdProject(){
     fstream projectFile;
@@ -38,8 +39,13 @@ void createProject(){
     printTectHeader;
     cout << "#------------# CRIAÇÃO DE PROJETO #----------#" << endl;
 
-    cout << "Nome do projeto: ";
-    getline(cin, name);
+    do {
+        cout << "Nome do projeto: ";
+        getline(cin, name);
+        if (verifyExistingProject() == true){
+            cout << "Nome de projeto já criado";
+        }
+    } while (verifyExistingProject() == true);
 
     cout << "Descrição do projeto: ";
     getline(cin, description);
@@ -48,7 +54,7 @@ void createProject(){
 
     id = idProject();
 
-    //verficar se existe outro projeto com mesmo nome
+    //verficar se existe outro projeto com mesmo nome.
 
     fstream projectFile;
     projectFile.open(PROJECT_FILE_NAME, ios::out | ios::app);
@@ -63,7 +69,7 @@ void createProject(){
 
 
 /*
-Incrementa o número de projetos criados e retorna esse número
+Incrementa o número de projetos criados e retorna esse número.
 */
 int idProject(){
     string value;
@@ -78,4 +84,29 @@ int idProject(){
     number++;
 
     return number;
+}
+
+/*
+Verifica se um nome de projeto já foi criado antes.
+*/
+
+bool verifyExistingProject(string name){
+    bool existProject = false;
+
+    string fileOutput;
+    fstream projectFile;
+    projectFile.open(PROJECT_FILE_NAME, ios::in);
+    getline(projectFile, fileOutput);
+    getline(projectFile, fileOutput);
+    if (projectFile.is_open){
+        while(existProject == false && getline(projectFile, fileOutput)) {
+            if (fileOutput.compare(name) == 0) {
+                existProject = true;
+            } else {
+                getline(projectFile, fileOutput);
+                getline(projectFile, fileOutput);
+            }
+        }
+    }
+    return existProject;
 }
