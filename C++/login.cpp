@@ -10,7 +10,11 @@
 #define USERS_FILE_NAME "users.dat"
 
 using namespace std;
+
 //CABEÇALHOS
+bool validateLogin();
+
+bool registerNewUser();
 
 void printLoginMenu();
 
@@ -18,6 +22,57 @@ void printLoginMenu();
 Menu de login do Sistema TecT, irá retornar true para login efetuado ou false, caso contrário.
 */
 bool loginMenu();
+
+//FUNÇÕES
+
+void jumpFileLine(fstream *file) {
+    char ch;
+    if (file->is_open()){
+        while (ch != '\n' && file->get(ch)) {
+            //file >> ch;
+        }
+    }
+}
+
+bool existingUserLogin() {
+    string user, password, name;
+    bool isLogged = false, foundUser = false;
+    system("clear");
+    printTectHeader();
+    cout << "#------------# LOGIN DE USUÁRIO #----------#" << endl;
+    
+    cout << "Login: ";
+    getline(cin, user);
+
+    cout << "Senha: ";
+    getline(cin, password);
+
+    string fileOutput = "";
+    fstream usersFile;
+    usersFile.open(USERS_FILE_NAME, ios::in);
+    if (usersFile.is_open()) {
+        while (foundUser == false || getline(usersFile, fileOutput)) {
+            if (fileOutput.compare(user) == 0) {
+                foundUser = true;
+            } else {
+                getline(usersFile, fileOutput);
+                getline(usersFile, fileOutput);
+            }
+        }
+    }
+
+    if (foundUser == true) {
+        getline(usersFile, fileOutput);
+        if (fileOutput.compare(password)) {
+            isLogged = true;
+            usersFile >> name;
+        }
+    }
+
+    usersFile.close();
+
+    return isLogged;
+}
 
 bool registerNewUser() {
     string name, user, password, passwordVerification;
@@ -41,12 +96,12 @@ bool registerNewUser() {
 
     system("clear");
     if (password.compare(passwordVerification) == 0) {
-        fstream outputFile;
-        outputFile.open(USERS_FILE_NAME, ios::in | ios::app);
-        if (outputFile.is_open()) {
-            outputFile << user << endl << password << endl << name << endl;
+        fstream usersFile;
+        usersFile.open(USERS_FILE_NAME, ios::out | ios::app);
+        if (usersFile.is_open()) {
+            usersFile << user << endl << password << endl << name << endl;
             isRegistered = true;
-            outputFile.close();
+            usersFile.close();
             cout << "Usuário cadastrado com sucesso!" << endl;
         } else {
             cout << "ERRO! Usuário não cadastrado!" << endl;
@@ -57,8 +112,6 @@ bool registerNewUser() {
 
     return isRegistered;
 }
-
-//FUNÇÕES
 
 void printLoginMenu() {
     system ("clear");
@@ -87,8 +140,8 @@ bool loginMenu() {
 
         switch(selectedOption){
             case '1':
-                cout << "Login efetuado" << endl;
-                isLogged = true;
+                isLogged = existingUserLogin();
+                isDone = true;
                 break;
             case '2':
                 registerNewUser();
