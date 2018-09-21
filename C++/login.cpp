@@ -11,30 +11,23 @@
 
 using namespace std;
 
+struct user {
+    string login;
+    string name;
+};
+
 //CABEÇALHOS
-bool validateLogin();
-
+bool existingUserLogin(user*);
 bool registerNewUser();
-
 void printLoginMenu();
-
 /*
 Menu de login do Sistema TecT, irá retornar true para login efetuado ou false, caso contrário.
 */
-bool loginMenu();
+bool loginMenu(user*, bool*);
 
 //FUNÇÕES
 
-void jumpFileLine(fstream *file) {
-    char ch;
-    if (file->is_open()){
-        while (ch != '\n' && file->get(ch)) {
-            //file >> ch;
-        }
-    }
-}
-
-bool existingUserLogin() {
+bool existingUserLogin(user *loggedUser) {
     string user, password, name;
     bool isLogged = false, foundUser = false;
     system("clear");
@@ -47,11 +40,11 @@ bool existingUserLogin() {
     cout << "Senha: ";
     getline(cin, password);
 
-    string fileOutput = "";
+    string fileOutput;
     fstream usersFile;
     usersFile.open(USERS_FILE_NAME, ios::in);
     if (usersFile.is_open()) {
-        while (foundUser == false || getline(usersFile, fileOutput)) {
+        while (foundUser == false && getline(usersFile, fileOutput)) {
             if (fileOutput.compare(user) == 0) {
                 foundUser = true;
             } else {
@@ -63,10 +56,17 @@ bool existingUserLogin() {
 
     if (foundUser == true) {
         getline(usersFile, fileOutput);
-        if (fileOutput.compare(password)) {
+        if (fileOutput.compare(password) == 0) {
             isLogged = true;
-            usersFile >> name;
+            getline(usersFile, name);
+            loggedUser->login = user;
+            loggedUser->name = name;
+            cout << "Login efetuado com sucesso!" << endl;
+        } else {
+            cout << "Senha incorreta!" << endl;
         }
+    } else {
+        cout << "Usuário inexistente!" << endl;
     }
 
     usersFile.close();
@@ -122,45 +122,42 @@ void printLoginMenu() {
     cout << "(3) Sair" << endl;
 }
 
-bool loginMenu() {
+bool loginMenu(user *loggedUser, bool *isDone) {
     char selectedOption = '0';
-    bool isLogged = false, isDone = false;
+    bool isLogged = false;
 
     do {
-        do {
-            printLoginMenu();
+        printLoginMenu();
 
-            cin.get(selectedOption);
-            cin.ignore();
+        cin.get(selectedOption);
+        cin.ignore();
 
-            if (isSelectedOptionValid(selectedOption, '1', '3') == false) {
-                printInvalidOptionMessage();
-            }
-        } while (isSelectedOptionValid(selectedOption, '1', '3') == false);
-
-        switch(selectedOption){
-            case '1':
-                isLogged = existingUserLogin();
-                isDone = true;
-                break;
-            case '2':
-                registerNewUser();
-                break;
-            case '3':
-                cout << "Encerrando sistema..." << endl;
-                isLogged = false;
-                isDone = true;
-                break;
-            default:
-                cout << "ERRO!" << endl;
-                isLogged = false;
-                isDone = true;
-                break;
+        if (isSelectedOptionValid(selectedOption, '1', '3') == false) {
+            printInvalidOptionMessage();
         }
-        cout << "Pressione ENTER para continuar..." << endl;
-        cin.get();
-        system ("clear");
-    } while(isDone == false);
+    } while (isSelectedOptionValid(selectedOption, '1', '3') == false);
+
+    switch(selectedOption){
+        case '1':
+            isLogged = existingUserLogin(loggedUser);
+            break;
+        case '2':
+            registerNewUser();
+            break;
+        case '3':
+            cout << "Encerrando sistema..." << endl;
+            isLogged = false;
+            *isDone = true;
+            break;
+        default:
+            cout << "ERRO!" << endl;
+            isLogged = false;
+            *isDone = true;
+            break;
+    }
+    cout << "Pressione ENTER para continuar..." << endl;
+    cin.get();
+    system ("clear");
 
     return isLogged;
 }

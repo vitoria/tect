@@ -12,24 +12,27 @@ using namespace std;
 //CABEÇALHOS
 
 void running();
-void systemMenu();
-void printSystemMenu();
+void systemMenu(user);
+void printSystemMenu(string);
 
 //FUNÇÕES
 
 void running() {
-    bool isLogged = loginMenu();
+    user loggedUser;
+    bool isDone = false;
     
-    if (isLogged){
-        systemMenu();
+    while (!isDone) {
+        if (loginMenu(&loggedUser, &isDone)){
+            systemMenu(loggedUser);
+        }
     }
 }
 
-void systemMenu() {
+void systemMenu(user loggedUser) {
     char selectedOption = '0';
     do {
         do {
-            printSystemMenu();
+            printSystemMenu(loggedUser.name);
 
             cin.get(selectedOption);
             cin.ignore();
@@ -38,6 +41,8 @@ void systemMenu() {
                 printInvalidOptionMessage();
             }
         } while (isSelectedOptionValid(selectedOption, '1', '5') == false);
+
+        system("clear");
 
         switch(selectedOption){
             case '1':
@@ -53,7 +58,7 @@ void systemMenu() {
                 cout << "Projeto editado" << endl;
                 break;
             case '5':
-                cout << "Encerrando sistema..." << endl;
+                cout << "Saindo do usuário atual..." << endl;
                 break;
             default:
                 cout << "ERRO!" << endl;
@@ -66,13 +71,13 @@ void systemMenu() {
     } while (selectedOption != '5');
 }
 
-void printSystemMenu() {
+void printSystemMenu(string userName) {
     system ("clear");
     printTectHeader();
-    cout << "Bem-vindo #NOME_DO_USUARIO#! Selecione a opção desejada: " << endl;
+    cout << "Bem-vindo " << userName << "! Selecione a opção desejada: " << endl;
     cout << "(1) Criar Projeto" << endl;
     cout << "(2) Pedir acesso a um projeto" << endl;
     cout << "(3) Pesquisar Projeto" << endl;
     cout << "(4) Editar Projeto" << endl;
-    cout << "(5) Sair" << endl;
+    cout << "(5) Logout" << endl;
 }
