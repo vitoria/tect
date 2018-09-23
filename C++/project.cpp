@@ -32,7 +32,7 @@ void incializeIdProject(){
 Cria um projeto de testes a partir do nome e descrição.
 */
 void createProject(){
-    int id;
+
     string name, description;
 
     system("clear");
@@ -52,9 +52,14 @@ void createProject(){
 
     system("clear");
 
-    id = idProject();
+    saveProject(name, description);
+    
+}
 
-    //verficar se existe outro projeto com mesmo nome.
+void saveProject(string name, string description){
+    int id;
+
+    id = idProject();
 
     fstream projectFile;
     projectFile.open(PROJECT_FILE_NAME, ios::out | ios::app);
