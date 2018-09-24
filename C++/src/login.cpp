@@ -1,22 +1,6 @@
-#include <iostream>
-#include <cctype>
-#include <stdlib.h>
-#include <cstdlib>
-
-#include "validation.cpp"
-#include "generalPrints.cpp"
+#include "login.h"
 
 using namespace std;
-//CABEÇALHOS
-
-void printLoginMenu();
-
-/*
-Menu de login do Sistema TecT, irá retornar true para login efetuado ou false, caso contrário.
-*/
-bool loginMenu();
-
-//FUNÇÕES
 
 void printLoginMenu() {
     system ("clear");
