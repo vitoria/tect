@@ -1,11 +1,6 @@
-#include <iostream>
+#include "generalPrints.h"
 
 using namespace std;
-
-/*
-Imprime o header padrão do TecT.
-*/
-void printTectHeader();
 
 void printTectHeader() {
     cout << "#-----------------# TecT #-----------------#" << endl;
