@@ -10,7 +10,6 @@
 
 using namespace std;
 
-//CABEÇALHOS
 void createProject();
 void incializeIdProject();
 int idProject();
