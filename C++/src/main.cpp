@@ -1,5 +1,5 @@
 #include <iostream>
-#include "system.cpp"
+#include "system.h"
 
 using namespace std;
 

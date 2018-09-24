@@ -1,15 +1,6 @@
-#include <iostream>
-#include <cctype>
-#include <stdlib.h>
-#include <cstdlib>
-
-#include "login.cpp"
+#include "system.h"
 
 using namespace std;
-
-void running();
-void systemMenu();
-void printSystemMenu();
 
 void running() {
     bool isLogged = loginMenu();
