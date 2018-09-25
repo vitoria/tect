@@ -4,9 +4,9 @@
 #include <cctype>
 #include <stdlib.h>
 #include <cstdlib>
+#include <string>
 #include "login.h"
 
-
 void running();
-void systemMenu();
-void printSystemMenu();
+void systemMenu(user);
+void printSystemMenu(std::string);
