@@ -5,13 +5,14 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <fstream>
+#include <string>
 
 #include "validation.h"
 #include "generalPrints.h"
 
 struct user {
-    string login;
-    string name;
+    std::string login;
+    std::string name;
 };
 
 bool existingUserLogin(user*);
