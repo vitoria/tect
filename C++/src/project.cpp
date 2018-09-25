@@ -4,7 +4,7 @@
 
 using namespace std;
 
-struct project{
+struct Project{
     int id;
     string name;
     string description;
@@ -99,7 +99,7 @@ Cria um projeto de testes a partir do nome e descrição.
 */
 void createProject(){
 
-    string name, description;
+    Project newProject;
 
     system("clear");
     printTectHeader;
@@ -107,25 +107,25 @@ void createProject(){
 
     do {
         cout << "Nome do projeto: ";
-        getline(cin, name);
+        getline(cin, newProject.name);
         if (verifyExistingProject() == true){
             cout << "Nome de projeto já criado";
         }
     } while (verifyExistingProject() == true);
 
     cout << "Descrição do projeto: ";
-    getline(cin, description);
+    getline(cin, newProject.description);
 
     system("clear");
-    
-    saveProject(name, description);
+
+    newProject.id = idProject();
+
+    saveProject(newProject);
     
 }
 
-void saveProject(string name, string description){
-    int id;
-
-    id = idProject();
+void saveProject(Project project){
+    
 
     fstream projectFile;
     projectFile.open(PROJECT_FILE_NAME, ios::out | ios::app);
@@ -143,6 +143,7 @@ void saveProject(string name, string description){
 /*
 Incrementa o número de projetos criados e retorna esse número.
 */
+//falta sobrescrever linha com o número de projetos
 int idProject(){
     string value;
     fstream projectFile;
