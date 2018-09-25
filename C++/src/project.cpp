@@ -1,19 +1,8 @@
-#include <iostream>
-#include <cctype>
-#include <stdlib.h>
-#include <cstdlib>
-#include <fstream>
-
-#include "generalPrints.cpp"
+#include <project.h>
 
 #define PROJECT_FILE_NAME "projects.dat"
 
 using namespace std;
-
-void createProject();
-void incializeIdProject();
-int idProject();
-bool verifyExistingProject();
 
 /*
 Insere o valor 0 no arquivo, que indica o número de projetos criados.
