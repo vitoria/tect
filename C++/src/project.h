@@ -6,8 +6,11 @@
 #include <cstdlib>
 #include <fstream>
 
-#include "generalPrints.cpp"
+#include "generalPrints.h"
+#include "validation.h"
 
+void printProjectMenu();
+void projectMenu();
 void createProject();
 void incializeIdProject();
 int idProject();
