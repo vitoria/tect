@@ -4,13 +4,18 @@
 #include <cctype>
 #include <stdlib.h>
 #include <cstdlib>
+#include <fstream>
+#include <string>
 
 #include "validation.h"
 #include "generalPrints.h"
 
-void printLoginMenu();
+struct user {
+    std::string login;
+    std::string name;
+};
 
-/*
-Menu de login do Sistema TecT, irá retornar true para login efetuado ou false, caso contrário.
-*/
-bool loginMenu();
+bool existingUserLogin(user*);
+bool registerNewUser();
+void printLoginMenu();
+bool loginMenu(user*, bool*);
