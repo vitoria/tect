@@ -4,6 +4,13 @@
 
 using namespace std;
 
+struct project{
+    int id;
+    string name;
+    string description;
+    string owner;
+    string users[];
+};
 
 void printProjectMenu(){
     system ("clear");
@@ -110,7 +117,7 @@ void createProject(){
     getline(cin, description);
 
     system("clear");
-
+    
     saveProject(name, description);
     
 }
@@ -175,4 +182,3 @@ bool verifyExistingProject(string name){
     }
     return existProject;
 }
-
