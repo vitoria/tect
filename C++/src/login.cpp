@@ -1,31 +1,8 @@
-#include <iostream>
-#include <cctype>
-#include <stdlib.h>
-#include <cstdlib>
-#include <fstream>
-
-#include "validation.cpp"
-#include "generalPrints.cpp"
+#include "login.h"
 
 #define USERS_FILE_NAME "users.dat"
 
 using namespace std;
-
-struct user {
-    string login;
-    string name;
-};
-
-//CABEÇALHOS
-bool existingUserLogin(user*);
-bool registerNewUser();
-void printLoginMenu();
-/*
-Menu de login do Sistema TecT, irá retornar true para login efetuado ou false, caso contrário.
-*/
-bool loginMenu(user*, bool*);
-
-//FUNÇÕES
 
 bool existingUserLogin(user *loggedUser) {
     string user, password, name;
