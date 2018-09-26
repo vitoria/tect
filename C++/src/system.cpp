@@ -63,7 +63,7 @@ void systemMenu(user loggedUser) {
 
 void printSystemMenu(string userName) {
     system(CLEAR);
-    printTectHeader();
+    printHeader();
     cout << "Bem-vindo " << userName << "! Selecione a opção desejada: \n";
     cout << MAIN_MENU << endl;
 }

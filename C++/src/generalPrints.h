@@ -5,4 +5,4 @@
 /*
 Imprime o header padrão do TecT.
 */
-void printTectHeader();
+void printHeader();

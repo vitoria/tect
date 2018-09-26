@@ -2,6 +2,6 @@
 
 using namespace std;
 
-void printTectHeader() {
+void printHeader() {
     cout << HEADER << endl;
 }

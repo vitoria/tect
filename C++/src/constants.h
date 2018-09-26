@@ -20,6 +20,18 @@
                    "(1) Efetuar login\n"
                    "(2) Cadastrar novo usuário\n"
                    "(3) Sair"
+#define SUITE_MENU "(1) Criar suite de teste\n"
+                   "(2) Listar suites de teste\n"
+                   "(3) Pesquisar suite de teste\n"
+                   "(4) Editar suite de teste\n"
+                   "(5) Apagar suite de teste\n"
+                   "(6) Voltar"
+#define CREATE_SUITE '1'
+#define LIST_SUITES '2'
+#define SEARCH_SUITE '3'
+#define EDIT_SUITE '4'
+#define DELETE_SUITE '5'
+#define GO_BACK '6'
 #define USERS_FILE_PATH "data/users.dat"
 #define DATA_FOLDER_PATH "data"
 #define HEADER "#-----------------# TecT #-----------------#"
@@ -28,3 +40,5 @@
 #define USERS_FILE_PATH "data/users.dat"
 #define DATA_FOLDER_PATH "data"
 #define LOGGED_USER_FILE_PATH "data/logged.dat"
+#define NAME 'Nome: '
+#define DESCRIPTION 'Descrição: '
