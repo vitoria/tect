@@ -1,6 +1,7 @@
 #include "login.h"
 
-#define USERS_FILE_NAME "users.dat"
+#define USERS_FILE_PATH "data/users.dat"
+#define DATA_FOLDER_PATH "data"
 
 using namespace std;
 
@@ -18,8 +19,8 @@ bool existingUserLogin(user *loggedUser) {
     getline(cin, password);
 
     string fileOutput;
-    fstream usersFile;
-    usersFile.open(USERS_FILE_NAME, ios::in);
+    ifstream usersFile;
+    usersFile.open(USERS_FILE_PATH, ios::in);
     if (usersFile.is_open()) {
         while (foundUser == false && getline(usersFile, fileOutput)) {
             if (fileOutput.compare(user) == 0) {
@@ -73,21 +74,47 @@ bool registerNewUser() {
 
     system("clear");
     if (password.compare(passwordVerification) == 0) {
-        fstream usersFile;
-        usersFile.open(USERS_FILE_NAME, ios::out | ios::app);
-        if (usersFile.is_open()) {
-            usersFile << user << endl << password << endl << name << endl;
-            isRegistered = true;
-            usersFile.close();
-            cout << "Usuário cadastrado com sucesso!" << endl;
+
+        if (isFolderCreated(DATA_FOLDER_PATH) == true){
+            ofstream usersFile;
+            usersFile.open(USERS_FILE_PATH, ios::out | ios::app);
+            if (usersFile.is_open()) {
+                usersFile << user << endl << password << endl << name << endl;
+                isRegistered = true;
+                usersFile.close();
+                cout << "Usuário cadastrado com sucesso!" << endl;
+            } else {
+                cout << "ERRO! Usuário não cadastrado!" << endl;
+            }
         } else {
-            cout << "ERRO! Usuário não cadastrado!" << endl;
+            cout << "ERRO! Diretório não encontrado ou falhou na criação." << endl;
         }
     } else {
         cout << "Senhas informadas não conferem! Usuário não cadastrado!" << endl;
     }
 
     return isRegistered;
+}
+
+bool isFolderCreated (const char *folderPath) {
+    bool result;
+    struct stat st = {0};
+
+    if (stat(folderPath, &st) == -1) {
+        result = createFolder(folderPath);
+    } else {
+        result = true;
+    }
+
+    return result;
+}
+
+bool createFolder(const char *folderPath) {
+    bool result = false;
+    if (mkdir(folderPath, 0700) == 0) {
+        result = true;
+    }
+    return result;
 }
 
 void printLoginMenu() {
