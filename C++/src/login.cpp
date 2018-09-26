@@ -151,19 +151,21 @@ void printLoginMenu() {
 }
 
 bool loginMenu(user *loggedUser, bool *isDone) {
-    char selectedOption = '0';
+    string optionInput;
+    char selectedOption;
     bool isLogged = false;
 
     do {
         printLoginMenu();
 
-        cin.get(selectedOption);
-        cin.ignore();
+        getline(cin,optionInput);
 
-        if (isSelectedOptionValid(selectedOption, '1', '3') == false) {
+        if (isMenuInputStringValid(optionInput, '1', '3') == false) {
             printInvalidOptionMessage();
         }
-    } while (isSelectedOptionValid(selectedOption, '1', '3') == false);
+    } while (isMenuInputStringValid(optionInput, '1', '3') == false);
+
+    selectedOption = optionInput[0];
 
     switch(selectedOption){
         case '1':
