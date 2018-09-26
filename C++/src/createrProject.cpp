@@ -1,5 +1,5 @@
-#include <dataManagerProject.h>
-#include <createrProject.h>
+#include "dataManagerProject.h"
+#include "createrProject.h"
 
 using namespace std;
 
@@ -47,8 +47,13 @@ void saveProject(Project project){
 
     fstream projectFile;
     project.id = idProject();
+
+    vector<Project> projects;
+    int size = arquiveToArray(projects) + 1;
+    projects.push_back(project);
+    arrayToArquive(projects);
     
-    projectFile.open(PROJECT_FILE_NAME, ios::out | ios::app);
+    /*projectFile.open(PROJECT_FILE_NAME, ios::out | ios::app);
     if (projectFile.is_open()){
         projectFile << project.id << endl << project.name << endl << project.description << endl;
         projectFile << project.owner << endl;
@@ -56,11 +61,11 @@ void saveProject(Project project){
             projectFile << project.users[i] << endl;
         }
         projectFile.close();
-        
+
         cout << "Projeto criado com sucesso!" << endl;
     } else {
         cout << "Erro ao criar projeto " << project.name << endl;
-    }
+    }*/
 }
 
 /*

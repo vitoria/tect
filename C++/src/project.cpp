@@ -1,5 +1,5 @@
-#include <project.h>
-#include <dataManagerProject.h>
+#include "project.h"
+#include "dataManagerProject.h"
 
 using namespace std;
 
@@ -96,7 +96,7 @@ void editNameProject(int id){
     if (projects[aux].id == id){
         cout << "Novo nome: ";
         getline(cin, projects[aux].name);
-        arrayToArquive(projects, size);
+        arrayToArquive(projects);
         cout << "Nome de projeto editado com sucesso." << endl;
     } else {
         cout << "Id não encontrado" << endl;
@@ -112,7 +112,7 @@ void editDescriptionProject(int id){
     if (projects[aux].id == id){
         cout << "Nova descrição: ";
         getline(cin, projects[aux].description);
-        arrayToArquive(projects, size);
+        arrayToArquive(projects);
         cout << "Descrição de projeto editado com sucesso." << endl;
     } else {
         cout << "Id não encontrado" << endl;
@@ -151,7 +151,7 @@ void allowPermissions(int id){
             split(usersString, vetor);
 
             //*projects[aux].users = newArray; //arrays com posições nulas
-            arrayToArquive(projects, size);
+            arrayToArquive(projects);
             cout << "Permissões dadas com sucesso" << endl;
         } else {
             cout << "Nenhum pedido de acesso." << endl;
@@ -181,8 +181,9 @@ void deleteProject(int id){
     int aux = throughArray(id, projects, size);
     
     swapProject(projects, size, aux);
+    projects.pop_back();
 
-    arrayToArquive(projects, size-1);
+    arrayToArquive(projects);
 
 }
 
