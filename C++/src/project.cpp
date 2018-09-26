@@ -126,11 +126,13 @@ void allowPermissions(int id){
     int aux = throughArray(id, projects, size);
 
     if (projects[aux].id == id){
-        if (projects[aux].numberOfRequests > 0){}
+        if (projects[aux].numberOfRequests > 0){
+            string usersString = "";
             int newSize = projects[aux].numberOfUsers + projects[aux].numberOfRequests;
             string *newArray = new string[newSize];
             for (int i = 0; i < projects[aux].numberOfUsers; i++){
-                newArray[i] = projects[aux].users[i];
+                usersString += projects[aux].users[i];
+                //newArray[i] = projects[aux].users[i];
             }
             int index = projects[aux].numberOfUsers;
             for (int i = 0; i < projects[aux].numberOfRequests; i++){
@@ -139,11 +141,16 @@ void allowPermissions(int id){
                 cout << " ao usuário " << projects[aux].requests[i] << " (s/n)? ";
                 cin >> fileInput;
                 if (fileInput == 's'){
-                    newArray[index] == projects[aux].requests[i];
+                    usersString += projects[aux].requests[i];
+                    //newArray[index] == projects[aux].requests[i];
                     index++;
                 }
             }
-            *projects[aux].users = newArray; //arrays com posições nulas
+
+            // fazer split da string usersString e colocar em um array
+            split(usersString, newArray);
+
+            //*projects[aux].users = newArray; //arrays com posições nulas
             arrayToArquive(projects, size);
             cout << "Permissões dadas com sucesso" << endl;
         } else {
@@ -151,6 +158,19 @@ void allowPermissions(int id){
         }
     } else {
         cout << "Id não encontrado" << endl;
+    }
+}
+
+void split(string usersString, string*newArray){
+    vector<string> vetor;
+    string aux = "";
+    for(int i = 0; i < usersString.size(); i++){
+        if(usersString[i] ==  ' '){
+            vetor.push_back(aux);
+            aux = "";
+        } else {
+            aux += usersString[i];
+        }
     }
 }
 
