@@ -14,20 +14,22 @@ void running() {
 }
 
 void systemMenu(user loggedUser) {
-    char selectedOption = '0';
+    string optionInput;
+    char selectedOption;
     do {
         do {
             printSystemMenu(loggedUser.name);
 
-            cin.get(selectedOption);
-            cin.ignore();
+            getline(cin,optionInput);
 
-            if (isSelectedOptionValid(selectedOption, '1', '5') == false) {
+            if (isMenuInputStringValid(optionInput, '1', '5') == false) {
                 printInvalidOptionMessage();
             }
-        } while (isSelectedOptionValid(selectedOption, '1', '5') == false);
+        } while (isMenuInputStringValid(optionInput, '1', '5') == false);
 
         system("clear");
+
+        selectedOption = optionInput[0];
 
         switch(selectedOption){
             case '1':
