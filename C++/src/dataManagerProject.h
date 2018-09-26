@@ -10,4 +10,4 @@
 #include <project.h>
 
 int arquiveToArray(Project *);
-void arrayToArquive(Project *, int size);
+void arrayToArquive(Project *, int);

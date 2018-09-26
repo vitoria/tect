@@ -23,3 +23,13 @@ struct Project{
     string requests[];
 };
 
+void printProjectMenu();
+void projectMenu(int);
+void editNameProject(int);
+void editDescriptionProject(int);
+void allowPermissions(int);
+void allowPermissions(int);
+void createSuite(int);
+void listSuites(int id);
+void searchSuite(int id);
+
