@@ -18,9 +18,9 @@ struct Project{
     string description;
     string owner;
     int numberOfUsers;
-    string users[];
+    string *users;
     int numberOfRequests;
-    string requests[];
+    string *requests;
 };
 
 void printProjectMenu();

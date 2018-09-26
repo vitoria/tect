@@ -42,25 +42,25 @@ void projectMenu(int id){
                 editDescriptionProject(id);
                 break;
             case '3':
-                void allowPermissions(id);
+                allowPermissions(id);
                 break;
             case '4':
                 cout << "Projeto excluído com sucesso" << endl;
                 break;
             case '5':
-                void createSuite(id);
+                createSuite(id);
                 cout << "Suíte de testes criado com sucesso" << endl;
                 break;
             case '6':
-                void listSuites(id);
+                listSuites(id);
                 cout << "Fim." << endl;
                 break;
             case '7':
-                void searchSuite(id);
+                searchSuite(id);
                 cout << "Consulta realizada com sucesso" << endl;
                 break;
             case '8':
-                void generateReport(id);
+                generateReport(id);
                 cout << "Relatório gerado com sucesso" << endl;
                 break;
             case '9':
@@ -128,7 +128,7 @@ void allowPermissions(int id){
     if (projects[aux].id == id){
         if (projects[aux].numberOfRequests > 0){}
             int newSize = projects[aux].numberOfUsers + projects[aux].numberOfRequests;
-            string newArray[newSize];
+            string *newArray = new string[newSize];
             for (int i = 0; i < projects[aux].numberOfUsers; i++){
                 newArray[i] = projects[aux].users[i];
             }
@@ -143,7 +143,7 @@ void allowPermissions(int id){
                     index++;
                 }
             }
-            projects[aux].users = newArray; //arrays com posições nulas
+            *projects[aux].users = newArray; //arrays com posições nulas
             arrayToArquive(projects, size);
             cout << "Permissões dadas com sucesso" << endl;
         } else {
@@ -159,9 +159,17 @@ void deleteProject(int id){
 
     int size = arquiveToArray(projects);
     int aux = throughArray(id, projects, size);
-    // quando excluir projeto levar o último projeto para  aposição vazia, ou dar um swap em todos?
+    
+    swapProject(projects, size, aux);
 
+    arrayToArquive(projects, size-1);
 
+}
+
+void swapProject(Project*projects, int size, int aux){
+    for (int i = aux; i < size-1; i ++){
+        projects[aux] = projects[aux+1];
+    }
 }
 
 void createSuite(int id){
