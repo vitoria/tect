@@ -7,7 +7,7 @@
 #include <fstream>
 #include <string>
 
-#include <project.h>
+#include "project.h"
 
 int arquiveToArray(std::vector<Project>);
-void arrayToArquive(std::vector<Project>, int);
+void arrayToArquive(std::vector<Project>);
