@@ -26,6 +26,7 @@ void systemMenu(user loggedUser) {
             if (isMenuInputStringValid(optionInput, CREATE_PROJECT, LOGOUT) == false) {
                 printInvalidOptionMessage();
             }
+
         } while (isMenuInputStringValid(optionInput, CREATE_PROJECT, LOGOUT) == false);
 
         system(CLEAR);
@@ -45,7 +46,7 @@ void systemMenu(user loggedUser) {
             case EDIT_PROJECT:
                 cout << "Projeto editado" << endl;
                 break;
-            case LOGOUT:
+            case EXIT:
                 cout << "Saindo do usuário atual..." << endl;
                 logout();
                 break;
@@ -64,9 +65,5 @@ void printSystemMenu(string userName) {
     system(CLEAR);
     printTectHeader();
     cout << "Bem-vindo " << userName << "! Selecione a opção desejada: \n";
-    cout << "(1) Criar Projeto\n"
-            "(2) Pedir acesso a um projeto\n"
-            "(3) Pesquisar Projeto\n"
-            "(4) Editar Projeto\n"
-            "(5) Logout\n";
+    cout << MAIN_MENU << endl;
 }

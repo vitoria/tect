@@ -1,17 +1,14 @@
 #include "login.h"
-
-#define USERS_FILE_PATH "data/users.dat"
-#define DATA_FOLDER_PATH "data"
-#define LOGGED_USER_FILE_PATH "data/logged.dat"
+#include "constants.h"
 
 using namespace std;
 
 bool existingUserLogin(user *loggedUser) {
     string user, password, name;
     bool isLogged = false, foundUser = false;
-    system("clear");
+    system(CLEAR);
     printTectHeader();
-    cout << "#------------# LOGIN DE USUÁRIO #----------#" << endl;
+    cout << LOGIN_HEADER << endl;
     
     cout << "Login: ";
     getline(cin, user);
@@ -88,9 +85,9 @@ bool registerNewUser() {
     string name, user, password, passwordVerification;
     bool isRegistered = false;
 
-    system("clear");
+    system(CLEAR);
     printTectHeader();
-    cout << "#----------# CADASTRO DE USUÁRIO #---------#" << endl;
+    cout << SIGN_UP_HEADER << endl;
 
     cout << "Nome: ";
     getline(cin, name);
@@ -104,7 +101,7 @@ bool registerNewUser() {
     cout << "Informe a senha novamente: ";
     getline(cin, passwordVerification);
 
-    system("clear");
+    system(CLEAR);
     if (isUserAlredyRegistered(user) == false) {
         if (password.compare(passwordVerification) == 0) {
 
@@ -174,12 +171,9 @@ bool isUserAlredyRegistered(string user) {
 }
 
 void printLoginMenu() {
-    system ("clear");
+    system (CLEAR);
     printTectHeader();
-    cout << "Bem-vindo! Selecione a opção desejada: " << endl;
-    cout << "(1) Efetuar login" << endl;
-    cout << "(2) Cadastrar novo usuário" << endl;
-    cout << "(3) Sair" << endl;
+    cout << LOGIN_MENU << endl;
 }
 
 bool loginMenu(user *loggedUser, bool *isDone) {
@@ -193,27 +187,27 @@ bool loginMenu(user *loggedUser, bool *isDone) {
 
             getline(cin,optionInput);
 
-            if (isMenuInputStringValid(optionInput, '1', '3') == false) {
-                printInvalidOptionMessage();
-            }
-        } while (isMenuInputStringValid(optionInput, '1', '3') == false);
+        if (isMenuInputStringValid(optionInput, LOGIN, LOGOUT) == false) {
+            printInvalidOptionMessage();
+        }
+    } while (isMenuInputStringValid(optionInput, LOGIN, LOGOUT) == false);
 
         selectedOption = optionInput[0];
 
-        switch(selectedOption){
-        case '1':
+    switch(selectedOption){
+        case LOGIN:
             isLogged = existingUserLogin(loggedUser);
             break;
-        case '2':
+        case SIGN_UP:
             registerNewUser();
             break;
-        case '3':
+        case LOGOUT:
             cout << "Encerrando sistema..." << endl;
             isLogged = false;
             *isDone = true;
             break;
         default:
-            cout << "ERRO!" << endl;
+            cout << INVALID_OPTION << endl;
             isLogged = false;
             *isDone = true;
             break;
@@ -222,10 +216,10 @@ bool loginMenu(user *loggedUser, bool *isDone) {
     } else {
         cout << "Bem-vindo de volta " << loggedUser->name << "!" << endl;
     }
-    
-    cout << "Pressione ENTER para continuar..." << endl;
+
+    cout << PAUSE_MSG << endl;
     cin.get();
-    system ("clear");
+    system (CLEAR);
 
     return isLogged;
 }

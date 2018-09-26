@@ -1,4 +1,5 @@
 #include "validation.h"
+#include "constants.h"
 
 using namespace std;
 
@@ -19,9 +20,9 @@ bool isSelectedOptionValid(char option, char intervalBegin, char intervalEnd) {
 }
 
 void printInvalidOptionMessage() {
-    system ("clear");
-    cout << "Opção inválida!" << endl;
-    cout << "Pressione qualquer tecla para continuar..." << endl;
+    system (CLEAR);
+    cout << INVALID_OPTION << endl;
+    cout << PAUSE_MSG << endl;
     cin.get();
-    system ("clear");
+    system (CLEAR);
 }

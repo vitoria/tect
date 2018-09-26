@@ -3,5 +3,5 @@
 using namespace std;
 
 void printTectHeader() {
-    cout << "#-----------------# TecT #-----------------#" << endl;
+    cout << HEADER << endl;
 }
