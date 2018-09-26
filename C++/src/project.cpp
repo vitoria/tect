@@ -1,16 +1,7 @@
 #include <project.h>
-
-#define PROJECT_FILE_NAME "projects.dat"
+#include <dataManagerProject.h>
 
 using namespace std;
-
-struct Project{
-    int id;
-    string name;
-    string description;
-    string owner;
-    string users[];
-};
 
 void printProjectMenu(){
     system ("clear");
@@ -26,9 +17,10 @@ void printProjectMenu(){
     cout << "(7) Consultar suítes de testes" << endl;
     cout << "(8) Gerar relatório de projeto" << endl;
     cout << "(9) Sair do projeto" << endl;
+
 }
 
-void projectMenu(){
+void projectMenu(int id){
     char selectedOption = '0';
     do {
         do {
@@ -44,10 +36,10 @@ void projectMenu(){
 
         switch(selectedOption){
             case '1':
-                cout << "Nome de projeto editado com sucesso" << endl;
+                editNameProject(id);
                 break;
             case '2':
-                cout << "Descrição de projeto editado com sucesso" << endl;
+                editDescriptionProject(id);
                 break;
             case '3':
                 cout << "Permissões dadas com sucesso" << endl;
@@ -81,105 +73,40 @@ void projectMenu(){
     } while (selectedOption != '5');
 }
 
-/*
-Insere o valor 0 no arquivo, que indica o número de projetos criados.
-*/
-void incializeIdProject(){
-    fstream projectFile;
-    projectFile.open(PROJECT_FILE_NAME, ios::out);
+void editNameProject(int id){
+    Project *projects;
 
-    projectFile << 0;
-    projectFile << "*";
+    int size = arquiveToArray(projects);
+    int aux = 0;
 
-    projectFile.close();
-}
+    while(projects[aux].id != id || aux < size){
+        aux++;
+    }
 
-/*
-Cria um projeto de testes a partir do nome e descrição.
-*/
-void createProject(){
-
-    Project newProject;
-
-    system("clear");
-    printTectHeader;
-    cout << "#------------# CRIAÇÃO DE PROJETO #----------#" << endl;
-
-    do {
-        cout << "Nome do projeto: ";
-        getline(cin, newProject.name);
-        if (verifyExistingProject() == true){
-            cout << "Nome de projeto já criado";
-        }
-    } while (verifyExistingProject() == true);
-
-    cout << "Descrição do projeto: ";
-    getline(cin, newProject.description);
-
-    system("clear");
-
-    newProject.id = idProject();
-
-    saveProject(newProject);
-    
-}
-
-void saveProject(Project project){
-    
-
-    fstream projectFile;
-    projectFile.open(PROJECT_FILE_NAME, ios::out | ios::app);
-    if (projectFile.is_open()){
-        projectFile << id << endl << name << endl << description << endl;
-        projectFile << "*";
-        projectFile.close();
-        cout << "Projeto criado com sucesso!" << endl;
+    if (projects[aux].id == id){
+        cout << "Novo nome: ";
+        getline(cin, projects[aux].name);
+        cout << "Nome de projeto editado com sucesso." << endl;
     } else {
-        cout << "Erro ao criar projeto " << name << endl;
+        cout << "Id não encontrado" << endl;
     }
 }
 
+void editDescriptionProject(int id){
+    Project *projects;
 
-/*
-Incrementa o número de projetos criados e retorna esse número.
-*/
-//falta sobrescrever linha com o número de projetos
-int idProject(){
-    string value;
-    fstream projectFile;
-    projectFile.open(PROJECT_FILE_NAME, ios::in);
-    getline(projectFile, value);
-    projectFile.close();
+    int size = arquiveToArray(projects);
+    int aux = 0;
 
-    int number;
-    number = stoi(value);
-
-    number++;
-
-    return number;
-}
-
-/*
-Verifica se um nome de projeto já foi criado antes.
-*/
-
-bool verifyExistingProject(string name){
-    bool existProject = false;
-
-    string fileOutput;
-    fstream projectFile;
-    projectFile.open(PROJECT_FILE_NAME, ios::in);
-    getline(projectFile, fileOutput);
-    getline(projectFile, fileOutput);
-    if (projectFile.is_open){
-        while(existProject == false && getline(projectFile, fileOutput)) {
-            if (fileOutput.compare(name) == 0) {
-                existProject = true;
-            } else {
-                getline(projectFile, fileOutput);
-                getline(projectFile, fileOutput);
-            }
-        }
+    while(projects[aux].id != id || aux < size){
+        aux++;
     }
-    return existProject;
+
+    if (projects[aux].id == id){
+        cout << "Nova descrição: ";
+        getline(cin, projects[aux].description);
+        cout << "Descrição de projeto editado com sucesso." << endl;
+    } else {
+        cout << "Id não encontrado" << endl;
+    }
 }
