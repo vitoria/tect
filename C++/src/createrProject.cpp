@@ -56,6 +56,7 @@ void saveProject(Project project){
             projectFile << project.users[i] << endl;
         }
         projectFile.close();
+        
         cout << "Projeto criado com sucesso!" << endl;
     } else {
         cout << "Erro ao criar projeto " << project.name << endl;
@@ -67,7 +68,7 @@ Incrementa o número de projetos criados e retorna esse número.
 */
 //falta sobrescrever linha com o número de projetos
 int idProject(){
-    Project *projects;
+    vector<Project> projects;
 
     int size = arquiveToArray(projects);
 
@@ -81,19 +82,14 @@ Verifica se um nome de projeto já foi criado antes.
 bool verifyExistingProject(string name){
     bool existProject = false;
 
-    string fileOutput;
-    fstream projectFile;
-    projectFile.open(PROJECT_FILE_NAME, ios::in);
-    getline(projectFile, fileOutput);
-    getline(projectFile, fileOutput);
-    if (projectFile.is_open){
-        while(existProject == false && getline(projectFile, fileOutput)) {
-            if (fileOutput.compare(name) == 0) {
-                existProject = true;
-            } else {
-                getline(projectFile, fileOutput);
-                getline(projectFile, fileOutput);
-            }
+    vector<Project> projects;
+
+    int size = arquiveToArray(projects);
+
+    for (int i = 0; i < size; i++){
+        if (projects[i].name.compare(name) == 0){
+            existProject = true;
+            break;
         }
     }
     return existProject;

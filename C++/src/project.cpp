@@ -77,7 +77,7 @@ void projectMenu(int id){
     } while (selectedOption != '5');
 }
 
-int throughArray(int id, Project*projects, int size){
+int throughArray(int id, vector<Project> projects, int size){
     int aux = 0;
 
     while(projects[aux].id != id || aux < size){
@@ -88,7 +88,7 @@ int throughArray(int id, Project*projects, int size){
 }
 
 void editNameProject(int id){
-    Project *projects;
+    vector<Project> projects;
 
     int size = arquiveToArray(projects);
     int aux = throughArray(id, projects, size);
@@ -104,7 +104,7 @@ void editNameProject(int id){
 }
 
 void editDescriptionProject(int id){
-    Project *projects;
+    vector<Project> projects;
 
     int size = arquiveToArray(projects);
     int aux = throughArray(id, projects, size);
@@ -120,7 +120,7 @@ void editDescriptionProject(int id){
 }
 
 void allowPermissions(int id){
-    Project *projects;
+    vector<Project> projects;
 
     int size = arquiveToArray(projects);
     int aux = throughArray(id, projects, size);
@@ -128,8 +128,8 @@ void allowPermissions(int id){
     if (projects[aux].id == id){
         if (projects[aux].numberOfRequests > 0){
             string usersString = "";
-            int newSize = projects[aux].numberOfUsers + projects[aux].numberOfRequests;
-            string *newArray = new string[newSize];
+            //int newSize = projects[aux].numberOfUsers + projects[aux].numberOfRequests;
+            vector<string> vetor;
             for (int i = 0; i < projects[aux].numberOfUsers; i++){
                 usersString += projects[aux].users[i];
                 //newArray[i] = projects[aux].users[i];
@@ -148,7 +148,7 @@ void allowPermissions(int id){
             }
 
             // fazer split da string usersString e colocar em um array
-            split(usersString, newArray);
+            split(usersString, vetor);
 
             //*projects[aux].users = newArray; //arrays com posições nulas
             arrayToArquive(projects, size);
@@ -161,8 +161,8 @@ void allowPermissions(int id){
     }
 }
 
-void split(string usersString, string*newArray){
-    vector<string> vetor;
+void split(string usersString, vector<string> vetor){
+    
     string aux = "";
     for(int i = 0; i < usersString.size(); i++){
         if(usersString[i] ==  ' '){
@@ -175,7 +175,7 @@ void split(string usersString, string*newArray){
 }
 
 void deleteProject(int id){
-    Project *projects;
+    vector<Project> projects;
 
     int size = arquiveToArray(projects);
     int aux = throughArray(id, projects, size);
@@ -186,7 +186,7 @@ void deleteProject(int id){
 
 }
 
-void swapProject(Project*projects, int size, int aux){
+void swapProject(vector<Project> projects, int size, int aux){
     for (int i = aux; i < size-1; i ++){
         projects[aux] = projects[aux+1];
     }

@@ -15,13 +15,15 @@
 
 struct Project{
     int id;
-    string name;
-    string description;
-    string owner;
+    std::string name;
+    std::string description;
+    std::string owner;
     int numberOfUsers;
-    string *users;
+    vector<string> users;
+    //std::string *users;
     int numberOfRequests;
-    string *requests;
+    vector<string> requests;
+    //std::string *requests;
 };
 
 void printProjectMenu();

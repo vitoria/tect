@@ -3,7 +3,7 @@
 
 using namespace std;
 
-int arquiveToArray(Project*arquive_split){
+int arquiveToArray(vector<Project> arquive_split){
 
     fstream arquive;
     arquive.open(PROJECT_FILE_NAME, ios::in);
@@ -15,7 +15,7 @@ int arquiveToArray(Project*arquive_split){
 
     size = stoi(fileOutput); 
 
-    arquive_split = new Project[size];
+    //arquive_split = new Project[size];
 
     for (int i = 0; i < size; i++ ){
         Project project;
@@ -30,7 +30,8 @@ int arquiveToArray(Project*arquive_split){
             getline(cin, project.users[j]);
         }
 
-        arquive_split[i] = project;
+        arquive_split.push_back(project);
+        //arquive_split[i] = project;
     }
 
     arquive.close();
@@ -39,6 +40,6 @@ int arquiveToArray(Project*arquive_split){
 }
 
 
-void arrayToArquive(Project*arquive_split , int size){
+void arrayToArquive(vector<Project> arquive_split , int size){
      // Not implemented
 } 
