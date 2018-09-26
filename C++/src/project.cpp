@@ -42,21 +42,25 @@ void projectMenu(int id){
                 editDescriptionProject(id);
                 break;
             case '3':
-                cout << "Permissões dadas com sucesso" << endl;
+                void allowPermissions(id);
                 break;
             case '4':
                 cout << "Projeto excluído com sucesso" << endl;
                 break;
             case '5':
+                void createSuite(id);
                 cout << "Suíte de testes criado com sucesso" << endl;
                 break;
             case '6':
+                void listSuites(id);
                 cout << "Fim." << endl;
                 break;
             case '7':
+                void searchSuite(id);
                 cout << "Consulta realizada com sucesso" << endl;
                 break;
             case '8':
+                void generateReport(id);
                 cout << "Relatório gerado com sucesso" << endl;
                 break;
             case '9':
@@ -73,19 +77,26 @@ void projectMenu(int id){
     } while (selectedOption != '5');
 }
 
-void editNameProject(int id){
-    Project *projects;
-
-    int size = arquiveToArray(projects);
+int throughArray(int id, Project*projects, int size){
     int aux = 0;
 
     while(projects[aux].id != id || aux < size){
         aux++;
     }
 
+    return aux;
+}
+
+void editNameProject(int id){
+    Project *projects;
+
+    int size = arquiveToArray(projects);
+    int aux = throughArray(id, projects, size);
+
     if (projects[aux].id == id){
         cout << "Novo nome: ";
         getline(cin, projects[aux].name);
+        arrayToArquive(projects, size);
         cout << "Nome de projeto editado com sucesso." << endl;
     } else {
         cout << "Id não encontrado" << endl;
@@ -96,17 +107,76 @@ void editDescriptionProject(int id){
     Project *projects;
 
     int size = arquiveToArray(projects);
-    int aux = 0;
-
-    while(projects[aux].id != id || aux < size){
-        aux++;
-    }
+    int aux = throughArray(id, projects, size);
 
     if (projects[aux].id == id){
         cout << "Nova descrição: ";
         getline(cin, projects[aux].description);
+        arrayToArquive(projects, size);
         cout << "Descrição de projeto editado com sucesso." << endl;
     } else {
         cout << "Id não encontrado" << endl;
     }
 }
+
+void allowPermissions(int id){
+    Project *projects;
+
+    int size = arquiveToArray(projects);
+    int aux = throughArray(id, projects, size);
+
+    if (projects[aux].id == id){
+        if (projects[aux].numberOfRequests > 0){}
+            int newSize = projects[aux].numberOfUsers + projects[aux].numberOfRequests;
+            string newArray[newSize];
+            for (int i = 0; i < projects[aux].numberOfUsers; i++){
+                newArray[i] = projects[aux].users[i];
+            }
+            int index = projects[aux].numberOfUsers;
+            for (int i = 0; i < projects[aux].numberOfRequests; i++){
+                char fileInput;
+                cout << "Dar permissão de acesso no projeto  " << projects[aux].name;
+                cout << " ao usuário " << projects[aux].requests[i] << " (s/n)? ";
+                cin >> fileInput;
+                if (fileInput == 's'){
+                    newArray[index] == projects[aux].requests[i];
+                    index++;
+                }
+            }
+            projects[aux].users = newArray; //arrays com posições nulas
+            arrayToArquive(projects, size);
+            cout << "Permissões dadas com sucesso" << endl;
+        } else {
+            cout << "Nenhum pedido de acesso." << endl;
+        }
+    } else {
+        cout << "Id não encontrado" << endl;
+    }
+}
+
+void deleteProject(int id){
+    Project *projects;
+
+    int size = arquiveToArray(projects);
+    int aux = throughArray(id, projects, size);
+    // quando excluir projeto levar o último projeto para  aposição vazia, ou dar um swap em todos?
+
+
+}
+
+void createSuite(int id){
+    //not implemented
+}
+
+void listSuites(int id){
+    //not implemented
+}
+
+void searchSuite(int id){
+    //not implemented
+}
+
+void generateReport(int id){
+    //not implemented
+}
+
