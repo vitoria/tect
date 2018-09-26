@@ -18,23 +18,23 @@ bool existingUserLogin(user *loggedUser) {
     cout << "Senha: ";
     getline(cin, password);
 
-    string fileOutput;
+    string fileInput;
     ifstream usersFile;
     usersFile.open(USERS_FILE_PATH, ios::in);
     if (usersFile.is_open()) {
-        while (foundUser == false && getline(usersFile, fileOutput)) {
-            if (fileOutput.compare(user) == 0) {
+        while (foundUser == false && getline(usersFile, fileInput)) {
+            if (fileInput.compare(user) == 0) {
                 foundUser = true;
             } else {
-                getline(usersFile, fileOutput);
-                getline(usersFile, fileOutput);
+                getline(usersFile, fileInput);
+                getline(usersFile, fileInput);
             }
         }
     }
 
     if (foundUser == true) {
-        getline(usersFile, fileOutput);
-        if (fileOutput.compare(password) == 0) {
+        getline(usersFile, fileInput);
+        if (fileInput.compare(password) == 0) {
             isLogged = true;
             getline(usersFile, name);
             loggedUser->login = user;
@@ -73,24 +73,28 @@ bool registerNewUser() {
     getline(cin, passwordVerification);
 
     system("clear");
-    if (password.compare(passwordVerification) == 0) {
+    if (isUserAlredyRegistered(user) == false) {
+        if (password.compare(passwordVerification) == 0) {
 
-        if (isFolderCreated(DATA_FOLDER_PATH) == true){
-            ofstream usersFile;
-            usersFile.open(USERS_FILE_PATH, ios::out | ios::app);
-            if (usersFile.is_open()) {
-                usersFile << user << endl << password << endl << name << endl;
-                isRegistered = true;
-                usersFile.close();
-                cout << "Usuário cadastrado com sucesso!" << endl;
+            if (isFolderCreated(DATA_FOLDER_PATH) == true){
+                ofstream usersFile;
+                usersFile.open(USERS_FILE_PATH, ios::out | ios::app);
+                if (usersFile.is_open()) {
+                    usersFile << user << endl << password << endl << name << endl;
+                    isRegistered = true;
+                    usersFile.close();
+                    cout << "Usuário cadastrado com sucesso!" << endl;
+                } else {
+                    cout << "ERRO! Usuário não cadastrado!" << endl;
+                }
             } else {
-                cout << "ERRO! Usuário não cadastrado!" << endl;
+                cout << "ERRO! Diretório não encontrado ou falhou na criação." << endl;
             }
         } else {
-            cout << "ERRO! Diretório não encontrado ou falhou na criação." << endl;
+            cout << "Senhas informadas não conferem! Usuário não cadastrado!" << endl;
         }
     } else {
-        cout << "Senhas informadas não conferem! Usuário não cadastrado!" << endl;
+        cout << "Usuário já cadastrado! Por favor, informe um usuário diferente." << endl;
     }
 
     return isRegistered;
@@ -115,6 +119,26 @@ bool createFolder(const char *folderPath) {
         result = true;
     }
     return result;
+}
+
+bool isUserAlredyRegistered(string user) {
+    bool foundUser = false;
+    string fileInput;
+    ifstream usersFile;
+
+    usersFile.open(USERS_FILE_PATH, ios::in);
+    if (usersFile.is_open()) {
+        while (foundUser == false && getline(usersFile, fileInput)) {
+            if (fileInput.compare(user) == 0) {
+                foundUser = true;
+            } else {
+                getline(usersFile, fileInput);
+                getline(usersFile, fileInput);
+            }
+        }
+    }
+
+    return foundUser;
 }
 
 void printLoginMenu() {

@@ -22,5 +22,6 @@ bool existingUserLogin(user*);
 bool registerNewUser();
 bool isFolderCreated (const char*);
 bool createFolder(const char*);
+bool isUserAlredyRegistered(std::string);
 void printLoginMenu();
 bool loginMenu(user*, bool*);
