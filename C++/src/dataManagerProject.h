@@ -9,5 +9,5 @@
 
 #include <project.h>
 
-int arquiveToArray(Project *);
-void arrayToArquive(Project *, int);
+int arquiveToArray(std::vector<Project>);
+void arrayToArquive(std::vector<Project>, int);
