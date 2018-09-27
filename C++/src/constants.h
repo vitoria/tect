@@ -31,6 +31,8 @@
 #define SUITE_LIST_HEADER   "#--------------# SUITE TESTS #-------------#"
 #define DELETE_SUITE_HEADER "#-------------# DELETE  SUITE #------------#"
 #define EDIT_SUITE_HEADER   "#--------------# EDITE SUITE #-------------#"
+#define SEARCH_SUITE_HEADER "#------------# PESQUISAR SUITE #-----------#"
+#define SUITE_DETAILS       "#-----------# DETALHES DA SUITE #----------#"
 #define LINE                "--------------------------------------------"
 #define TABLE_HEADER        "-     ID     | Nome da suite               -"
 #define SUSPENSION_POINTS "..."

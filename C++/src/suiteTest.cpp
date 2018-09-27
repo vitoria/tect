@@ -215,6 +215,36 @@ void deleteSuite() {
         showMessage(SUITE_NOT_FOUND);
     }
 }
+
+/**
+ * Show the suites details.
+ */
+void showSuite(suite current) {
+    printHeader(SUITE_DETAILS);
+    std::cout << "ID: ";
+    showID(current.id);
+    std::cout << "\nNome: " << current.name << std::endl;
+    std::cout << "Descrição: " << current.description << std::endl;
+    std::cout << "Status: " << "100\n";
+
+    pauseSystem();
+}
+
+/**
+ * Search suite procedure.
+ */
+void searchSuite() {
+    printHeader(SEARCH_SUITE_HEADER);
+    std::string selectedSuite = readSelectedSuite();
+    std::vector<suite> suites = readSuites();
+
+    if (containsSuite(suites, selectedSuite)) {
+        showSuite(suites[searchSuite(suites, selectedSuite)]);
+    } else {
+        showMessage(SUITE_NOT_FOUND);
+    }
+}
+
 /**
  * It shows the suiteTests main menu.
  */
@@ -236,7 +266,7 @@ void goToProcediment(char optionSelected) {
             listSuites();
             break;
         case SEARCH_SUITE:
-            // TODO: go to the search suite procediment
+            searchSuite();
             break;
         case EDIT_SUITE:
             editSuite();
