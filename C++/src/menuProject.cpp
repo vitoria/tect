@@ -4,6 +4,7 @@
 #include "login.h"
 #include "system.h"
 #include "constants.h"
+#include "suiteTest.h"
 
 using namespace std;
 
@@ -51,11 +52,9 @@ void printProjectMenuOwner(){
     cout << "(2) Editar descrição do projeto" << endl;
     cout << "(3) Verificar pedidos de permissão" << endl;
     cout << "(4) Excluir projeto" << endl;
-    cout << "(5) Criar suíte de testes" << endl;
-    cout << "(6) Listar suítes de testes" << endl;
-    cout << "(7) Consultar suítes de testes" << endl;
-    cout << "(8) Gerar relatório de projeto" << endl;
-    cout << "(9) Sair do projeto" << endl;
+    cout << "(5) Gerenciar suítes de teste" << endl;
+    cout << "(6) Gerar relatório de projeto" << endl;
+    cout << "(7) Sair do projeto" << endl;
 
 }
 
@@ -68,10 +67,10 @@ void projectMenuOwner(int id, user loggedUser){
             cin.get(selectedOption);
             cin.ignore();
 
-            if (isSelectedOptionValid(selectedOption, '1', '9') == false) {
+            if (isSelectedOptionValid(selectedOption, '1', '7') == false) {
                 printInvalidOptionMessage();
             }
-        } while (isSelectedOptionValid(selectedOption, '1', '9') == false);
+        } while (isSelectedOptionValid(selectedOption, '1', '7') == false);
 
         switch(selectedOption){
             case '1':
@@ -85,26 +84,16 @@ void projectMenuOwner(int id, user loggedUser){
                 break;
             case '4':
                 deleteProject(id);
-                systemMenu(loggedUser);
+                selectedOption = '7';
                 break;
             case '5':
-                createSuite(id);
-                cout << "Suíte de testes criado com sucesso" << endl;
+                suiteTestMenu();
                 break;
             case '6':
-                listSuites(id);
-                cout << "Fim." << endl;
-                break;
-            case '7':
-                searchSuite(id);
-                cout << "Consulta realizada com sucesso" << endl;
-                break;
-            case '8':
                 generateReport(id);
                 cout << "Relatório gerado com sucesso" << endl;
                 break;
-            case '9':
-                systemMenu(loggedUser);
+            case '7':
                 cout << "Saindo do projeto" << endl;
                 break;
             default:
@@ -115,18 +104,16 @@ void projectMenuOwner(int id, user loggedUser){
         cout << "Pressione qualquer tecla para continuar..." << endl;
         cin.get();
         system ("clear");
-    } while (selectedOption != '5');
+    } while (selectedOption != '7');
 }
 
 void printProjectMenuUser(){
     system ("clear");
     printHeader();
     cout << "Menu Projeto Usuário Com Acesso" << endl; 
-    cout << "(1) Criar suíte de testes" << endl;
-    cout << "(2) Listar suítes de testes" << endl;
-    cout << "(3) Consultar suítes de testes" << endl;
-    cout << "(4) Gerar relatório de projeto" << endl;
-    cout << "(5) Sair do projeto" << endl;
+    cout << "(1) Gerenciar suítes de teste" << endl;
+    cout << "(2) Gerar relatório de projeto" << endl;
+    cout << "(3) Sair do projeto" << endl;
 
 }
 
@@ -140,29 +127,20 @@ void projectMenuUser(int id, user loggedUser){
             cin.get(selectedOption);
             cin.ignore();
 
-            if (isSelectedOptionValid(selectedOption, '1', '5') == false) {
+            if (isSelectedOptionValid(selectedOption, '1', '3') == false) {
                 printInvalidOptionMessage();
             }
-        } while (isSelectedOptionValid(selectedOption, '1', '5') == false);
+        } while (isSelectedOptionValid(selectedOption, '1', '3') == false);
 
         switch(selectedOption){
             case '1':
-                createSuite(id);
-                cout << "Suíte de testes criado com sucesso" << endl;
+                suiteTestMenu();
                 break;
             case '2':
-                listSuites(id);
-                cout << "Fim." << endl;
-                break;
-            case '3':
-                searchSuite(id);
-                cout << "Consulta realizada com sucesso" << endl;
-                break;
-            case '4':
                 generateReport(id);
                 cout << "Relatório gerado com sucesso" << endl;
                 break;
-            case '5':
+            case '3':
                 cout << "Saindo do projeto" << endl;
                 break;
             default:
@@ -173,5 +151,5 @@ void projectMenuUser(int id, user loggedUser){
         cout << "Pressione qualquer tecla para continuar..." << endl;
         cin.get();
         system ("clear");
-    } while (selectedOption != '5');
+    } while (selectedOption != '3');
 }

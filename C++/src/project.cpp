@@ -54,22 +54,20 @@ void allowPermissions(int id){
     int aux = throughArray(id, projects);
 
     if (projects[aux].id == id){
-        if (projects[aux].numberOfRequests > 0){
+        if (projects[aux].requests.size() > 0){
             string usersString = "";
 
             vector<string> vetor;
-            for (int i = 0; i < projects[aux].numberOfUsers; i++){
+            for (int i = 0; i < projects[aux].users.size(); i++){
                 usersString += projects[aux].users[i];
             }
-            int index = projects[aux].numberOfUsers;
-            for (int i = 0; i < projects[aux].numberOfRequests; i++){
+            for (int i = 0; i < projects[aux].requests.size(); i++){
                 char fileInput;
                 cout << "Dar permissão de acesso no projeto  " << projects[aux].name;
                 cout << " ao usuário " << projects[aux].requests[i] << " (s/n)? ";
                 cin >> fileInput;
                 if (fileInput == 's'){
                     usersString += projects[aux].requests[i];
-                    index++;
                 }
             }
 
@@ -83,6 +81,25 @@ void allowPermissions(int id){
     } else {
         cout << "Id não encontrado" << endl;
     }
+}
+
+void askPermission(user loggedUser){
+    vector<Project> projects = arquiveToArray();
+
+    string input;
+    cout << "Informe id do projeto: ";
+    getline(cin, input);
+
+    int id = stoi(input);
+
+    int aux = throughArray(id, projects);
+
+    if (projects[aux].id == id){
+        projects[aux].requests.push_back(loggedUser.login);
+    }
+
+    arrayToArquive(projects);
+
 }
 
 void split(string usersString, vector<string> vetor){
@@ -104,29 +121,14 @@ void deleteProject(int id){
     int aux = throughArray(id, projects);
     
     projects.erase(projects.begin() + aux);
-    //swapProject(projects, aux);
-    //projects.pop_back();
 
     arrayToArquive(projects);
-
 }
 
 void swapProject(vector<Project> projects, int aux){
     for (int i = aux; i < projects.size()-1; i ++){
         projects[aux] = projects[aux+1];
     }
-}
-
-void createSuite(int id){
-    //not implemented
-}
-
-void listSuites(int id){
-    //not implemented
-}
-
-void searchSuite(int id){
-    //not implemented
 }
 
 void generateReport(int id){

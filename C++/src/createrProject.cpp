@@ -31,8 +31,6 @@ void createProject(user creater){
     system("clear");
 
     newProject.owner = creater.login;
-    newProject.numberOfUsers = 0;
-    newProject.numberOfRequests = 0;
     vector<string> users;
     vector<string> requests;
     newProject.users = users;

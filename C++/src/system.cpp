@@ -40,18 +40,15 @@ void systemMenu(user loggedUser) {
         switch(selectedOption){
             case CREATE_PROJECT:
                 createProject(loggedUser);
-                cout << "Projeto criado" << endl;
-                //suiteTestMenu();
                 break;
             case ASK_FOR_ACCESS_PROJECT:
-                cleanFile();
-                cout << "Acesso solicitado" << endl;
+                askPermission(loggedUser);
                 break;
             case SEARCH_PROJECT:
-                verifyUserToProject(loggedUser);
+                // not implemented
                 break;
             case EDIT_PROJECT:
-                cout << "Projeto editado" << endl;
+                verifyUserToProject(loggedUser);
                 break;
             case EXIT:
                 cout << "Saindo do usuário atual..." << endl;
