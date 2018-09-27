@@ -4,10 +4,10 @@
 
 using namespace std;
 
-int throughArray(int id, vector<Project> projects, int size){
+int throughArray(int id, vector<Project> projects){
     int aux = 0;
 
-    while(projects[aux].id != id || aux < size){
+    while(projects[aux].id != id || aux < projects.size()){
         aux++;
     }
 
@@ -17,13 +17,13 @@ int throughArray(int id, vector<Project> projects, int size){
 void editNameProject(int id){
     vector<Project> projects;
 
-    int size = arquiveToArray(projects);
-    int aux = throughArray(id, projects, size);
+    arquiveToArray(projects);
+    int aux = throughArray(id, projects);
 
     if (projects[aux].id == id){
         cout << "Novo nome: ";
         getline(cin, projects[aux].name);
-        arrayToArquive(projects, size);
+        arrayToArquive(projects);
         cout << "Nome de projeto editado com sucesso." << endl;
     } else {
         cout << "Id não encontrado" << endl;
@@ -33,13 +33,13 @@ void editNameProject(int id){
 void editDescriptionProject(int id){
     vector<Project> projects;
 
-    int size = arquiveToArray(projects);
-    int aux = throughArray(id, projects, size);
+    arquiveToArray(projects);
+    int aux = throughArray(id, projects);
 
     if (projects[aux].id == id){
         cout << "Nova descrição: ";
         getline(cin, projects[aux].description);
-        arrayToArquive(projects, size);
+        arrayToArquive(projects);
         cout << "Descrição de projeto editado com sucesso." << endl;
     } else {
         cout << "Id não encontrado" << endl;
@@ -49,8 +49,8 @@ void editDescriptionProject(int id){
 void allowPermissions(int id){
     vector<Project> projects;
 
-    int size = arquiveToArray(projects);
-    int aux = throughArray(id, projects, size);
+    arquiveToArray(projects);
+    int aux = throughArray(id, projects);
 
     if (projects[aux].id == id){
         if (projects[aux].numberOfRequests > 0){
@@ -74,7 +74,7 @@ void allowPermissions(int id){
 
             split(usersString, vetor);
 
-            arrayToArquive(projects, size);
+            arrayToArquive(projects);
             cout << "Permissões dadas com sucesso" << endl;
         } else {
             cout << "Nenhum pedido de acesso." << endl;
@@ -100,18 +100,18 @@ void split(string usersString, vector<string> vetor){
 void deleteProject(int id){
     vector<Project> projects;
 
-    int size = arquiveToArray(projects);
-    int aux = throughArray(id, projects, size);
+    arquiveToArray(projects);
+    int aux = throughArray(id, projects);
     
-    swapProject(projects, size, aux);
+    swapProject(projects, aux);
     projects.pop_back();
 
-    arrayToArquive(projects, size);
+    arrayToArquive(projects);
 
 }
 
-void swapProject(vector<Project> projects, int size, int aux){
-    for (int i = aux; i < size-1; i ++){
+void swapProject(vector<Project> projects, int aux){
+    for (int i = aux; i < projects.size()-1; i ++){
         projects[aux] = projects[aux+1];
     }
 }

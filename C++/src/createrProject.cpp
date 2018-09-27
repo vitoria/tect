@@ -5,18 +5,6 @@
 using namespace std;
 
 /*
-Insere o valor 0 no arquivo, que indica o número de projetos criados.
-*/
-void incializeIdProject(){
-    fstream projectFile;
-    projectFile.open(PROJECT_FILE_NAME, ios::out);
-
-    projectFile << "0" << endl;
-
-    projectFile.close();
-}
-
-/*
 Cria um projeto de testes a partir do nome e descrição.
 */
 void createProject(user creater){
@@ -61,9 +49,9 @@ void saveProject(Project project){
     project.id = idProject();
 
     vector<Project> projects;
-    int size = arquiveToArray(projects) + 1;
+    arquiveToArray(projects);
     projects.push_back(project);
-    arrayToArquive(projects, size);
+    arrayToArquive(projects);
     
 }
 
@@ -72,10 +60,15 @@ Incrementa o número de projetos criados e retorna esse número.
 */
 int idProject(){
     vector<Project> projects;
+    int id = 1;
 
-    int size = arquiveToArray(projects);
+    arquiveToArray(projects);
 
-    return (projects[size-1].id) + 1;
+    if (projects.size() > 0) {
+        id = (projects[projects.size()-1].id) + 1;
+    }
+    
+    return id;
 }
 
 /*
@@ -86,9 +79,9 @@ bool verifyExistingProject(string name){
 
     vector<Project> projects;
 
-    int size = arquiveToArray(projects);
+    arquiveToArray(projects);
 
-    for (int i = 0; i < size; i++){
+    for (int i = 0; i < projects.size(); i++){
         if (projects[i].name.compare(name) == 0){
             existProject = true;
             break;

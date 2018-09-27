@@ -7,8 +7,8 @@ using namespace std;
 void verifyUserToProject(user loggedUser, int id){
     vector<Project> projects;
 
-    int size = arquiveToArray(projects);
-    int aux = throughArray(id, projects, size);
+    arquiveToArray(projects);
+    int aux = throughArray(id, projects);
 
     if (projects[aux].owner.compare(loggedUser.login) == 0){
         projectMenuOwner(id);
