@@ -10,6 +10,7 @@
 
 #include "generalPrints.h"
 #include "validation.h"
+#include "login.h"
 
 #define PROJECT_FILE_NAME "projects.dat"
 
@@ -19,20 +20,25 @@ struct Project{
     std::string description;
     std::string owner;
     int numberOfUsers;
-    vector<string> users;
+    std::vector<std::string> users;
     //std::string *users;
     int numberOfRequests;
-    vector<string> requests;
+    std::vector<std::string> requests;
     //std::string *requests;
 };
 
-void printProjectMenu();
-void projectMenu(int);
+void verifyUserToProject(user, int);
+void printProjectMenuOwner();
+void projectMenuOwner(int);
+void printProjectMenuUser();
+void projectMenuUser(int);
 void editNameProject(int);
 void editDescriptionProject(int);
 void allowPermissions(int);
-void allowPermissions(int);
+void split(std::string, std::vector<std::string>);
 void createSuite(int);
-void listSuites(int id);
-void searchSuite(int id);
+void listSuites(int);
+void searchSuite(int);
+void generateReport(int);
+void swapProject(std::vector<Project>, int, int);
 

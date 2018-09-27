@@ -26,14 +26,17 @@ void createProject(){
     printTectHeader;
     cout << "#------------# CRIAÇÃO DE PROJETO #----------#" << endl;
 
+    string name;
+
     do {
         cout << "Nome do projeto: ";
-        getline(cin, newProject.name);
-        if (verifyExistingProject() == true){
+        getline(cin, name);
+        if (verifyExistingProject(name) == true){
             cout << "Nome de projeto já criado";
         }
-    } while (verifyExistingProject() == true);
-
+    } while (verifyExistingProject(name) == true);
+    newProject.name = name;
+    
     cout << "Descrição do projeto: ";
     getline(cin, newProject.description);
 
