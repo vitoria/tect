@@ -9,6 +9,14 @@
 #include <sstream>
 #include <vector>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#include "testCase.h"
+#include "validation.h"
+#include "constants.h"
+
 struct Step {
     std::string description;
     std::string expectedResult;
@@ -20,10 +28,6 @@ struct Case{
     std::string objectives;
     std::string preconditions;
     std::vector<Step> steps;
-};
-
-struct testCases{
-    std::vector<Case> arrayCases;
 };
 
 void createCase();

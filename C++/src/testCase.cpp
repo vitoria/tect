@@ -1,9 +1,66 @@
 #include "testCase.h"
-#include "validation.h"
 
 using namespace std;
 
-testCases folder;
+string generateTestCaseFilePath(int projectId, int suiteId) {
+    return string(DATA_FOLDER_PATH) + "/" + to_string(projectId) + "/" + to_string(suiteId) + ".dat";
+}
+
+string generateTestCaseFolderPath(int projectId) {
+    return string(DATA_FOLDER_PATH) + "/" + to_string(projectId);
+}
+
+void writeCases(vector<Case> cases, int projectId, int suiteId) {
+    string filePath = generateTestCaseFilePath(projectId, suiteId);
+    string folderPath = generateTestCaseFolderPath(projectId);
+    if (isFolderCreated(folderPath)) {
+        ofstream casesFile(filePath, ios::out);
+        if (casesFile.is_open()) {
+            for (int i = 0; i < cases.size(); i++) {
+                casesFile << cases[i].idCase << endl << cases[i].name << endl << cases[i].objectives << endl << cases[i].preconditions << endl;
+                casesFile << cases[i].steps.size() << endl;
+                for (int j = 0; j < cases[i].steps.size(); j++) {
+                    casesFile << cases[i].steps[j].description << endl;
+                    casesFile << cases[i].steps[j].expectedResult << endl;
+                }
+            }
+        }
+    }
+}
+
+// std::vector<Case> readCases(int projectId, int suiteId) {
+//     std::ifstream suitesFile(SUITES_PATH, std::ios::in);
+//     std::vector<suite> suites;
+//     suite current;
+
+//     while(suitesFile >> current.id >> current.name >> current.description) {
+//         suites.push_back(current);
+//     }
+//     suitesFile.close();
+
+//     return suites;
+// }
+
+bool isFolderCreated (string folderPath) {
+    bool result;
+    struct stat st = {0};
+
+    if (stat(folderPath.c_str, &st) == -1) {
+        result = createFolder(folderPath);
+    } else {
+        result = true;
+    }
+
+    return result;
+}
+
+bool createFolder(string folderPath) {
+    bool result = false;
+    if (mkdir(folderPath.c_str, 0700) == 0) {
+        result = true;
+    }
+    return result;
+}
 
 void createCase() {
 
