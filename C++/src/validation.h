@@ -26,4 +26,4 @@ bool isCharANumber(char);
 
 bool isStringNumeric(std::string);
 
-std::string stringToUpper(std::string)
+std::string stringToUpper(std::string);
