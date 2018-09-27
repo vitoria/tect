@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <iomanip>
 
 /**
  * This struct represents a suite
@@ -130,10 +131,18 @@ void createSuite() {
  * saved in the suites file.
  */
 void listSuites() {
+    printHeader(SUITE_LIST_HEADER);
     std::vector<suite> suites = readSuites();
+    std::setfill('0');
+
+    showLine();
+    std::cout << TABLE_HEADER << std::endl;
+    showLine();
     for (int i = 0; i < suites.size(); i++) {
-        std::cout << suites[i].name << "   |   " << suites[i].description << std::endl;
+        std::cout << "-    " << std::setfill('0') << std::setw(4) << suites[i].id
+        << "    | " << truncate(suites[i].name, 28) << " -" << std::endl;
     }
+    showLine();
     pauseSystem();
 }
 
@@ -155,7 +164,7 @@ void goToProcediment(char optionSelected) {
             createSuite();
             break;
         case LIST_SUITES:
-            // TODO: go to the list suites procediment
+            listSuites();
             break;
         case SEARCH_SUITE:
             // TODO: go to the search suite procediment

@@ -11,3 +11,5 @@ void showMessage(std::string);
 void pauseSystem();
 
 std::string readOption();
+
+void showLine();

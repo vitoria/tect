@@ -43,3 +43,19 @@ bool isTextValid(std::string text) {
     std::string currentText = removeWhiteSpaces(text);
     return currentText.compare("") != 0;
 }
+
+string getWhiteSpaces(int size) {
+    string whiteSpaces = "";
+    for (int i = 0; i < (size - 1); i++) {
+        whiteSpaces += " ";
+    }
+    return whiteSpaces;
+}
+
+string truncate(string text, int size) {
+    if (text.size() > size) {
+        text = text.substr(size - 3);
+        text += SUSPENSION_POINTS;
+    }
+    return (text + getWhiteSpaces(size - text.size()));
+}

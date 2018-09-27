@@ -30,3 +30,7 @@ std::string readOption() {
     std::cin >> optionSelected;
     return optionSelected;
 }
+
+void showLine() {
+    std::cout << LINE << std::endl;
+}

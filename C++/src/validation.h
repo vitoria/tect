@@ -15,3 +15,5 @@ void printInvalidOptionMessage();
 std::string removeWhiteSpaces(std::string);
 
 bool isTextValid(std::string);
+
+std::string truncate(std::string, int);
