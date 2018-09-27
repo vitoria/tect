@@ -231,11 +231,11 @@ void editStepTestCase(int positSteps, int posic) {
     }
 }
 
-int generateId() {
+int generateId(vector<Case> cases) {
     int id = 1;
     
-    if (folder.cases.size() > 0) {
-        id = folder.cases[folder.cases.size() - 1].id + 1;
+    if (cases.size() > 0) {
+        id = cases[cases.size() - 1].id + 1;
     }
 
     return id;

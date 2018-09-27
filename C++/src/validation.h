@@ -25,3 +25,5 @@ int stringToInteger(std::string);
 bool isCharANumber(char);
 
 bool isStringNumeric(std::string);
+
+std::string stringToUpper(std::string)
