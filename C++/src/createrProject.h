@@ -12,6 +12,7 @@
 void printProjectMenu();
 void projectMenu();
 void createProject();
+void saveProject(Project);
 void incializeIdProject();
 int idProject();
-bool verifyExistingProject();
+bool verifyExistingProject(std::string);
