@@ -8,7 +8,7 @@ testCases folder;
 void createCase(int code) {
 
     Case caseImpl;
-    caseImpl.idProject = code;
+    caseImpl.idCase = code;
     cout << "Nome: ";
     getline(cin, caseImpl.name);
     cout << "Objetivo: ";
@@ -67,22 +67,22 @@ void editTestsCases(string name) {
         cout << "(3) Pré-Condições" << endl;
         cout << "(4) Passos" << endl;
         cout << "(0) Sair" << endl;
-        char opcao;
+        int opcao;
         cin >> opcao;
         switch(opcao){
-            case "1":
+            case 1:
                 cout << "Digite o novo nome:" << endl;
                 getline(cin, folder.arrayCases[posic].name);
                 break;
-            case "2":
+            case 2:
                 cout << "Digite o novo Objetivo:" << endl;
                 getline(cin, folder.arrayCases[posic].objectives);
                 break;
-            case "3":
+            case 3:
                 cout << "Digite as Pré-Condições:" << endl;
                 getline(cin, folder.arrayCases[posic].preconditions);
                 break;
-            case "4":
+            case 4:
                 cout << "Quer adicionar(1), alterar(2), ou remover(3)?" << endl;
                 int opcaoStep;
                 cin >> opcaoStep;
@@ -94,6 +94,7 @@ void editTestsCases(string name) {
                         cout << "Digite o novo resultado esperado:" << endl;
                         getline(cin, novoStep.expectedResult);
                         folder.arrayCases[posic].steps.push_back(novoStep);
+                        break;
                     case 2:
                         cout << "Qual passo voce deseja alterar?" << endl;
                         int posStep;
@@ -102,16 +103,16 @@ void editTestsCases(string name) {
                         getline(cin, folder.arrayCases[posic].steps[posStep-1].description);
                         cout << "Digite o novo resultado esperado:" << endl;
                         getline(cin, folder.arrayCases[posic].steps[posStep-1].expectedResult);
-
+                        break;
                     case 3:
                         cout << "Qual passo voce deseja remover?" << endl;
                         int posStep;
                         cin >> posStep;
                         folder.arrayCases[posic].steps.erase(folder.arrayCases[posic].steps.begin() + (posStep-1));
-
+                        break;
                     default:
                         cout << "Opção inválida" << endl;
-
+                        break;
                 }
 
             break;
@@ -130,6 +131,11 @@ int findTestCase(string name) {
          };
     };
     return -1;    
+}
+
+void removeTestCase(string name) {
+    int i = findTestCase(name);
+    folder.arrayCases.erase(folder.arrayCases.begin()+ i);
 }
 
 
