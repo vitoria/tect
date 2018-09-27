@@ -84,8 +84,8 @@ suite readSuiteInformation() {
  * in the suites. If find it, returns a natural number,
  * otherwise returns a negative one.
  */
-int searchSuite(std::vector<suite> suites, suite current) {
-    std::string name = removeWhiteSpaces(current.name);
+int searchSuite(std::vector<suite> suites, std::string current) {
+    std::string name = removeWhiteSpaces(current);
     int index = 0;
 
     while (index < suites.size() && 
@@ -104,7 +104,7 @@ int searchSuite(std::vector<suite> suites, suite current) {
  * This method checks if the suites contains a suite with the same name
  * than the current.
  */
-bool containsSuite(std::vector<suite> suites, suite current) {
+bool containsSuite(std::vector<suite> suites, std::string current) {
     return searchSuite(suites, current) != -1;
 }
 
@@ -116,7 +116,7 @@ void createSuite() {
     std::vector<suite> suites = readSuites();
     suite newSuite = readSuiteInformation();
 
-    if (containsSuite(suites, newSuite)) {
+    if (containsSuite(suites, newSuite.name)) {
         showMessage(CREATION_FAILED);
     } else {
         newSuite.id = generateId(suites);
@@ -147,6 +147,39 @@ void listSuites() {
 }
 
 /**
+ * It read the user's selected suite tests and returns it.
+ */
+std::string readSelectedSuite() {
+    std::string selectedSuite;
+    std::cout << CHOOSE_SUITE;
+    std::cin >> selectedSuite;
+    return selectedSuite;
+}
+
+/**
+ * It deletes the suite from index in the suites.
+ */
+void deleteSuite(std::vector<suite> suites, int index) {
+    suites.erase(suites.begin() + index);
+    writeSuites(suites);
+}
+
+/**
+ * Delete suite test procedure.
+ */
+void deleteSuite() {
+    printHeader(DELETE_SUITE_HEADER);
+    std::string selectedSuite = readSelectedSuite();
+    std::vector<suite> suites = readSuites();
+
+    if (containsSuite(suites, selectedSuite)) {
+        deleteSuite(suites, searchSuite(suites, selectedSuite));
+        showMessage(SUITE_DELETED);
+    } else {
+        showMessage(SUITE_NOT_FOUND);
+    }
+}
+/**
  * It shows the suiteTests main menu.
  */
 void showSuiteTestMenu() {
@@ -173,7 +206,7 @@ void goToProcediment(char optionSelected) {
             // TODO: go to the edit suite procediment
             break;
         case DELETE_SUITE:
-            // TODO: go to the delete procediment
+            deleteSuite();
             break;
         default:
             break;
