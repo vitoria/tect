@@ -1,5 +1,5 @@
-#include <testCase.h>
-#include <validation.h>
+#include "testCase.h"
+#include "validation.h"
 
 using namespace std;
 
@@ -129,6 +129,7 @@ void removeTestCase() {
 
 void editStepTestCase(int positSteps, int posic) {
     Step novoStep;
+    int posStep;
     switch(positSteps){
         case 1:
             cout << "Digite a nova descrição:" << endl;
@@ -139,7 +140,6 @@ void editStepTestCase(int positSteps, int posic) {
             break;
         case 2:
             cout << "Qual passo voce deseja alterar?" << endl;
-            int posStep;
             cin >> posStep;
             cout << "Digite a nova descrição:" << endl;
             getline(cin, folder.arrayCases[posic].steps[posStep-1].description);
@@ -148,7 +148,6 @@ void editStepTestCase(int positSteps, int posic) {
             break;
         case 3:
             cout << "Qual passo voce deseja remover?" << endl;
-            int posStep;
             cin >> posStep;
             folder.arrayCases[posic].steps.erase(folder.arrayCases[posic].steps.begin() + (posStep-1));
             break;
@@ -219,18 +218,6 @@ void printMenuPrincipal() {
     cout << "(4) Pesquisar um caso de teste" << endl;
     cout << "(5) remover um caso de teste" << endl;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

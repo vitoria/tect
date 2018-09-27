@@ -9,28 +9,33 @@
 #include <sstream>
 #include <vector>
 
-
-
 struct Step {
-    string description;
-    string expectedResult;
+    std::string description;
+    std::string expectedResult;
 };
+
 struct Case{
     int idCase;
-    string name;
-    string objectives;
-    string preconditions;
-    vector<Step> steps;
+    std::string name;
+    std::string objectives;
+    std::string preconditions;
+    std::vector<Step> steps;
 };
-
 
 struct testCases{
-    vector<Case> arrayCases;
+    std::vector<Case> arrayCases;
 };
 
-void createCase(int);
+void createCase();
 void listTestsCases();
 void searchTestsCases();
-void editTestsCases(string name);
-int findTestCase(string name);
-void removeTestCase(string name);
+void editTestsCases();
+int findTestCase(std::string);
+void removeTestCase();
+int findTestCasePorId(int);
+void removeTestCase();
+void editStepTestCase(int, int);
+int generateId();
+char editTestsMenu();
+void menuPrincipalCases();
+void printMenuPrincipal();
