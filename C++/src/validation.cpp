@@ -26,3 +26,20 @@ void printInvalidOptionMessage() {
     cin.get();
     system (CLEAR);
 }
+
+std::string removeWhiteSpaces(std::string str) {
+    std::string result = "";
+
+    for (int i = 0; i < str.size(); i++) {
+        if (str[i] != ' ') {
+            result += str[i];
+        }
+    }
+
+    return result;
+}
+
+bool isTextValid(std::string text) {
+    std::string currentText = removeWhiteSpaces(text);
+    return currentText.compare("") != 0;
+}

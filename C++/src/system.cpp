@@ -1,5 +1,6 @@
 #include "system.h"
 #include "constants.h"
+#include "suiteTest.h"
 
 using namespace std;
 
@@ -36,6 +37,7 @@ void systemMenu(user loggedUser) {
         switch(selectedOption){
             case CREATE_PROJECT:
                 cout << "Projeto criado" << endl;
+                suiteTestMenu();
                 break;
             case ASK_FOR_ACCESS_PROJECT:
                 cout << "Acesso solicitado" << endl;
