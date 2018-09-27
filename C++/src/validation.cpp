@@ -27,8 +27,8 @@ void printInvalidOptionMessage() {
     system (CLEAR);
 }
 
-std::string removeWhiteSpaces(std::string str) {
-    std::string result = "";
+string removeWhiteSpaces(string str) {
+    string result = "";
 
     for (int i = 0; i < str.size(); i++) {
         if (str[i] != ' ') {
@@ -39,8 +39,8 @@ std::string removeWhiteSpaces(std::string str) {
     return result;
 }
 
-bool isTextValid(std::string text) {
-    std::string currentText = removeWhiteSpaces(text);
+bool isTextValid(string text) {
+    string currentText = removeWhiteSpaces(text);
     return currentText.compare("") != 0;
 }
 

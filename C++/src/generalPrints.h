@@ -4,7 +4,7 @@
 
 void printHeader();
 
-void printHeader(std::string subtitle);
+void printHeader(std::string);
 
 void showMessage(std::string);
 
