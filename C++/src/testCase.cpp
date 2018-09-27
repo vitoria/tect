@@ -17,29 +17,46 @@ void writeCases(vector<Case> cases, int projectId, int suiteId) {
         ofstream casesFile(filePath, ios::out);
         if (casesFile.is_open()) {
             for (int i = 0; i < cases.size(); i++) {
-                casesFile << cases[i].idCase << endl << cases[i].name << endl << cases[i].objectives << endl << cases[i].preconditions << endl;
+                casesFile << cases[i].id << endl << cases[i].name << endl << cases[i].objectives << endl << cases[i].preconditions << endl;
                 casesFile << cases[i].steps.size() << endl;
                 for (int j = 0; j < cases[i].steps.size(); j++) {
                     casesFile << cases[i].steps[j].description << endl;
                     casesFile << cases[i].steps[j].expectedResult << endl;
                 }
             }
+            casesFile.close();
         }
+    } else {
+        cout << "CASE FILE NOT CREATED FLAG" << endl;
     }
 }
 
-// std::vector<Case> readCases(int projectId, int suiteId) {
-//     std::ifstream suitesFile(SUITES_PATH, std::ios::in);
-//     std::vector<suite> suites;
-//     suite current;
+vector<Case> readCases(int projectId, int suiteId) {
+    string filePath = generateTestCaseFilePath(projectId, suiteId);
+    vector<Case> cases;
+    Case currentCase;
+    Step currentCaseStep;
+    int stepsVectorSize;
 
-//     while(suitesFile >> current.id >> current.name >> current.description) {
-//         suites.push_back(current);
-//     }
-//     suitesFile.close();
+    ifstream casesFile(filePath, ios::in);
+    if (casesFile.is_open()) {
 
-//     return suites;
-// }
+        while(casesFile >> currentCase.id) {
+            casesFile >> currentCase.name >> currentCase.objectives >> currentCase.preconditions;
+            casesFile >> stepsVectorSize;
+            for (int i = 0; i < stepsVectorSize; i++) {
+                casesFile >> currentCaseStep.description >> currentCaseStep.expectedResult;
+                currentCase.steps.push_back(currentCaseStep);
+            }
+            cases.push_back(currentCase);
+        }
+        casesFile.close();
+    } else {
+        cout << "CASE FILE NOT OPENED FLAG" << endl;
+    }
+
+    return cases;
+}
 
 bool isFolderCreated (string folderPath) {
     bool result;
@@ -66,7 +83,7 @@ void createCase() {
 
     Case caseImpl;
     Step step;
-    caseImpl.idCase = generateId();
+    caseImpl.id = generateId();
     cout << "Nome: ";
     getline(cin, caseImpl.name);
     cout << "Objetivo: ";
@@ -84,14 +101,14 @@ void createCase() {
         cin >> haveNext;
     } while (haveNext == 's' && caseImpl.steps.size() <= 9);
 
-    folder.arrayCases.push_back(caseImpl);
+    folder.cases.push_back(caseImpl);
 }
 
 void listTestsCases() {
 
     cout << "Lista de casos de teste:" << endl;
-    for(int i = 0; i < folder.arrayCases.size(); i++) {
-        cout << "Caso " << i+1 << " Nome: " << folder.arrayCases[i].name <<endl;
+    for(int i = 0; i < folder.cases.size(); i++) {
+        cout << "Caso " << i+1 << " Nome: " << folder.cases[i].name <<endl;
     }
 }
 
@@ -105,12 +122,12 @@ void searchTestsCases() {
         cout << "Caso não encontrado" << endl;
         return searchTestsCases();
     }
-    cout << "Nome: " << folder.arrayCases[posic].name << endl;
-    cout << "Objetivos: " << folder.arrayCases[posic].objectives << endl;
-    cout << "Pré-condições: " << folder.arrayCases[posic].preconditions << endl;
-    for(int j = 0; j < folder.arrayCases[posic].steps.size(); j++) {
-        cout << "Descrição: " << folder.arrayCases[posic].steps[j].description << endl;
-        cout << "Resultados esperados: " << folder.arrayCases[posic].steps[j].expectedResult << endl;
+    cout << "Nome: " << folder.cases[posic].name << endl;
+    cout << "Objetivos: " << folder.cases[posic].objectives << endl;
+    cout << "Pré-condições: " << folder.cases[posic].preconditions << endl;
+    for(int j = 0; j < folder.cases[posic].steps.size(); j++) {
+        cout << "Descrição: " << folder.cases[posic].steps[j].description << endl;
+        cout << "Resultados esperados: " << folder.cases[posic].steps[j].expectedResult << endl;
         }
     }
 
@@ -129,15 +146,15 @@ void editTestsCases() {
         switch(opcao){
             case '1':
                 cout << "Digite o novo nome:" << endl;
-                getline(cin, folder.arrayCases[posic].name);
+                getline(cin, folder.cases[posic].name);
                 break;
             case '2':
                 cout << "Digite o novo Objetivo:" << endl;
-                getline(cin, folder.arrayCases[posic].objectives);
+                getline(cin, folder.cases[posic].objectives);
                 break;
             case '3':
                 cout << "Digite as Pré-Condições:" << endl;
-                getline(cin, folder.arrayCases[posic].preconditions);
+                getline(cin, folder.cases[posic].preconditions);
                 break;
             case '4':
                 cout << "Quer adicionar(1), alterar(2), ou remover(3)?" << endl;
@@ -156,8 +173,8 @@ void editTestsCases() {
 
 
 int findTestCase(string name) {
-    for(int i = 0; i < folder.arrayCases.size(); i++) {
-         if(name == folder.arrayCases[i].name) {
+    for(int i = 0; i < folder.cases.size(); i++) {
+         if(name == folder.cases[i].name) {
              return i;
          }
     }
@@ -165,8 +182,8 @@ int findTestCase(string name) {
 }
 
 int findTestCasePorId(int id) {
-    for(int i = 0; i < folder.arrayCases.size(); i++) {
-         if(id == folder.arrayCases[i].idCase) {
+    for(int i = 0; i < folder.cases.size(); i++) {
+         if(id == folder.cases[i].id) {
              return i;
          }
     }
@@ -175,13 +192,13 @@ int findTestCasePorId(int id) {
 
 void removeTestCase() {
     cout << "Qual caso voce deseja remover? (por id)" << endl;
-    for(int i = 0; i < folder.arrayCases.size(); i++) {
-        cout << folder.arrayCases[i].idCase << " " << folder.arrayCases[i].name << endl;
+    for(int i = 0; i < folder.cases.size(); i++) {
+        cout << folder.cases[i].id << " " << folder.cases[i].name << endl;
     }
     int idEscolhido;
     cin >> idEscolhido;
     int i = findTestCasePorId(idEscolhido);
-    folder.arrayCases.erase(folder.arrayCases.begin()+ i);
+    folder.cases.erase(folder.cases.begin()+ i);
 }
 
 void editStepTestCase(int positSteps, int posic) {
@@ -193,20 +210,20 @@ void editStepTestCase(int positSteps, int posic) {
             getline(cin, novoStep.description);
             cout << "Digite o novo resultado esperado:" << endl;
             getline(cin, novoStep.expectedResult);
-            folder.arrayCases[posic].steps.push_back(novoStep);
+            folder.cases[posic].steps.push_back(novoStep);
             break;
         case 2:
             cout << "Qual passo voce deseja alterar?" << endl;
             cin >> posStep;
             cout << "Digite a nova descrição:" << endl;
-            getline(cin, folder.arrayCases[posic].steps[posStep-1].description);
+            getline(cin, folder.cases[posic].steps[posStep-1].description);
             cout << "Digite o novo resultado esperado:" << endl;
-            getline(cin, folder.arrayCases[posic].steps[posStep-1].expectedResult);
+            getline(cin, folder.cases[posic].steps[posStep-1].expectedResult);
             break;
         case 3:
             cout << "Qual passo voce deseja remover?" << endl;
             cin >> posStep;
-            folder.arrayCases[posic].steps.erase(folder.arrayCases[posic].steps.begin() + (posStep-1));
+            folder.cases[posic].steps.erase(folder.cases[posic].steps.begin() + (posStep-1));
             break;
         default:
             cout << "Opção inválida" << endl;
@@ -217,8 +234,8 @@ void editStepTestCase(int positSteps, int posic) {
 int generateId() {
     int id = 1;
     
-    if (folder.arrayCases.size() > 0) {
-        id = folder.arrayCases[folder.arrayCases.size() - 1].idCase + 1;
+    if (folder.cases.size() > 0) {
+        id = folder.cases[folder.cases.size() - 1].id + 1;
     }
 
     return id;

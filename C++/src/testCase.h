@@ -23,7 +23,7 @@ struct Step {
 };
 
 struct Case{
-    int idCase;
+    int id;
     std::string name;
     std::string objectives;
     std::string preconditions;
