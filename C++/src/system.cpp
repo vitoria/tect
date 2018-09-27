@@ -1,4 +1,6 @@
 #include "system.h"
+#include "constants.h"
+#include "suiteTest.h"
 
 using namespace std;
 
@@ -22,29 +24,31 @@ void systemMenu(user loggedUser) {
 
             getline(cin,optionInput);
 
-            if (isMenuInputStringValid(optionInput, '1', '5') == false) {
+            if (isMenuInputStringValid(optionInput, CREATE_PROJECT, LOGOUT) == false) {
                 printInvalidOptionMessage();
             }
-        } while (isMenuInputStringValid(optionInput, '1', '5') == false);
 
-        system("clear");
+        } while (isMenuInputStringValid(optionInput, CREATE_PROJECT, LOGOUT) == false);
+
+        system(CLEAR);
 
         selectedOption = optionInput[0];
 
         switch(selectedOption){
-            case '1':
+            case CREATE_PROJECT:
                 cout << "Projeto criado" << endl;
+                suiteTestMenu();
                 break;
-            case '2':
+            case ASK_FOR_ACCESS_PROJECT:
                 cout << "Acesso solicitado" << endl;
                 break;
-            case '3':
+            case SEARCH_PROJECT:
                 cout << "Projeto encontrado" << endl;
                 break;
-            case '4':
+            case EDIT_PROJECT:
                 cout << "Projeto editado" << endl;
                 break;
-            case '5':
+            case EXIT:
                 cout << "Saindo do usuário atual..." << endl;
                 logout();
                 break;
@@ -53,19 +57,15 @@ void systemMenu(user loggedUser) {
                 break;
         }
     
-        cout << "Pressione ENTER para continuar..." << endl;
+        cout << PAUSE_MSG << endl;
         cin.get();
-        system ("clear");
-    } while (selectedOption != '5');
+        system(CLEAR);
+    } while(selectedOption != LOGOUT);
 }
 
 void printSystemMenu(string userName) {
-    system ("clear");
-    printTectHeader();
-    cout << "Bem-vindo " << userName << "! Selecione a opção desejada: " << endl;
-    cout << "(1) Criar Projeto" << endl;
-    cout << "(2) Pedir acesso a um projeto" << endl;
-    cout << "(3) Pesquisar Projeto" << endl;
-    cout << "(4) Editar Projeto" << endl;
-    cout << "(5) Logout" << endl;
+    system(CLEAR);
+    printHeader();
+    cout << "Bem-vindo " << userName << "! Selecione a opção desejada: \n";
+    cout << MAIN_MENU << endl;
 }
