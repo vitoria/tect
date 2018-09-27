@@ -21,10 +21,8 @@ struct Project{
     std::string owner;
     int numberOfUsers;
     std::vector<std::string> users;
-    //std::string *users;
     int numberOfRequests;
     std::vector<std::string> requests;
-    //std::string *requests;
 };
 
 void verifyUserToProject(user, int);

@@ -15,8 +15,6 @@ int arquiveToArray(vector<Project> arquive_split){
 
     size = stoi(fileOutput); 
 
-    //arquive_split = new Project[size];
-
     for (int i = 0; i < size; i++ ){
         Project project;
         getline(arquive, fileOutput); 
@@ -31,7 +29,6 @@ int arquiveToArray(vector<Project> arquive_split){
         }
 
         arquive_split.push_back(project);
-        //arquive_split[i] = project;
     }
 
     arquive.close();
@@ -40,6 +37,18 @@ int arquiveToArray(vector<Project> arquive_split){
 }
 
 
-void arrayToArquive(vector<Project> arquive_split){
-     // Not implemented
+void arrayToArquive(vector<Project> arquive_split, int size){
+     /*projectFile.open(PROJECT_FILE_NAME, ios::out | ios::app);
+    if (projectFile.is_open()){
+        projectFile << project.id << endl << project.name << endl << project.description << endl;
+        projectFile << project.owner << endl;
+        for (int i = 0; i < project.numberOfUsers; i++){
+            projectFile << project.users[i] << endl;
+        }
+        projectFile.close();
+
+        cout << "Projeto criado com sucesso!" << endl;
+    } else {
+        cout << "Erro ao criar projeto " << project.name << endl;
+    }*/
 } 

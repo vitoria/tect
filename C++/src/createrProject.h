@@ -11,7 +11,7 @@
 
 void printProjectMenu();
 void projectMenu();
-void createProject();
+void createProject(user);
 void saveProject(Project);
 void incializeIdProject();
 int idProject();

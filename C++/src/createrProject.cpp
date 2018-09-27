@@ -18,7 +18,7 @@ void incializeIdProject(){
 /*
 Cria um projeto de testes a partir do nome e descrição.
 */
-void createProject(){
+void createProject(user creater){
 
     Project newProject;
 
@@ -42,6 +42,14 @@ void createProject(){
 
     system("clear");
 
+    newProject.owner = creater.login;
+    newProject.numberOfUsers = 0;
+    newProject.numberOfRequests = 0;
+    vector<string> users;
+    vector<string> requests;
+    newProject.users = users;
+    newProject.requests = requests;
+
     saveProject(newProject);
     
 }
@@ -54,27 +62,13 @@ void saveProject(Project project){
     vector<Project> projects;
     int size = arquiveToArray(projects) + 1;
     projects.push_back(project);
-    arrayToArquive(projects);
+    arrayToArquive(projects, size);
     
-    /*projectFile.open(PROJECT_FILE_NAME, ios::out | ios::app);
-    if (projectFile.is_open()){
-        projectFile << project.id << endl << project.name << endl << project.description << endl;
-        projectFile << project.owner << endl;
-        for (int i = 0; i < project.numberOfUsers; i++){
-            projectFile << project.users[i] << endl;
-        }
-        projectFile.close();
-
-        cout << "Projeto criado com sucesso!" << endl;
-    } else {
-        cout << "Erro ao criar projeto " << project.name << endl;
-    }*/
 }
 
 /*
 Incrementa o número de projetos criados e retorna esse número.
 */
-//falta sobrescrever linha com o número de projetos
 int idProject(){
     vector<Project> projects;
 
@@ -86,7 +80,6 @@ int idProject(){
 /*
 Verifica se um nome de projeto já foi criado antes.
 */
-
 bool verifyExistingProject(string name){
     bool existProject = false;
 
