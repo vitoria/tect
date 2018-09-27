@@ -4,6 +4,7 @@
 #include <cctype>
 #include <stdlib.h>
 #include <cstdlib>
+#
 #include <fstream>
 #include <string>
 #include <sys/types.h>
@@ -18,7 +19,10 @@ struct user {
     std::string name;
 };
 
-bool existingUserLogin(user*);
+bool existingUserLogin(user *);
+void saveLoggedUser(user *);
+bool isUserLogged(user *);
+void logout();
 bool registerNewUser();
 bool isFolderCreated (const char*);
 bool createFolder(const char*);
