@@ -16,6 +16,7 @@
 #include "testCase.h"
 #include "validation.h"
 #include "constants.h"
+#include "generalPrints.h"
 
 #define OBJECTIVE "Objetivo: "
 #define PRECONDITIONS "Pré-condições: "
@@ -27,6 +28,7 @@
 #define CASE_STEP_DESCRIPTION "Descrição do passo: "
 #define CASE_STEP_EXPECTED_RESULT "Resultado esperado para o passo: "
 #define CASE_STEP_CONTINUE_MESSAGE "Deseja inserir outro passo (S/N)?"
+#define CREATE_CASE_HEADER "#----------# CRIAR CASO DE TESTE #---------#"
 
 struct Step {
     std::string description;
@@ -45,6 +47,8 @@ struct Case{
 Case readCaseInformation();
 int searchCase(std::vector<Case>, std::string);
 int searchCase(std::vector<Case>, int);
+bool containsCase(std::vector<Case>, std::string);
+bool containsCase(std::vector<Case>, int);
 void createCase(int, int);
 void listTestsCases();
 void searchTestsCases();

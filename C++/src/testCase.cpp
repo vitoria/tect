@@ -140,11 +140,26 @@ int searchCase(vector<Case> cases, int id) {
     return index;
 }
 
+bool containsCase(vector<Case> cases, string current) {
+    return searchCase(cases, current) != -1;
+}
+
+bool containsCase(vector<Case> cases, int id) {
+    return searchCase(cases, id) != -1;
+}
+
 void createCase(int projectId, int suiteId) {
+    printHeader(CREATE_CASE_HEADER);
     vector<Case> cases = readCases(projectId, suiteId);
-
     Case newCase = readCaseInformation();
-
+    if (containsCase(cases, newCase.name)) {
+        showMessage(CREATION_FAILED);
+    } else {
+        newCase.id = generateId(cases);
+        cases.push_back(newCase);
+        writeCases(cases, projectId, suiteId);
+        showMessage(CREATION_SUCCESS);
+    }
     cases.push_back(newCase);
 }
 
