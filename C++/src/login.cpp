@@ -1,16 +1,14 @@
 #include "login.h"
-
-#define USERS_FILE_PATH "data/users.dat"
-#define DATA_FOLDER_PATH "data"
+#include "constants.h"
 
 using namespace std;
 
 bool existingUserLogin(user *loggedUser) {
     string user, password, name;
     bool isLogged = false, foundUser = false;
-    system("clear");
-    printTectHeader();
-    cout << "#------------# LOGIN DE USUÁRIO #----------#" << endl;
+    system(CLEAR);
+    printHeader();
+    cout << LOGIN_HEADER << endl;
     
     cout << "Login: ";
     getline(cin, user);
@@ -49,16 +47,47 @@ bool existingUserLogin(user *loggedUser) {
 
     usersFile.close();
 
+    if (isLogged == true) {
+        saveLoggedUser(loggedUser);
+    }
+
     return isLogged;
+}
+
+void saveLoggedUser(user *loggedUser) {
+    ofstream loggedUserFile;
+    loggedUserFile.open(LOGGED_USER_FILE_PATH, ios::out);
+    if (loggedUserFile.is_open() == true) {
+        loggedUserFile << loggedUser->login << endl;
+        loggedUserFile << loggedUser->name << endl;
+        loggedUserFile.close();
+    }
+}
+
+bool isUserLogged(user *loggedUser) {
+    bool isLogged = false;
+    ifstream loggedUserFile;
+    loggedUserFile.open(LOGGED_USER_FILE_PATH, ios::in);
+    if (loggedUserFile.is_open() == true) {
+        getline(loggedUserFile, loggedUser->login);
+        getline(loggedUserFile, loggedUser->name);
+        isLogged = true;
+        loggedUserFile.close();
+    }
+    return isLogged;
+}
+
+void logout() {
+    remove(LOGGED_USER_FILE_PATH);
 }
 
 bool registerNewUser() {
     string name, user, password, passwordVerification;
     bool isRegistered = false;
 
-    system("clear");
-    printTectHeader();
-    cout << "#----------# CADASTRO DE USUÁRIO #---------#" << endl;
+    system(CLEAR);
+    printHeader();
+    cout << SIGN_UP_HEADER << endl;
 
     cout << "Nome: ";
     getline(cin, name);
@@ -72,7 +101,7 @@ bool registerNewUser() {
     cout << "Informe a senha novamente: ";
     getline(cin, passwordVerification);
 
-    system("clear");
+    system(CLEAR);
     if (isUserAlredyRegistered(user) == false) {
         if (password.compare(passwordVerification) == 0) {
 
@@ -142,52 +171,55 @@ bool isUserAlredyRegistered(string user) {
 }
 
 void printLoginMenu() {
-    system ("clear");
-    printTectHeader();
-    cout << "Bem-vindo! Selecione a opção desejada: " << endl;
-    cout << "(1) Efetuar login" << endl;
-    cout << "(2) Cadastrar novo usuário" << endl;
-    cout << "(3) Sair" << endl;
+    system (CLEAR);
+    printHeader();
+    cout << LOGIN_MENU << endl;
 }
 
 bool loginMenu(user *loggedUser, bool *isDone) {
     string optionInput;
     char selectedOption;
-    bool isLogged = false;
+    bool isLogged = isUserLogged(loggedUser);
 
-    do {
-        printLoginMenu();
+    if (isLogged == false) {
+        do {
+            printLoginMenu();
 
-        getline(cin,optionInput);
+            getline(cin,optionInput);
 
-        if (isMenuInputStringValid(optionInput, '1', '3') == false) {
+        if (isMenuInputStringValid(optionInput, LOGIN, LOGOUT) == false) {
             printInvalidOptionMessage();
         }
-    } while (isMenuInputStringValid(optionInput, '1', '3') == false);
+    } while (isMenuInputStringValid(optionInput, LOGIN, LOGOUT) == false);
 
-    selectedOption = optionInput[0];
+        selectedOption = optionInput[0];
 
     switch(selectedOption){
-        case '1':
+        case LOGIN:
             isLogged = existingUserLogin(loggedUser);
             break;
-        case '2':
+        case SIGN_UP:
             registerNewUser();
             break;
-        case '3':
+        case LOGOUT:
             cout << "Encerrando sistema..." << endl;
             isLogged = false;
             *isDone = true;
             break;
         default:
-            cout << "ERRO!" << endl;
+            cout << INVALID_OPTION << endl;
             isLogged = false;
             *isDone = true;
             break;
+        }
+
+    } else {
+        cout << "Bem-vindo de volta " << loggedUser->name << "!" << endl;
     }
-    cout << "Pressione ENTER para continuar..." << endl;
+
+    cout << PAUSE_MSG << endl;
     cin.get();
-    system ("clear");
+    system (CLEAR);
 
     return isLogged;
 }

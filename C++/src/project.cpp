@@ -4,10 +4,17 @@
 
 using namespace std;
 
+<<<<<<< HEAD
 int throughArray(int id, vector<Project> projects, int size){
     int aux = 0;
 
     while(projects[aux].id != id || aux < size){
+=======
+int throughArray(int id, vector<Project> projects){
+    int aux = 0;
+
+    while(projects[aux].id != id || aux < projects.size()){
+>>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
         aux++;
     }
 
@@ -17,13 +24,22 @@ int throughArray(int id, vector<Project> projects, int size){
 void editNameProject(int id){
     vector<Project> projects;
 
+<<<<<<< HEAD
     int size = arquiveToArray(projects);
     int aux = throughArray(id, projects, size);
+=======
+    arquiveToArray(projects);
+    int aux = throughArray(id, projects);
+>>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
 
     if (projects[aux].id == id){
         cout << "Novo nome: ";
         getline(cin, projects[aux].name);
+<<<<<<< HEAD
         arrayToArquive(projects, size);
+=======
+        arrayToArquive(projects);
+>>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
         cout << "Nome de projeto editado com sucesso." << endl;
     } else {
         cout << "Id não encontrado" << endl;
@@ -33,13 +49,22 @@ void editNameProject(int id){
 void editDescriptionProject(int id){
     vector<Project> projects;
 
+<<<<<<< HEAD
     int size = arquiveToArray(projects);
     int aux = throughArray(id, projects, size);
+=======
+    arquiveToArray(projects);
+    int aux = throughArray(id, projects);
+>>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
 
     if (projects[aux].id == id){
         cout << "Nova descrição: ";
         getline(cin, projects[aux].description);
+<<<<<<< HEAD
         arrayToArquive(projects, size);
+=======
+        arrayToArquive(projects);
+>>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
         cout << "Descrição de projeto editado com sucesso." << endl;
     } else {
         cout << "Id não encontrado" << endl;
@@ -49,8 +74,13 @@ void editDescriptionProject(int id){
 void allowPermissions(int id){
     vector<Project> projects;
 
+<<<<<<< HEAD
     int size = arquiveToArray(projects);
     int aux = throughArray(id, projects, size);
+=======
+    arquiveToArray(projects);
+    int aux = throughArray(id, projects);
+>>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
 
     if (projects[aux].id == id){
         if (projects[aux].numberOfRequests > 0){
@@ -74,7 +104,11 @@ void allowPermissions(int id){
 
             split(usersString, vetor);
 
+<<<<<<< HEAD
             arrayToArquive(projects, size);
+=======
+            arrayToArquive(projects);
+>>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
             cout << "Permissões dadas com sucesso" << endl;
         } else {
             cout << "Nenhum pedido de acesso." << endl;
@@ -100,6 +134,7 @@ void split(string usersString, vector<string> vetor){
 void deleteProject(int id){
     vector<Project> projects;
 
+<<<<<<< HEAD
     int size = arquiveToArray(projects);
     int aux = throughArray(id, projects, size);
     
@@ -112,6 +147,20 @@ void deleteProject(int id){
 
 void swapProject(vector<Project> projects, int size, int aux){
     for (int i = aux; i < size-1; i ++){
+=======
+    arquiveToArray(projects);
+    int aux = throughArray(id, projects);
+    
+    swapProject(projects, aux);
+    projects.pop_back();
+
+    arrayToArquive(projects);
+
+}
+
+void swapProject(vector<Project> projects, int aux){
+    for (int i = aux; i < projects.size()-1; i ++){
+>>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
         projects[aux] = projects[aux+1];
     }
 }

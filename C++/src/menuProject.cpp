@@ -7,8 +7,13 @@ using namespace std;
 void verifyUserToProject(user loggedUser, int id){
     vector<Project> projects;
 
+<<<<<<< HEAD
     int size = arquiveToArray(projects);
     int aux = throughArray(id, projects, size);
+=======
+    arquiveToArray(projects);
+    int aux = throughArray(id, projects);
+>>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
 
     if (projects[aux].owner.compare(loggedUser.login) == 0){
         projectMenuOwner(id);
@@ -31,7 +36,11 @@ void verifyUserToProject(user loggedUser, int id){
 
 void printProjectMenuOwner(){
     system ("clear");
+<<<<<<< HEAD
     printTectHeader();
+=======
+    printHeader();
+>>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
     cout << "Menu Projeto Dono" << endl; 
     cout << "Selecione a opção desejada: " << endl;
     cout << "(1) Editar nome do projeto" << endl;
@@ -106,7 +115,11 @@ void projectMenuOwner(int id){
 
 void printProjectMenuUser(){
     system ("clear");
+<<<<<<< HEAD
     printTectHeader();
+=======
+    printHeader();
+>>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
     cout << "Menu Projeto Usuário Com Acesso" << endl; 
     cout << "Selecione a opção desejada: " << endl;
     cout << "(1) Criar suíte de testes" << endl;
