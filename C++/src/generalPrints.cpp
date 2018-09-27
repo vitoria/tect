@@ -9,15 +9,15 @@ void printHeader() {
     cout << HEADER << endl;
 }
 
-void printHeader(std::string subtitle) {
+void printHeader(string subtitle) {
     printHeader();
-    std::cout << subtitle << std::endl << std::endl;
+    cout << subtitle << endl << endl;
 }
 
-void showMessage(std::string msg) {
-    std::cout << msg;
-    std::cin.get();
-    std::cin.get();
+void showMessage(string msg) {
+    cout << msg;
+    cin.get();
+    cin.get();
     system(CLEAR);
 }
 
@@ -25,17 +25,17 @@ void pauseSystem() {
     showMessage(PAUSE_MSG);
 }
 
-std::string readOption() {
-    std::string optionSelected;
-    std::cout << std::endl << CHOOSE_OPTION;
-    std::cin >> optionSelected;
+string readOption() {
+    string optionSelected;
+    cout << endl << CHOOSE_OPTION;
+    cin >> optionSelected;
     return optionSelected;
 }
 
 void showLine() {
-    std::cout << LINE << std::endl;
+    cout << LINE << endl;
 }
 
 void showID(int id) {
-    std::cout << std::setfill('0') << std::setw(4) << id;
+    cout << setfill('0') << setw(4) << id;
 }
