@@ -31,7 +31,7 @@ void verifyUserToProject(user loggedUser, int id){
 
 void printProjectMenuOwner(){
     system ("clear");
-    printTectHeader();
+    printHeader();
     cout << "Menu Projeto Dono" << endl; 
     cout << "Selecione a opção desejada: " << endl;
     cout << "(1) Editar nome do projeto" << endl;
@@ -106,7 +106,7 @@ void projectMenuOwner(int id){
 
 void printProjectMenuUser(){
     system ("clear");
-    printTectHeader();
+    printHeader();
     cout << "Menu Projeto Usuário Com Acesso" << endl; 
     cout << "Selecione a opção desejada: " << endl;
     cout << "(1) Criar suíte de testes" << endl;

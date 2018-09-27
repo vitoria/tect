@@ -38,7 +38,9 @@ int arquiveToArray(vector<Project> arquive_split){
 
 
 void arrayToArquive(vector<Project> arquive_split, int size){
-     /*projectFile.open(PROJECT_FILE_NAME, ios::out | ios::app);
+    
+    /*fstream projectFile;
+    projectFile.open(PROJECT_FILE_NAME, ios::out | ios::app);
     if (projectFile.is_open()){
         projectFile << project.id << endl << project.name << endl << project.description << endl;
         projectFile << project.owner << endl;
