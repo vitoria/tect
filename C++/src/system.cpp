@@ -48,7 +48,7 @@ void systemMenu(user loggedUser) {
             case EDIT_PROJECT:
                 cout << "Projeto editado" << endl;
                 break;
-            case EXIT:
+            case LOGOUT:
                 cout << "Saindo do usuário atual..." << endl;
                 logout();
                 break;

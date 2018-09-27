@@ -4,10 +4,10 @@
 #define ASK_FOR_ACCESS_PROJECT '2'
 #define SEARCH_PROJECT '3'
 #define EDIT_PROJECT '4'
-#define EXIT '5'
+#define EXIT '3'
 #define LOGIN '1'
 #define SIGN_UP '2'
-#define LOGOUT '3'
+#define LOGOUT '5'
 #define CLEAR "clear"
 #define PAUSE_MSG "Pressione ENTER para continuar..." 
 #define INVALID_OPTION "Opção inválida!"

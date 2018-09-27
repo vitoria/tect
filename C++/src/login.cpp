@@ -201,7 +201,7 @@ bool loginMenu(user *loggedUser, bool *isDone) {
         case SIGN_UP:
             registerNewUser();
             break;
-        case LOGOUT:
+        case EXIT:
             cout << "Encerrando sistema..." << endl;
             isLogged = false;
             *isDone = true;
