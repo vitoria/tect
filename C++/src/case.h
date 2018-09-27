@@ -10,7 +10,6 @@
 #include <vector>
 
 
-
 struct Step {
     string description;
     string expectedResult;
@@ -22,9 +21,4 @@ struct Case{
     string preconditions;
     vector<Step> steps;
     int numberOfSteps;
-};
-
-
-struct testCases{
-    vector<Case>;
 };

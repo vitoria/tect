@@ -1,58 +1,183 @@
 #include <testCase.h>
+#include <validation.h>
 
 using namespace std;
 
-
+testCases folder;
 
 void createCase(int code) {
 
-    Case testCase;
-    testCase.idProject = code;
+    Case caseImpl;
+    caseImpl.idProject = code;
     cout << "Nome: ";
-    getline(cin, testCase.name);
+    getline(cin, caseImpl.name);
     cout << "Objetivo: ";
-    getline(cin, testCase.objectives);
+    getline(cin, caseImpl.objectives);
     cout << "Pré-condições: ";
-    getline(cin, testCase.preconditions);
+    getline(cin, caseImpl.preconditions);
     
     int pos = 0;
     char haveNext;
     do{
         cout << "Por favor, insira um passo:" << endl;
-        getline(cin, testCase.steps[pos].description);
+        getline(cin, caseImpl.steps[pos].description);
         cout << "Qual o resultado esperado para o passo " << pos + 1 << "?:" << endl;
-        getline(cin, testCase.steps[pos].expectedResult);
+        getline(cin, caseImpl.steps[pos].expectedResult);
         cout << "Deseja inserir outro passo (s/n)? " << endl;
         cin >> haveNext;
         pos++;
     } while (haveNext == 's' && pos <= 9);
-    testCase.numberOfSteps = pos;
-    saveCaseInFile(testCase);
-}
-void saveCaseInFile(Case testCase) {
 
-    stringstream convertString;
-    convertString << testCase.idProject <<endl;
-    string fileName = convertString.str();
-
-    fstream outFile;
-    outFile.open(fileName + ".dat", ios::out | ios::app);
-    if (outFile.is_open()) {
-        outFile << testCase.idProject << endl;
-        outFile << testCase.name << endl;
-        outFile << testCase.objectives << endl;
-        outFile << testCase.preconditions << endl;
-        outFile << "Lista de passos:" << endl;
-        for (int i = 0; i < testCase.numberOfSteps; i++) {
-            outFile << testCase.steps[i].description << endl;
-            outFile << testCase.steps[i].expectedResult << endl;
-        }
-        outFile.close();
-        cout << "Caso de teste criado com sucesso!" << endl;
-    } else {
-        cout << "Erro ao salvar caso de teste " << endl;
-    }
+    folder.arrayCases.push_back;
 }
+
+void listTestsCases() {
+
+    cout << "Lista de casos de teste:" << endl;
+    for(int i = 0; i < folder.arrayCases.size(); i++) {
+        cout << "Caso " << i+1 << " Nome: " << folder.arrayCases[i].name <<endl;
+    };
+}
+
+void searchTestsCases() {
+
+    cout << "Digite o nome do caso:" << endl;
+    string caseName;
+    getline(cin, caseName);
+    int posic = findTestCase(caseName);
+    cout << "Nome: " << folder.arrayCases[posic].name << endl;
+    cout << "Objetivos: " << folder.arrayCases[posic].objectives << endl;
+    cout << "Pré-condições: " << folder.arrayCases[posic].preconditions << endl;
+    for(int j = 0; j < folder.arrayCases[posic].steps.size(); j++) {
+        cout << "Descrição: " << folder.arrayCases[posic].steps[j].description << endl;
+        cout << "Resultados esperados: " << folder.arrayCases[posic].steps[j].expectedResult << endl;
+        };
+    };
+
+void editTestsCases(string name) {
+
+    cout << "Digite o nome do caso:" << endl;
+    string caseName;
+    getline(cin, caseName);
+    int posic = findTestCase(caseName);
+    do{
+        cout << "Deseja modificar qual atributo?" << endl;
+        cout << "(1) Nome" << endl;
+        cout << "(2) Objetivos" << endl;
+        cout << "(3) Pré-Condições" << endl;
+        cout << "(4) Passos" << endl;
+        cout << "(0) Sair" << endl;
+        char opcao;
+        cin >> opcao;
+        switch(opcao){
+            case "1":
+                cout << "Digite o novo nome:" << endl;
+                getline(cin, folder.arrayCases[posic].name);
+                break;
+            case "2":
+                cout << "Digite o novo Objetivo:" << endl;
+                getline(cin, folder.arrayCases[posic].objectives);
+                break;
+            case "3":
+                cout << "Digite as Pré-Condições:" << endl;
+                getline(cin, folder.arrayCases[posic].preconditions);
+                break;
+            case "4":
+                cout << "Quer adicionar(1), alterar(2), ou remover(3)?" << endl;
+                int opcaoStep;
+                cin >> opcaoStep;
+                switch(opcaoStep){
+                    case 1:
+                        cout << "Digite a nova descrição:" << endl;
+                        Step novoStep;
+                        getline(cin, novoStep.description);
+                        cout << "Digite o novo resultado esperado:" << endl;
+                        getline(cin, novoStep.expectedResult);
+                        folder.arrayCases[posic].steps.push_back(novoStep);
+                    case 2:
+                        cout << "Qual passo voce deseja alterar?" << endl;
+                        int posStep;
+                        cin >> posStep;
+                        cout << "Digite a nova descrição:" << endl;
+                        getline(cin, folder.arrayCases[posic].steps[posStep-1].description);
+                        cout << "Digite o novo resultado esperado:" << endl;
+                        getline(cin, folder.arrayCases[posic].steps[posStep-1].expectedResult);
+
+                    case 3:
+                        cout << "Qual passo voce deseja remover?" << endl;
+                        int posStep;
+                        cin >> posStep;
+                        folder.arrayCases[posic].steps.erase(folder.arrayCases[posic].steps.begin() + (posStep-1));
+
+                    default:
+                        cout << "Opção inválida" << endl;
+
+                }
+
+            break;
+        default:
+            cout << "Opção inválida" << endl;
+            break;
+        }} while (isSelectedOptionValid(opcao, "0", "5") == true);
+        
+}
+
+
+int findTestCase(string name) {
+    for(int i = 0; i < folder.arrayCases.size(); i++) {
+         if(name == folder.arrayCases[i].name) {
+             return i;
+         };
+    };
+    return -1;    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// void saveCaseInFile(Case caseImpl) {
+
+//     stringstream convertString;
+//     convertString << caseImpl.idProject <<endl;
+//     string fileName = convertString.str();
+
+//     fstream outFile;
+//     outFile.open(fileName + ".dat", ios::out | ios::app);
+//     if (outFile.is_open()) {
+//         outFile << caseImpl.idProject << endl;
+//         outFile << caseImpl.name << endl;
+//         outFile << caseImpl.objectives << endl;
+//         outFile << caseImpl.preconditions << endl;
+//         outFile << "Lista de passos:" << endl;
+//         for (int i = 0; i < caseImpl.numberOfSteps; i++) {
+//             outFile << caseImpl.steps[i].description << endl;
+//             outFile << caseImpl.steps[i].expectedResult << endl;
+//         }
+//         outFile.close();
+//         cout << "Caso de teste criado com sucesso!" << endl;
+//     } else {
+//         cout << "Erro ao salvar caso de teste " << endl;
+//     }
+// }
 
 
 
