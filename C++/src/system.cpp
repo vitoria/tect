@@ -25,7 +25,8 @@ void systemMenu(user loggedUser) {
         do {
             printSystemMenu(loggedUser.name);
 
-            getline(cin,optionInput);
+            optionInput = readOption();
+            cin.ignore();
 
             if (isMenuInputStringValid(optionInput, CREATE_PROJECT, LOGOUT) == false) {
                 printInvalidOptionMessage();
@@ -50,12 +51,12 @@ void systemMenu(user loggedUser) {
             case EDIT_PROJECT:
                 verifyUserToProject(loggedUser);
                 break;
-            case EXIT:
-                cout << "Saindo do usuário atual..." << endl;
+            case LOGOUT:
+                cout << LOGOUT_MSG << endl;
                 logout();
                 break;
             default:
-                cout << "ERRO!" << endl;
+                cout << INVALID_OPTION << endl;
                 break;
         }
     
@@ -68,6 +69,6 @@ void systemMenu(user loggedUser) {
 void printSystemMenu(string userName) {
     system(CLEAR);
     printHeader();
-    cout << "Bem-vindo " << userName << "! Selecione a opção desejada: \n";
+    cout << "Bem-vindo " << userName << "!" << endl;
     cout << MAIN_MENU << endl;
 }
