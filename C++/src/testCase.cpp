@@ -79,29 +79,42 @@ bool createFolder(string folderPath) {
     return result;
 }
 
-void createCase() {
+Case readCaseInformation() {
+    Case newCase;
+    Step newStep;
 
-    Case caseImpl;
-    Step step;
-    caseImpl.id = generateId();
-    cout << "Nome: ";
-    getline(cin, caseImpl.name);
-    cout << "Objetivo: ";
-    getline(cin, caseImpl.objectives);
-    cout << "Pré-condições: ";
-    getline(cin, caseImpl.preconditions);
-    char haveNext;
+    cout << NAME;
+    getline(cin, newCase.name);
+
+    cout << OBJECTIVE;
+    getline(cin,newCase.objectives);
+
+    cout << PRECONDITIONS;
+    getline(cin, newCase.preconditions);
+
+    string hasAnotherStep;
+    cout << CASE_STEPS_READING_HEADER << endl;
     do{
-        cout << "Por favor, insira um passo:" << endl;
-        getline(cin, step.description);
-        cout << "Qual o resultado esperado para o passo " << caseImpl.steps.size() << "?:" << endl;
-        getline(cin, step.expectedResult);
-        caseImpl.steps.push_back(step);
-        cout << "Deseja inserir outro passo (s/n)? " << endl;
-        cin >> haveNext;
-    } while (haveNext == 's' && caseImpl.steps.size() <= 9);
+        cout << "- Passo " << newCase.steps.size() + 1 << endl;
+        cout << CASE_STEP_DESCRIPTION;
+        getline(cin, newStep.description);
+        
+        cout << CASE_STEP_EXPECTED_RESULT;
+        getline(cin, newStep.expectedResult);
 
-    folder.cases.push_back(caseImpl);
+        cout << CASE_STEP_CONTINUE_MESSAGE << endl;
+        getline(cin, hasAnotherStep);
+    } while (isMenuInputStringValid(stringToUpper(hasAnotherStep), 'S', 'S'));
+
+    return newCase;
+}
+
+void createCase(int projectId, int suiteId) {
+    vector<Case> cases = readCases(projectId, suiteId);
+
+    Case newCase = readCaseInformation();
+
+    cases.push_back(newCase);
 }
 
 void listTestsCases() {
@@ -296,23 +309,23 @@ void printMenuPrincipal() {
 
 
 
-// void saveCaseInFile(Case caseImpl) {
+// void saveCaseInFile(Case currentCase) {
 
 //     stringstream convertString;
-//     convertString << caseImpl.idProject <<endl;
+//     convertString << currentCase.idProject <<endl;
 //     string fileName = convertString.str();
 
 //     fstream outFile;
 //     outFile.open(fileName + ".dat", ios::out | ios::app);
 //     if (outFile.is_open()) {
-//         outFile << caseImpl.idProject << endl;
-//         outFile << caseImpl.name << endl;
-//         outFile << caseImpl.objectives << endl;
-//         outFile << caseImpl.preconditions << endl;
+//         outFile << currentCase.idProject << endl;
+//         outFile << currentCase.name << endl;
+//         outFile << currentCase.objectives << endl;
+//         outFile << currentCase.preconditions << endl;
 //         outFile << "Lista de passos:" << endl;
-//         for (int i = 0; i < caseImpl.numberOfSteps; i++) {
-//             outFile << caseImpl.steps[i].description << endl;
-//             outFile << caseImpl.steps[i].expectedResult << endl;
+//         for (int i = 0; i < currentCase.numberOfSteps; i++) {
+//             outFile << currentCase.steps[i].description << endl;
+//             outFile << currentCase.steps[i].expectedResult << endl;
 //         }
 //         outFile.close();
 //         cout << "Caso de teste criado com sucesso!" << endl;
