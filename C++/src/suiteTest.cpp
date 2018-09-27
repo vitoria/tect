@@ -6,8 +6,6 @@
 #include <vector>
 #include <fstream>
 
-#define SUITES_PATH "suites.txt"
-
 /**
  * This struct represents a suite
  * that contains an automatic generated id,
@@ -25,6 +23,7 @@ struct suite {
 void writeSuites(std::vector<suite> suites) {
     std::ofstream suitesFile(SUITES_PATH, std::ios::out);
     for (int i = 0; i < suites.size(); i++) {
+        suitesFile << suites[i].id << std::endl;
         suitesFile << suites[i].name << std::endl;
         suitesFile << suites[i].description << std::endl;
     }
@@ -40,12 +39,26 @@ std::vector<suite> readSuites() {
     std::vector<suite> suites;
     suite current;
 
-    while(suitesFile >> current.name >> current.description) {
+    while(suitesFile >> current.id >> current.name >> current.description) {
         suites.push_back(current);
     }
     suitesFile.close();
 
     return suites;
+}
+
+/**
+ * Generate the an id based on the last suite id. If there is 
+ * no suite in the suites, the id is 1.
+ */
+int generateId(std::vector<suite> suites) {
+    int id = 1;
+    
+    if (suites.size() > 0) {
+        id = suites[suites.size() - 1].id + 1;
+    }
+
+    return id;
 }
 
 /**
@@ -105,6 +118,7 @@ void createSuite() {
     if (containsSuite(suites, newSuite)) {
         showMessage(CREATION_FAILED);
     } else {
+        newSuite.id = generateId(suites);
         suites.push_back(newSuite);
         writeSuites(suites);
         showMessage(CREATION_SUCCESS);
@@ -153,7 +167,6 @@ void goToProcediment(char optionSelected) {
             // TODO: go to the delete procediment
             break;
         default:
-            // TODO: go to the previous menu
             break;
     }
 }

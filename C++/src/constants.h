@@ -21,6 +21,7 @@
 #define DELETE_SUITE '5'
 #define GO_BACK '6'
 #define USERS_FILE_PATH "data/users.dat"
+#define SUITES_PATH "suites.dat"
 #define DATA_FOLDER_PATH "data"
 #define HEADER              "#-----------------# TecT #-----------------#"
 #define LOGIN_HEADER        "#------------# LOGIN DE USUÁRIO #----------#"
