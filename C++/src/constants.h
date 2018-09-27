@@ -46,3 +46,5 @@
 #define SUITE_DELETED "Suite deletada com sucesso!"
 #define SUITE_EDITED "Suite editada com sucesso!"
 #define LOGGED_USER_FILE_PATH "data/logged.dat"
+
+#define CREATER_PROJECT_HEADER "#------------# CRIAÇÃO DE PROJETO #----------#"

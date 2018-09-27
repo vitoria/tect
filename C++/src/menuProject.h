@@ -15,8 +15,8 @@
 
 #define PROJECT_FILE_NAME "projects.dat"
 
-void verifyUserToProject(user, int);
+void verifyUserToProject(user);
 void printProjectMenuOwner();
-void projectMenuOwner(int);
+void projectMenuOwner(int, user);
 void printProjectMenuUser();
-void projectMenuUser(int);
+void projectMenuUser(int, user);

@@ -1,48 +1,52 @@
+#include "menuProject.h"
 #include "project.h"
 #include "dataManagerProject.h"
 #include "login.h"
+#include "system.h"
+#include "constants.h"
 
 using namespace std;
 
-void verifyUserToProject(user loggedUser, int id){
-    vector<Project> projects;
+void verifyUserToProject(user loggedUser){
+    vector<Project> projects = arquiveToArray();
 
-<<<<<<< HEAD
-    int size = arquiveToArray(projects);
-    int aux = throughArray(id, projects, size);
-=======
-    arquiveToArray(projects);
+    string input;
+    cout << "Informe id do projeto: ";
+    getline(cin, input);
+
+    int id = stoi(input);
+
     int aux = throughArray(id, projects);
->>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
 
-    if (projects[aux].owner.compare(loggedUser.login) == 0){
-        projectMenuOwner(id);
-    } else {
-        bool isAllowedUser = false;
-        for (int i = 0; i < projects[aux].users.size(); i++){
-            if (projects[aux].users[i].compare(loggedUser.login) == 0){
-                isAllowedUser =  true;
-                break;
+    if ((aux > -1) && (projects[aux].id == id)){
+        if (projects[aux].owner.compare(loggedUser.login) == 0){
+            projectMenuOwner(id, loggedUser);
+        } else {
+            bool isAllowedUser = false;
+            for (int i = 0; i < projects[aux].users.size(); i++){
+                if (projects[aux].users[i].compare(loggedUser.login) == 0){
+                    isAllowedUser =  true;
+                    break;
+                }
+            }
+            if (isAllowedUser){
+                projectMenuUser(id, loggedUser);
+            } else {
+                cout << "Usuário não tem permissão de acesso a esse projeto." << endl;
             }
         }
-        if (isAllowedUser){
-            projectMenuUser(id);
-        } else {
-            cout << "Usuário não tem permissão de acesso a esse projeto." << endl;
-        }
-
-    }
+    } else {
+        cout << "Projeto não encontrado." << endl;
+        cout << PAUSE_MSG << endl;
+        cin.get();
+        system(CLEAR);
+        systemMenu(loggedUser);
+    }    
 }
 
 void printProjectMenuOwner(){
     system ("clear");
-<<<<<<< HEAD
-    printTectHeader();
-=======
-    printHeader();
->>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
-    cout << "Menu Projeto Dono" << endl; 
-    cout << "Selecione a opção desejada: " << endl;
+    printHeader("Menu Projeto Dono");
     cout << "(1) Editar nome do projeto" << endl;
     cout << "(2) Editar descrição do projeto" << endl;
     cout << "(3) Verificar pedidos de permissão" << endl;
@@ -55,12 +59,12 @@ void printProjectMenuOwner(){
 
 }
 
-void projectMenuOwner(int id){
+void projectMenuOwner(int id, user loggedUser){
     char selectedOption = '0';
     do {
         do {
             printProjectMenuOwner();
-
+            cout << "Selecione a opção desejada: ";
             cin.get(selectedOption);
             cin.ignore();
 
@@ -81,7 +85,7 @@ void projectMenuOwner(int id){
                 break;
             case '4':
                 deleteProject(id);
-                cout << "Projeto excluído com sucesso" << endl;
+                systemMenu(loggedUser);
                 break;
             case '5':
                 createSuite(id);
@@ -100,6 +104,7 @@ void projectMenuOwner(int id){
                 cout << "Relatório gerado com sucesso" << endl;
                 break;
             case '9':
+                systemMenu(loggedUser);
                 cout << "Saindo do projeto" << endl;
                 break;
             default:
@@ -115,13 +120,8 @@ void projectMenuOwner(int id){
 
 void printProjectMenuUser(){
     system ("clear");
-<<<<<<< HEAD
-    printTectHeader();
-=======
     printHeader();
->>>>>>> 473c4df85d7e1741b3efaa3f03a418dfaf2bbe90
     cout << "Menu Projeto Usuário Com Acesso" << endl; 
-    cout << "Selecione a opção desejada: " << endl;
     cout << "(1) Criar suíte de testes" << endl;
     cout << "(2) Listar suítes de testes" << endl;
     cout << "(3) Consultar suítes de testes" << endl;
@@ -130,12 +130,13 @@ void printProjectMenuUser(){
 
 }
 
-void projectMenuUser(int id){
+void projectMenuUser(int id, user loggedUser){
     char selectedOption = '0';
     do {
         do {
             printProjectMenuUser();
 
+            cout << "Selecione a opção desejada: ";
             cin.get(selectedOption);
             cin.ignore();
 

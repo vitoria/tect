@@ -1,7 +1,9 @@
 #include "system.h"
 #include "constants.h"
 #include "suiteTest.h"
-
+#include "createrProject.h"
+#include "menuProject.h"
+#include "dataManagerProject.h"
 
 using namespace std;
 
@@ -37,15 +39,16 @@ void systemMenu(user loggedUser) {
 
         switch(selectedOption){
             case CREATE_PROJECT:
-
+                createProject(loggedUser);
                 cout << "Projeto criado" << endl;
                 //suiteTestMenu();
                 break;
             case ASK_FOR_ACCESS_PROJECT:
+                cleanFile();
                 cout << "Acesso solicitado" << endl;
                 break;
             case SEARCH_PROJECT:
-                cout << "Projeto encontrado" << endl;
+                verifyUserToProject(loggedUser);
                 break;
             case EDIT_PROJECT:
                 cout << "Projeto editado" << endl;
