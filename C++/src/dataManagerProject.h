@@ -10,4 +10,4 @@
 #include "project.h"
 
 int arquiveToArray(std::vector<Project>);
-void arrayToArquive(std::vector<Project>);
+void arrayToArquive(std::vector<Project>, int);

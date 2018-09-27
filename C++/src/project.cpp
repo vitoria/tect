@@ -23,7 +23,7 @@ void editNameProject(int id){
     if (projects[aux].id == id){
         cout << "Novo nome: ";
         getline(cin, projects[aux].name);
-        arrayToArquive(projects);
+        arrayToArquive(projects, size);
         cout << "Nome de projeto editado com sucesso." << endl;
     } else {
         cout << "Id não encontrado" << endl;
@@ -39,7 +39,7 @@ void editDescriptionProject(int id){
     if (projects[aux].id == id){
         cout << "Nova descrição: ";
         getline(cin, projects[aux].description);
-        arrayToArquive(projects);
+        arrayToArquive(projects, size);
         cout << "Descrição de projeto editado com sucesso." << endl;
     } else {
         cout << "Id não encontrado" << endl;
@@ -55,11 +55,10 @@ void allowPermissions(int id){
     if (projects[aux].id == id){
         if (projects[aux].numberOfRequests > 0){
             string usersString = "";
-            //int newSize = projects[aux].numberOfUsers + projects[aux].numberOfRequests;
+
             vector<string> vetor;
             for (int i = 0; i < projects[aux].numberOfUsers; i++){
                 usersString += projects[aux].users[i];
-                //newArray[i] = projects[aux].users[i];
             }
             int index = projects[aux].numberOfUsers;
             for (int i = 0; i < projects[aux].numberOfRequests; i++){
@@ -69,16 +68,13 @@ void allowPermissions(int id){
                 cin >> fileInput;
                 if (fileInput == 's'){
                     usersString += projects[aux].requests[i];
-                    //newArray[index] == projects[aux].requests[i];
                     index++;
                 }
             }
 
-            // fazer split da string usersString e colocar em um array
             split(usersString, vetor);
 
-            //*projects[aux].users = newArray; //arrays com posições nulas
-            arrayToArquive(projects);
+            arrayToArquive(projects, size);
             cout << "Permissões dadas com sucesso" << endl;
         } else {
             cout << "Nenhum pedido de acesso." << endl;
@@ -110,7 +106,7 @@ void deleteProject(int id){
     swapProject(projects, size, aux);
     projects.pop_back();
 
-    arrayToArquive(projects);
+    arrayToArquive(projects, size);
 
 }
 
