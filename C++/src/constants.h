@@ -5,9 +5,11 @@
 #define SEARCH_PROJECT '3'
 #define EDIT_PROJECT '4'
 #define EXIT '3'
+#define EXIT_MSG "Encerrando sistema..."
 #define LOGIN '1'
 #define SIGN_UP '2'
 #define LOGOUT '5'
+#define LOGOUT_MSG "Saindo do usuário atual..."
 #define CLEAR "clear"
 #define PAUSE_MSG "Pressione ENTER para continuar..." 
 #define INVALID_OPTION "Opção inválida!"

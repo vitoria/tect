@@ -344,7 +344,7 @@ void suiteTestMenu() {
     do {
         do {
             showSuiteTestMenu();
-            optionSelected = readOption();;
+            optionSelected = readOption();
 
             isOptionValid = isMenuInputStringValid(optionSelected, CREATE_SUITE, GO_BACK);
 
