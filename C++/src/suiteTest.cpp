@@ -99,11 +99,39 @@ int searchSuite(std::vector<suite> suites, std::string current) {
 }
 
 /**
+ * Search for a suite that has the same id from the current suite
+ * in the suites. If find it, returns a natural number,
+ * otherwise returns a negative one.
+ */
+int searchSuite(std::vector<suite> suites, int id) {
+    int index = 0;
+
+    while (index < suites.size() && 
+            id != suites[index].id) {
+        index += 1;
+    }
+
+    if (index >= suites.size()) {
+        index = -1;
+    }
+
+    return index;
+}
+
+/**
  * This method checks if the suites contains a suite with the same name
  * than the current.
  */
 bool containsSuite(std::vector<suite> suites, std::string current) {
     return searchSuite(suites, current) != -1;
+}
+
+/**
+ * This method checks if the suites contains a suite with the same id
+ * than the current.
+ */
+bool containsSuite(std::vector<suite> suites, int id) {
+    return searchSuite(suites, id) != -1;
 }
 
 /**
@@ -185,10 +213,19 @@ void editSuite() {
     std::string selectedSuite = readSelectedSuite();
     std::vector<suite> suites = readSuites();
 
-    if (containsSuite(suites, selectedSuite)) {
-        editSuite(suites, searchSuite(suites, selectedSuite));
+    if (isStringNumeric(selectedSuite)) {
+        int id = stringToInteger(selectedSuite);
+        if (containsSuite(suites, id)) {
+            editSuite(suites, searchSuite(suites, id));
+        } else {
+            showMessage(SUITE_NOT_FOUND);
+        }
     } else {
-        showMessage(SUITE_NOT_FOUND);
+        if (containsSuite(suites, selectedSuite)) {
+            editSuite(suites, searchSuite(suites, selectedSuite));
+        } else {
+            showMessage(SUITE_NOT_FOUND);
+        }
     }
 }
 
@@ -208,11 +245,21 @@ void deleteSuite() {
     std::string selectedSuite = readSelectedSuite();
     std::vector<suite> suites = readSuites();
 
-    if (containsSuite(suites, selectedSuite)) {
-        deleteSuite(suites, searchSuite(suites, selectedSuite));
-        showMessage(SUITE_DELETED);
+    if (isStringNumeric(selectedSuite)) {
+        int id = stringToInteger(selectedSuite);
+        if (containsSuite(suites, id)) {
+            deleteSuite(suites, searchSuite(suites, id));
+            showMessage(SUITE_DELETED);
+        } else {
+            showMessage(SUITE_NOT_FOUND);
+        }
     } else {
-        showMessage(SUITE_NOT_FOUND);
+        if (containsSuite(suites, selectedSuite)) {
+            deleteSuite(suites, searchSuite(suites, selectedSuite));
+            showMessage(SUITE_DELETED);
+        } else {
+            showMessage(SUITE_NOT_FOUND);
+        }
     }
 }
 
@@ -237,11 +284,19 @@ void searchSuite() {
     printHeader(SEARCH_SUITE_HEADER);
     std::string selectedSuite = readSelectedSuite();
     std::vector<suite> suites = readSuites();
-
-    if (containsSuite(suites, selectedSuite)) {
-        showSuite(suites[searchSuite(suites, selectedSuite)]);
+    if (isStringNumeric(selectedSuite)) {
+        int id = stringToInteger(selectedSuite);
+        if (containsSuite(suites, id)) {
+            showSuite(suites[searchSuite(suites, id)]);
+        } else {
+            showMessage(SUITE_NOT_FOUND);
+        }
     } else {
-        showMessage(SUITE_NOT_FOUND);
+        if (containsSuite(suites, selectedSuite)) {
+            showSuite(suites[searchSuite(suites, selectedSuite)]);
+        } else {
+            showMessage(SUITE_NOT_FOUND);
+        }
     }
 }
 
