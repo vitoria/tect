@@ -32,13 +32,14 @@ void printProjectMenuOwner();
 void projectMenuOwner(int);
 void printProjectMenuUser();
 void projectMenuUser(int);
+int throughArray(int, std::vector<Project>, int);
 void editNameProject(int);
 void editDescriptionProject(int);
 void allowPermissions(int);
 void split(std::string, std::vector<std::string>);
+void deleteProject(int);
 void createSuite(int);
 void listSuites(int);
 void searchSuite(int);
 void generateReport(int);
 void swapProject(std::vector<Project>, int, int);
-
