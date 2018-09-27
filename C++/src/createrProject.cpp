@@ -1,6 +1,7 @@
 #include "dataManagerProject.h"
 #include "createrProject.h"
 #include "generalPrints.h"
+#include "constants.h"
 
 using namespace std;
 
@@ -11,7 +12,7 @@ void createProject(user creater){
     system("clear");
     printHeader();
 
-    cout << CREATER_PROJECT_HEADER << endl;
+    cout << "#------------# CRIAÇÃO DE PROJETO #----------#" << endl;
 
     string name;
 

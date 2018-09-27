@@ -9,6 +9,7 @@ int throughArray(int id, vector<Project> projects){
     int aux = -1;
 
     if (projects.size() > 0){
+        aux++;
         while(projects[aux].id != id && aux < projects.size()){
             aux++;
         }
