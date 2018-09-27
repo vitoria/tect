@@ -16,15 +16,21 @@ struct Step {
     string expectedResult;
 };
 struct Case{
-    int idProject;
+    int idCase;
     string name;
     string objectives;
     string preconditions;
     vector<Step> steps;
-    int numberOfSteps;
 };
 
 
 struct testCases{
-    vector<Case>;
+    vector<Case> arrayCases;
 };
+
+void createCase(int);
+void listTestsCases();
+void searchTestsCases();
+void editTestsCases(string name);
+int findTestCase(string name);
+void removeTestCase(string name);

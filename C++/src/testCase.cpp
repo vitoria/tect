@@ -113,14 +113,12 @@ void editTestsCases(string name) {
                     default:
                         cout << "Opção inválida" << endl;
                         break;
-                }
-
-            break;
-        default:
-            cout << "Opção inválida" << endl;
-            break;
-        }} while (isSelectedOptionValid(opcao, "0", "5") == true);
-        
+                    }   
+                break;
+            default:
+                cout << "Opção inválida" << endl;
+                break;
+                }} while (isSelectedOptionValid(opcao, "0", "5") == true);
 }
 
 
