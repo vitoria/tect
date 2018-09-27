@@ -45,3 +45,4 @@
 #define SUITE_NOT_FOUND "Suite nao encontrada"
 #define SUITE_DELETED "Suite deletada com sucesso!"
 #define SUITE_EDITED "Suite editada com sucesso!"
+#define LOGGED_USER_FILE_PATH "data/logged.dat"
