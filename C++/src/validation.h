@@ -16,4 +16,12 @@ std::string removeWhiteSpaces(std::string);
 
 bool isTextValid(std::string);
 
+std::string getWhiteSpaces(int size);
+
 std::string truncate(std::string, int);
+
+int stringToInteger(std::string);
+
+bool isCharANumber(char);
+
+bool isStringNumeric(std::string);

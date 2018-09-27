@@ -59,3 +59,27 @@ string truncate(string text, int size) {
     }
     return (text + getWhiteSpaces(size - text.size()));
 }
+
+int stringToInteger(string str) {
+    int result = -1;
+    if (isStringNumeric(str)) {
+        result = stoi(str);
+    }
+    return result;
+}
+
+bool isCharANumber(char ch) {
+    bool result = false;
+    if (ch >= '0' && ch <= '9') {
+        result = true;
+    }
+    return result;
+}
+
+bool isStringNumeric(string str) {
+    bool result = true;
+    for (int i = 0; i < str.size() && result; i++) {
+        result = isCharANumber(str[i]);
+    }
+    return result;
+}
