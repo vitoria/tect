@@ -13,11 +13,11 @@
  * that contains an automatic generated id,
  * a name and a simple description.
  */
-typedef struct suite {
+struct suite {
     int id;
     std::string name;
     std::string description;
-} suite;
+};
 
 /**
  * This method receive a list of suites and write them in a file.
