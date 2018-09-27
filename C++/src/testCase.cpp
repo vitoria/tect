@@ -109,6 +109,37 @@ Case readCaseInformation() {
     return newCase;
 }
 
+int searchCase(vector<Case> cases, string current) {
+    std::string name = removeWhiteSpaces(current);
+    int index = 0;
+
+    while (index < cases.size() && 
+            name.compare(removeWhiteSpaces(cases[index].name)) != 0) {
+        index += 1;
+    }
+
+    if (index >= cases.size()) {
+        index = -1;
+    }
+
+    return index;
+}
+
+int searchCase(vector<Case> cases, int id) {
+    int index = 0;
+
+    while (index < cases.size() && 
+            id != cases[index].id) {
+        index += 1;
+    }
+
+    if (index >= cases.size()) {
+        index = -1;
+    }
+
+    return index;
+}
+
 void createCase(int projectId, int suiteId) {
     vector<Case> cases = readCases(projectId, suiteId);
 

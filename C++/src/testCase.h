@@ -43,6 +43,8 @@ struct Case{
 };
 
 Case readCaseInformation();
+int searchCase(std::vector<Case>, std::string);
+int searchCase(std::vector<Case>, int);
 void createCase(int, int);
 void listTestsCases();
 void searchTestsCases();
