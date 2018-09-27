@@ -30,6 +30,7 @@
 #define SUITE_MENU_HEADER   "#------------# SUITE TEST MENU #-----------#"
 #define SUITE_LIST_HEADER   "#--------------# SUITE TESTS #-------------#"
 #define DELETE_SUITE_HEADER "#-------------# DELETE  SUITE #------------#"
+#define EDIT_SUITE_HEADER   "#--------------# EDITE SUITE #-------------#"
 #define LINE                "--------------------------------------------"
 #define TABLE_HEADER        "-     ID     | Nome da suite               -"
 #define SUSPENSION_POINTS "..."
@@ -41,3 +42,4 @@
 #define CHOOSE_SUITE "Informe o nome ou ID da suite: "
 #define SUITE_NOT_FOUND "Suite nao encontrada"
 #define SUITE_DELETED "Suite deletada com sucesso!"
+#define SUITE_EDITED "Suite editada com sucesso!"

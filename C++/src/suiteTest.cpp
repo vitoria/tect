@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include <iomanip>
 
 /**
  * This struct represents a suite
@@ -69,7 +68,6 @@ int generateId(std::vector<suite> suites) {
 suite readSuiteInformation() {
     suite newSuite;
 
-    printHeader(CREATE_SUITE_HEADER);
     std::cout << NAME;
     std::cin >> newSuite.name;
 
@@ -113,6 +111,7 @@ bool containsSuite(std::vector<suite> suites, std::string current) {
  * already created and save it in the suites file.
  */
 void createSuite() {
+    printHeader(CREATE_SUITE_HEADER);
     std::vector<suite> suites = readSuites();
     suite newSuite = readSuiteInformation();
 
@@ -133,14 +132,14 @@ void createSuite() {
 void listSuites() {
     printHeader(SUITE_LIST_HEADER);
     std::vector<suite> suites = readSuites();
-    std::setfill('0');
 
     showLine();
     std::cout << TABLE_HEADER << std::endl;
     showLine();
     for (int i = 0; i < suites.size(); i++) {
-        std::cout << "-    " << std::setfill('0') << std::setw(4) << suites[i].id
-        << "    | " << truncate(suites[i].name, 28) << " -" << std::endl;
+        std::cout << "-    ";
+        showID(suites[i].id);
+        std::cout << "    | " << truncate(suites[i].name, 28) << " -" << std::endl;
     }
     showLine();
     pauseSystem();
@@ -154,6 +153,43 @@ std::string readSelectedSuite() {
     std::cout << CHOOSE_SUITE;
     std::cin >> selectedSuite;
     return selectedSuite;
+}
+
+/**
+ * Edit the suite in the index position.
+ */
+void editSuite(std::vector<suite> suites, int index) {
+    printHeader();
+    std::cout << "#----------# EDITING SUITE ";
+    showID(suites[index].id);
+    std::cout << " #----------#" << std::endl << std::endl;
+
+    suite editedSuite = readSuiteInformation();
+
+    if (containsSuite(suites, editedSuite.name)) {
+        showMessage(CREATION_FAILED);
+    } else {
+        suites[index].name = editedSuite.name;
+        suites[index].description = editedSuite.description;
+        writeSuites(suites);
+        showMessage(SUITE_EDITED);
+    }
+
+}
+
+/**
+ * Edit suuite procedure.
+ */
+void editSuite() {
+    printHeader(EDIT_SUITE_HEADER);
+    std::string selectedSuite = readSelectedSuite();
+    std::vector<suite> suites = readSuites();
+
+    if (containsSuite(suites, selectedSuite)) {
+        editSuite(suites, searchSuite(suites, selectedSuite));
+    } else {
+        showMessage(SUITE_NOT_FOUND);
+    }
 }
 
 /**
@@ -203,7 +239,7 @@ void goToProcediment(char optionSelected) {
             // TODO: go to the search suite procediment
             break;
         case EDIT_SUITE:
-            // TODO: go to the edit suite procediment
+            editSuite();
             break;
         case DELETE_SUITE:
             deleteSuite();

@@ -1,5 +1,6 @@
 #include "generalPrints.h"
 #include "constants.h"
+#include <iomanip>
 
 using namespace std;
 
@@ -33,4 +34,8 @@ std::string readOption() {
 
 void showLine() {
     std::cout << LINE << std::endl;
+}
+
+void showID(int id) {
+    std::cout << std::setfill('0') << std::setw(4) << id;
 }

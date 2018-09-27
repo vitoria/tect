@@ -13,3 +13,5 @@ void pauseSystem();
 std::string readOption();
 
 void showLine();
+
+void showID(int);
