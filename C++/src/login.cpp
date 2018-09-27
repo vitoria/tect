@@ -2,6 +2,7 @@
 
 #define USERS_FILE_PATH "data/users.dat"
 #define DATA_FOLDER_PATH "data"
+#define LOGGED_USER_FILE_PATH "data/logged.dat"
 
 using namespace std;
 
@@ -49,7 +50,38 @@ bool existingUserLogin(user *loggedUser) {
 
     usersFile.close();
 
+    if (isLogged == true) {
+        saveLoggedUser(loggedUser);
+    }
+
     return isLogged;
+}
+
+void saveLoggedUser(user *loggedUser) {
+    ofstream loggedUserFile;
+    loggedUserFile.open(LOGGED_USER_FILE_PATH, ios::out);
+    if (loggedUserFile.is_open() == true) {
+        loggedUserFile << loggedUser->login << endl;
+        loggedUserFile << loggedUser->name << endl;
+        loggedUserFile.close();
+    }
+}
+
+bool isUserLogged(user *loggedUser) {
+    bool isLogged = false;
+    ifstream loggedUserFile;
+    loggedUserFile.open(LOGGED_USER_FILE_PATH, ios::in);
+    if (loggedUserFile.is_open() == true) {
+        getline(loggedUserFile, loggedUser->login);
+        getline(loggedUserFile, loggedUser->name);
+        isLogged = true;
+        loggedUserFile.close();
+    }
+    return isLogged;
+}
+
+void logout() {
+    remove(LOGGED_USER_FILE_PATH);
 }
 
 bool registerNewUser() {
@@ -153,21 +185,22 @@ void printLoginMenu() {
 bool loginMenu(user *loggedUser, bool *isDone) {
     string optionInput;
     char selectedOption;
-    bool isLogged = false;
+    bool isLogged = isUserLogged(loggedUser);
 
-    do {
-        printLoginMenu();
+    if (isLogged == false) {
+        do {
+            printLoginMenu();
 
-        getline(cin,optionInput);
+            getline(cin,optionInput);
 
-        if (isMenuInputStringValid(optionInput, '1', '3') == false) {
-            printInvalidOptionMessage();
-        }
-    } while (isMenuInputStringValid(optionInput, '1', '3') == false);
+            if (isMenuInputStringValid(optionInput, '1', '3') == false) {
+                printInvalidOptionMessage();
+            }
+        } while (isMenuInputStringValid(optionInput, '1', '3') == false);
 
-    selectedOption = optionInput[0];
+        selectedOption = optionInput[0];
 
-    switch(selectedOption){
+        switch(selectedOption){
         case '1':
             isLogged = existingUserLogin(loggedUser);
             break;
@@ -184,7 +217,12 @@ bool loginMenu(user *loggedUser, bool *isDone) {
             isLogged = false;
             *isDone = true;
             break;
+        }
+
+    } else {
+        cout << "Bem-vindo de volta " << loggedUser->name << "!" << endl;
     }
+    
     cout << "Pressione ENTER para continuar..." << endl;
     cin.get();
     system ("clear");

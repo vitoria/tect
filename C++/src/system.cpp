@@ -46,6 +46,7 @@ void systemMenu(user loggedUser) {
                 break;
             case '5':
                 cout << "Saindo do usuário atual..." << endl;
+                logout();
                 break;
             default:
                 cout << "ERRO!" << endl;
