@@ -59,6 +59,7 @@ vector<Case> readCases(int projectId, int suiteId) {
             getline(casesFile, trash);
             getline(casesFile, currentCase.authorUser);
             cases.push_back(currentCase);
+            currentCase.steps.clear();
         }
         casesFile.close();
     }
