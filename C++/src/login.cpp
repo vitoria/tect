@@ -7,8 +7,7 @@ bool existingUserLogin(user *loggedUser) {
     string user, password, name;
     bool isLogged = false, foundUser = false;
     system(CLEAR);
-    printHeader();
-    cout << LOGIN_HEADER << endl;
+    printHeader(LOGIN_HEADER);
     
     cout << "Login: ";
     getline(cin, user);
@@ -85,9 +84,7 @@ bool registerNewUser() {
     string name, user, password, passwordVerification;
     bool isRegistered = false;
 
-    system(CLEAR);
-    printHeader();
-    cout << SIGN_UP_HEADER << endl;
+    printHeader(SIGN_UP_HEADER);
 
     cout << "Nome: ";
     getline(cin, name);
@@ -173,7 +170,7 @@ bool isUserAlredyRegistered(string user) {
 void printLoginMenu() {
     system (CLEAR);
     printHeader();
-    cout << LOGIN_MENU << endl;
+    cout << endl << LOGIN_MENU << endl;
 }
 
 bool loginMenu(user *loggedUser, bool *isDone) {
