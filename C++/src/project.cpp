@@ -99,23 +99,36 @@ void askPermission(user loggedUser){
     getline(cin, input);
     int id = stoi(input);
     int aux = throughArray(id, projects);
-    if (projects[aux].id == id){
-        if (!verifyUserAskingPermission(projects[aux], loggedUser)){
-            projects[aux].requests.push_back(loggedUser.login);
-            projects[aux].numberOfRequests++;
-            arrayToArquive(projects);
+    if (aux > -1){
+        if(projects[aux].id == id){
+            if (!verifyUserAskingPermission(projects[aux], loggedUser)){
+                projects[aux].requests.push_back(loggedUser.login);
+                projects[aux].numberOfRequests++;
+                arrayToArquive(projects);
+                cout << "Pedido Realizado com Sucesso." << endl;
+            }
+        } else {
+        cout << "Projeto não encontrado." << endl;
         }
+    } else {
+        cout << "Projeto não encontrado." << endl;
     }
 
 }
 
 bool verifyUserAskingPermission(Project project, user loggedUser){
     bool verify = false;
-    for (int i = 0; i < project.users.size(); i++){
-        if(loggedUser.login.compare(project.users[i]) == 0){
-            verify = true;
-            cout << "Você já tem permissão de acesso a esse projeto." << endl;
-            break;
+    if (loggedUser.login.compare(project.owner) == 0){
+        verify = true;
+        cout << "Você é o dono desse projeto." << endl;
+    }
+    if (!verify){
+        for (int i = 0; i < project.users.size(); i++){
+            if(loggedUser.login.compare(project.users[i]) == 0){
+                verify = true;
+                cout << "Você já tem permissão de acesso a esse projeto." << endl;
+                break;
+            }
         }
     }
     if (!verify){
