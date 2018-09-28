@@ -65,7 +65,7 @@ void arrayToArquive(vector<Project> arquive_split){
     
     if (isFolderCreated(folderPath)) {
         file.open(filePath, ios::out);
-        if (file.is_open() == true) {
+        if (file.is_open()) {
             for (int i = 0; i < arquive_split.size(); i++) {
                 file << arquive_split[i].id << endl;
                 file << arquive_split[i].name << endl;
