@@ -28,8 +28,6 @@ void writeCases(vector<Case> cases, int projectId, int suiteId) {
             }
             casesFile.close();
         }
-    } else {
-        cout << "CASE FILE NOT CREATED FLAG" << endl;
     }
 }
 
@@ -63,32 +61,9 @@ vector<Case> readCases(int projectId, int suiteId) {
             cases.push_back(currentCase);
         }
         casesFile.close();
-    } else {
-        cout << "CASE FILE NOT OPENED FLAG" << endl;
     }
 
     return cases;
-}
-
-bool isFolderCreated (string folderPath) {
-    bool result;
-    struct stat st = {0};
-
-    if (stat(folderPath.c_str(), &st) == -1) {
-        result = createFolder(folderPath);
-    } else {
-        result = true;
-    }
-
-    return result;
-}
-
-bool createFolder(string folderPath) {
-    bool result = false;
-    if (mkdir(folderPath.c_str(), 0700) == 0) {
-        result = true;
-    }
-    return result;
 }
 
 Case readCaseInformation() {

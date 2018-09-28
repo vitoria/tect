@@ -41,8 +41,6 @@ std::string generateTestCaseFilePath(int, int);
 std::string generateTestCaseFolderPath(int);
 void writeCases(std::vector<Case>, int, int);
 std::vector<Case> readCases(int, int);
-bool isFolderCreated (std::string);
-bool createFolder(std::string);
 Case readCaseInformation();
 int searchCase(std::vector<Case>, std::string);
 int searchCase(std::vector<Case>, int);

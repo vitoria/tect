@@ -85,7 +85,7 @@
 
 // Paths
 #define DATA_FOLDER_PATH "data"
-#define SUITES_PATH "suites.dat"
+#define SUITES_FILE_PATH "suites.dat"
 #define USERS_FILE_PATH "data/users.dat"
 #define LOGGED_USER_FILE_PATH "data/logged.dat"
 

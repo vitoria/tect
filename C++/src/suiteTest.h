@@ -2,12 +2,12 @@
 
 void suiteTestMenu(int);
 
-void createSuite();
+void createSuite(int);
 
-void listSuites();
+void listSuites(int);
 
-void editSuite();
+void editSuite(int);
 
-void deleteSuite();
+void deleteSuite(int);
 
-void searchSuite();
+void searchSuite(int);
