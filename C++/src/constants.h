@@ -27,6 +27,7 @@
 #define SUITES_PATH "suites.dat"
 #define DATA_FOLDER_PATH "data"
 #define HEADER              "#-----------------# TecT #-----------------#"
+#define MAIN_HEADER         "#-------------# MENU PRINCIPAL #-----------#"
 #define LOGIN_HEADER        "#------------# LOGIN DE USUÁRIO #----------#"
 #define SIGN_UP_HEADER      "#----------# CADASTRO DE USUÁRIO #---------#"
 #define CREATE_SUITE_HEADER "#----------# CRIAR SUITE DE TEST #---------#"

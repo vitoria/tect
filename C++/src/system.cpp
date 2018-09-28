@@ -63,15 +63,12 @@ void systemMenu(user loggedUser, bool *isDone) {
                 break;
         }
     
-        cout << PAUSE_MSG << endl;
-        cin.get();
-        system(CLEAR);
+        pauseSystem();
     } while(selectedOption != LOGOUT && selectedOption != MAIN_EXIT);
 }
 
 void printSystemMenu(string userName) {
     system(CLEAR);
-    printHeader();
-    cout << "Bem-vindo " << userName << "!" << endl;
+    printHeader(MAIN_HEADER);
     cout << MAIN_MENU << endl;
 }
