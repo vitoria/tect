@@ -28,8 +28,6 @@ void writeCases(vector<Case> cases, int projectId, int suiteId) {
             }
             casesFile.close();
         }
-    } else {
-        cout << "CASE FILE NOT CREATED FLAG" << endl;
     }
 }
 
@@ -63,32 +61,9 @@ vector<Case> readCases(int projectId, int suiteId) {
             cases.push_back(currentCase);
         }
         casesFile.close();
-    } else {
-        cout << "CASE FILE NOT OPENED FLAG" << endl;
     }
 
     return cases;
-}
-
-bool isFolderCreated (string folderPath) {
-    bool result;
-    struct stat st = {0};
-
-    if (stat(folderPath.c_str(), &st) == -1) {
-        result = createFolder(folderPath);
-    } else {
-        result = true;
-    }
-
-    return result;
-}
-
-bool createFolder(string folderPath) {
-    bool result = false;
-    if (mkdir(folderPath.c_str(), 0700) == 0) {
-        result = true;
-    }
-    return result;
 }
 
 Case readCaseInformation() {
@@ -165,7 +140,7 @@ bool containsCase(vector<Case> cases, int id) {
     return searchCase(cases, id) != -1;
 }
 
-void createCase(int projectId, int suiteId, user loggedUser) {
+void createCase(int projectId, int suiteId) {
     printHeader(CREATE_CASE_HEADER);
     vector<Case> cases = readCases(projectId, suiteId);
     Case newCase = readCaseInformation();
@@ -174,7 +149,7 @@ void createCase(int projectId, int suiteId, user loggedUser) {
         showMessage(CREATION_FAILED);
     } else {
         newCase.id = generateId(cases);
-        newCase.authorUser = loggedUser.login;
+        newCase.authorUser = getLoggedUser();
         cases.push_back(newCase);
         writeCases(cases, projectId, suiteId);
         showMessage(CREATION_SUCCESS);
@@ -393,10 +368,10 @@ void showTestCaseMenu() {
     std::cout << TEST_CASE_MENU << std::endl;
 }
 
-void goToProcediment(char optionSelected, int projectId, int suiteId, user loggedUser) {
+void goToProcediment(char optionSelected, int projectId, int suiteId) {
     switch(optionSelected) {
         case CREATE_CASE:
-            createCase(projectId, suiteId, loggedUser);
+            createCase(projectId, suiteId);
             break;
         case LIST_CASES:
             listTestsCases(projectId, suiteId);
@@ -415,7 +390,7 @@ void goToProcediment(char optionSelected, int projectId, int suiteId, user logge
     }
 }
 
-void testCaseMenu(int projectId, int suiteId, user loggedUser) {
+void testCaseMenu(int projectId, int suiteId) {
     string optionSelected;
     bool isOptionValid;
 
@@ -424,7 +399,7 @@ void testCaseMenu(int projectId, int suiteId, user loggedUser) {
             showTestCaseMenu();
             optionSelected = readOption();;
 
-            isOptionValid = isMenuInputStringValid(optionSelected, CREATE_SUITE, GO_BACK);
+            isOptionValid = isMenuInputStringValid(optionSelected, CREATE_SUITE, GO_BACK_TEST_CASES);
 
             if (!isOptionValid) {
                 std::cout << INVALID_OPTION << std::endl;
@@ -432,7 +407,7 @@ void testCaseMenu(int projectId, int suiteId, user loggedUser) {
 
         } while (!isOptionValid);
 
-        goToProcediment(optionSelected[0], projectId, suiteId, loggedUser);
+        goToProcediment(optionSelected[0], projectId, suiteId);
 
-    } while (optionSelected[0] != GO_BACK);
+    } while (optionSelected[0] != GO_BACK_TEST_CASES);
 }

@@ -131,9 +131,9 @@ bool registerNewUser() {
 
 bool isFolderCreated (const char *folderPath) {
     bool result;
-    struct stat st = {0};
+    struct stat folderRestrict = {0};
 
-    if (stat(folderPath, &st) == -1) {
+    if (stat(folderPath, &folderRestrict) == -1) {
         result = createFolder(folderPath);
     } else {
         result = true;
@@ -144,7 +144,7 @@ bool isFolderCreated (const char *folderPath) {
 
 bool createFolder(const char *folderPath) {
     bool result = false;
-    if (mkdir(folderPath, 0700) == 0) {
+    if (mkdir(folderPath, FOLDER_CREATION_PARAMETER) == 0) {
         result = true;
     }
     return result;

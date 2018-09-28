@@ -105,3 +105,24 @@ bool verifyPasswords(string password, string password2) {
 
     return isValid;
 }
+
+bool isFolderCreated (string folderPath) {
+    bool result;
+    struct stat folderRestrict = {0};
+
+    if (stat(folderPath.c_str(), &folderRestrict) == -1) {
+        result = createFolder(folderPath);
+    } else {
+        result = true;
+    }
+
+    return result;
+}
+
+bool createFolder(string folderPath) {
+    bool result = false;
+    if (mkdir(folderPath.c_str(), FOLDER_CREATION_PARAMETER) == 0) {
+        result = true;
+    }
+    return result;
+}

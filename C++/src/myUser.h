@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+std::string getLoggedUser();
+
 void myUserMenu();
 
 void changePassword();
