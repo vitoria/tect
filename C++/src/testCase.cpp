@@ -70,7 +70,6 @@ vector<Case> readCases(int projectId, int suiteId) {
 Case readCaseInformation() {
     Case newCase;
     Step newStep;
-    cin.ignore();
 
     cout << NAME;
     getline(cin, newCase.name);

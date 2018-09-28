@@ -19,7 +19,7 @@ void generateReport(user loggedUser){
 
     cout << "(1) Gerar relatório de uma suite de testes" << endl;
     cout << "(2) Gerar relatório de um projeto" << endl;
-    cout << "(3) Gerar relatório de participação de usuário em todos os projetos" << endl;
+    //cout << "(3) Gerar relatório de participação de usuário em todos os projetos" << endl;
     
     selectedOption = readOption()[0];
 
@@ -125,22 +125,21 @@ void generateReport(user loggedUser){
             }
             break;
         }
-        case '3':{
-            projects = arquiveToArray();
-            cout << "Digite o login do usuário base para o relatório: ";
-            cin >> userLogin;
+        // case '3':{
+        //     projects = arquiveToArray();
+        //     cout << "Digite o login do usuário base para o relatório: ";
+        //     cin >> userLogin;
 
-            system("clear");
-            generateUserReport(userLogin, projects);
+        //     system("clear");
+        //     generateUserReport(userLogin, projects);
 
-            break;
-        }
+        //     break;
+        // }
         default:{
             showMessage(INVALID_OPTION);
             break;
         }
     }
-
 }
 
 void generateSuiteReport(suite reportSuite, vector<Case> suiteTestCases){
@@ -150,7 +149,7 @@ void generateSuiteReport(suite reportSuite, vector<Case> suiteTestCases){
     float problemsPercentage;
     float notExecutedPercentage;
 
-    cout << SUITES_PATH + to_string(reportSuite.id) + ".dat" << endl;
+    //cout << SUITES_PATH + to_string(reportSuite.id) + ".dat" << endl;
 
     std::ofstream reportFile(SUITES_PATH + to_string(reportSuite.id) + ".dat", std::ios::in);
 
@@ -177,7 +176,7 @@ void generateSuiteReport(suite reportSuite, vector<Case> suiteTestCases){
         reportFile << "" << endl;
         cout << "" << endl;
         reportFile << "Status do caso: " << suiteTestCases[i].status << endl;
-        cout << "Status do caso: " << suiteTestCases[i].status << endl;
+        cout << "Status do caso: " << caseStatusMessage[suiteTestCases[i].status] << endl;
         reportFile << "" << endl;
         cout << "" << endl;
 
@@ -197,33 +196,30 @@ void generateSuiteReport(suite reportSuite, vector<Case> suiteTestCases){
         }
     }
 
-    notExecutedPercentage /= suiteTestCases.size();
-    notExecutedPercentage *= 100;
+    notExecutedPercentage = calculateStatus(reportSuite, CASE_NOT_EXECUTED);
 
-    passingPercentage /= suiteTestCases.size();
-    passingPercentage *= 100;
+    passingPercentage = calculateStatus(reportSuite, CASE_PASSED);
 
-    notPassingPercentage /= suiteTestCases.size();
-    notPassingPercentage *= 100;
+    notPassingPercentage = calculateStatus(reportSuite, CASE_NOT_PASSED);
 
-    problemsPercentage /= suiteTestCases.size();
-    problemsPercentage *= 100;
+    problemsPercentage = calculateStatus(reportSuite, CASE_ERROR);
 
-    reportFile << "Percentual de casos de testes que passaram: " << int(passingPercentage) << endl;
-    cout << "Percentual de casos de testes que passaram: " << int(passingPercentage) << endl;
-    reportFile << "Percentual de casos de testes que não passaram: " << int(notPassingPercentage) << endl;
-    cout << "Percentual de casos de testes que não passaram: " << int(notPassingPercentage) << endl;
-    reportFile << "Percentual de casos de testes em que ocorreram problemas de execução: " << int(problemsPercentage) << endl;
-    cout << "Percentual de casos de testes em que ocorreram problemas de execução: " << int(problemsPercentage) << endl;
-    reportFile << "Percentual de casos de testes não executados: " << int(notExecutedPercentage) << endl;
-    cout << "Percentual de casos de testes não executados: " << int(notExecutedPercentage) << endl;
+    // reportFile << "Percentual de casos de testes que passaram: " << int(passingPercentage) << "%" << endl;
+    // cout << "Percentual de casos de testes que passaram: " << int(passingPercentage) << "%" << endl;
+    // reportFile << "Percentual de casos de testes que não passaram: " << int(notPassingPercentage) << "%" << endl;
+    // cout << "Percentual de casos de testes que não passaram: " << int(notPassingPercentage) << "%" << endl;
+    // reportFile << "Percentual de casos de testes em que ocorreram problemas de execução: " << int(problemsPercentage) << "%" << endl;
+    // cout << "Percentual de casos de testes em que ocorreram problemas de execução: " << int(problemsPercentage) << "%" << endl;
+    // reportFile << "Percentual de casos de testes não executados: " << int(notExecutedPercentage) << "%" << endl;
+    // cout << "Percentual de casos de testes não executados: " << int(notExecutedPercentage) << "%" << endl;
 
+    pauseSystem();
 }
 
 void generateProjectReport(Project reportProject, vector<suite> projectSuites){
 
-    float passingPercentage;
-    int numberOfCases;
+    float passingPercentage = 0;
+    int numberOfCases = 0;
 
     std::ofstream reportFile(PROJECT_FILE_NAME + reportProject.id, std::ios::in);
 
@@ -279,8 +275,9 @@ void generateProjectReport(Project reportProject, vector<suite> projectSuites){
     passingPercentage *= 100;
 
     reportFile << "Percentual de casos de testes que passaram: " << int(passingPercentage) << endl;
-    cout << "Percentual de casos de testes que passaram: " << int(passingPercentage) << endl;
-
+    // cout << "Percentual de casos de testes que passaram: " << int(passingPercentage) << endl;
+    reportFile.close();
+    pauseSystem();
 }
 
 void generateUserReport(string userLogin, vector<Project> projects){
@@ -357,6 +354,6 @@ void generateUserReport(string userLogin, vector<Project> projects){
     percentage = numberOfPassingTests / numberOfCreatedTests;
 
     reportFile << "Porcentagem de casos de teste criados pelo usuário que passaram: " <<  int(percentage) << endl;
-    cout << "Porcentagem de casos de teste criados pelo usuário que passaram: " <<  int(percentage) << endl;
-
+    // cout << "Porcentagem de casos de teste criados pelo usuário que passaram: " <<  int(percentage) << endl;
+    pauseSystem();
 }

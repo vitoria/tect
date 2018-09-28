@@ -18,6 +18,7 @@ struct suite {
     std::string name;
     std::string description;
     int projectId;
+    float status;
 };
 
 void suiteTestMenu(int);
@@ -33,3 +34,5 @@ void editSuite(int);
 void deleteSuite(int);
 
 void searchSuite(int);
+
+float calculateStatus(suite, int);
