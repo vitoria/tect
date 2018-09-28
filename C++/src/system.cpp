@@ -1,7 +1,12 @@
 #include "system.h"
 #include "constants.h"
 #include "suiteTest.h"
+
+#include "createrProject.h"
+#include "menuProject.h"
+
 #include "myUser.h"
+
 
 using namespace std;
 
@@ -39,20 +44,16 @@ void systemMenu(user loggedUser, bool *isDone) {
                 myUserMenu();
                 break;
             case CREATE_PROJECT:
-                suiteTestMenu();
-                //TODO: Criar projetos
+                createProject(loggedUser);
                 break;
             case ASK_FOR_ACCESS_PROJECT:
-                cout << "Acesso solicitado" << endl;
-                //TODO: Acessar projetos
+                askPermission(loggedUser);
                 break;
             case SEARCH_PROJECT:
-                cout << "Projeto encontrado" << endl;
-                //TODO: Buscar projetos
+                // not implemented
                 break;
             case EDIT_PROJECT:
-                cout << "Projeto editado" << endl;
-                //TODO: Editar projetos
+                verifyUserToProject(loggedUser);
                 break;
             case LOGOUT:
                 cout << LOGOUT_MSG << endl;
