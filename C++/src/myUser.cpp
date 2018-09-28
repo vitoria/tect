@@ -55,9 +55,12 @@ vector<user> readUsers() {
 user readCurrentUser() {
     ifstream userLoggedFile(LOGGED_USER_FILE_PATH, ios::in);
     user current;
-
-    userLoggedFile >> current.username >> current.name;
-    userLoggedFile.close();
+    if (userLoggedFile.is_open()) {
+        userLoggedFile >> current.username >> current.name;
+        userLoggedFile.close();
+    } else {
+        showMessage("Erro ao abrir o arquivo");
+    }
 
     return current;
 }
@@ -127,6 +130,7 @@ void changePassword() {
         currentUser.password = newPassword;
         users[index] = currentUser;
         writeUser(users);
+        showMessage("Senha alterada!");
     }
 
 }
@@ -171,6 +175,7 @@ void myUserMenu() {
             isOptionValid = isMenuInputStringValid(optionSelected, MY_PROFILE, MY_USER_BACK);
 
             if (!isOptionValid) {
+                cout << endl;
                 showMessage(INVALID_OPTION);
             }
 
