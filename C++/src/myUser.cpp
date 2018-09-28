@@ -62,6 +62,10 @@ user readCurrentUser() {
     return current;
 }
 
+string getLoggedUser() {
+    return readCurrentUser().username;
+}
+
 /**
  * This method receives a collection of users and a user to find into this collection.
  * If there inst a user with the same username than the current, returns -1, else returns

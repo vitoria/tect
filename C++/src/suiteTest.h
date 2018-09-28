@@ -1,6 +1,6 @@
 #pragma once
 
-void suiteTestMenu();
+void suiteTestMenu(int);
 
 void createSuite();
 

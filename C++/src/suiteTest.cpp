@@ -2,6 +2,7 @@
 #include "constants.h"
 #include "validation.h"
 #include "generalPrints.h"
+#include "testCase.h"
 #include <string>
 #include <vector>
 #include <fstream>
@@ -72,6 +73,8 @@ suite readSuiteInformation() {
 
     cout << NAME;
     cin >> newSuite.name;
+
+    cin.ignore();
 
     cout << DESCRIPTION;
     cin >> newSuite.description;
@@ -303,6 +306,29 @@ void searchSuite() {
 }
 
 /**
+ * This funcion opens the test case manager passing the test suite id.
+ */
+void manageTestCases(int projectId) {
+    printHeader(TEST_CASE_MANAGER_HEADER);
+    string selectedSuite = readSelectedSuite();
+    vector<suite> suites = readSuites();
+    if (isStringNumeric(selectedSuite)) {
+        int id = stringToInteger(selectedSuite);
+        if (containsSuite(suites, id)) {
+            testCaseMenu(projectId, id);
+        } else {
+            showMessage(SUITE_NOT_FOUND);
+        }
+    } else {
+        if (containsSuite(suites, selectedSuite)) {
+            testCaseMenu(projectId, searchSuite(suites, selectedSuite));
+        } else {
+            showMessage(SUITE_NOT_FOUND);
+        }
+    }
+}
+
+/**
  * It shows the suiteTests main menu.
  */
 void showSuiteTestMenu() {
@@ -314,7 +340,7 @@ void showSuiteTestMenu() {
  * This method chooses the procedure that should be
  * executed according to the selected option. 
  */
-void goToProcediment(char optionSelected) {
+void goToProcediment(char optionSelected, int projecId) {
     switch(optionSelected) {
         case CREATE_SUITE:
             createSuite();
@@ -331,6 +357,9 @@ void goToProcediment(char optionSelected) {
         case DELETE_SUITE:
             deleteSuite();
             break;
+        case MANAGE_TEST_CASES:
+            manageTestCases(projecId);
+            break;
         default:
             break;
     }
@@ -339,7 +368,7 @@ void goToProcediment(char optionSelected) {
 /**
  * This method initializes the suiteTests module.
  */
-void suiteTestMenu() {
+void suiteTestMenu(int projectId) {
     string optionSelected;
     bool isOptionValid;
 
@@ -356,7 +385,7 @@ void suiteTestMenu() {
 
         } while (!isOptionValid);
 
-        goToProcediment(optionSelected[0]);
+        goToProcediment(optionSelected[0], projectId);
 
     } while (optionSelected[0] != GO_BACK);
 }
