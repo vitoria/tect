@@ -96,6 +96,6 @@ void arrayToArquive(vector<Project> arquive_split){
 
 void cleanFile(){
     fstream file;
-    file.open(PROJECT_FILE_NAME, fstream::out | fstream::trunc);
+    file.open(generateProjectFilePath(), fstream::out | fstream::trunc);
     file.close();
 }

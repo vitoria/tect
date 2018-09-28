@@ -45,7 +45,6 @@ void createProject(user creater){
 
 void saveProject(Project project){
 
-    fstream projectFile;
     project.id = idProject();
 
     vector<Project> projects = arquiveToArray();
