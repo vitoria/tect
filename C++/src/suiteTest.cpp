@@ -14,11 +14,11 @@ using namespace std;
  * that contains an automatic generated id,
  * a name and a simple description.
  */
-struct suite {
+/*struct suite {
     int id;
     string name;
     string description;
-};
+};*/
 
 string generateTestSuiteFilePath(int projectId) {
     return string(DATA_FOLDER_PATH) + "/" + to_string(projectId) + "/" + string(SUITES_FILE_PATH);

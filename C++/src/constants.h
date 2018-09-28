@@ -88,6 +88,7 @@
 #define SUITES_FILE_PATH "suites.dat"
 #define USERS_FILE_PATH "data/users.dat"
 #define LOGGED_USER_FILE_PATH "data/logged.dat"
+#define SUITES_PATH "data/reportSuite"
 
 #define MIN_PASSWORD_CHARACTERES 4
 

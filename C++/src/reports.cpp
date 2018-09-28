@@ -46,7 +46,7 @@ void generateReport(user loggedUser){
                 cases = readCases(projectId, suiteId);
                 vector<Case> casesOfSuite;
 
-                suites = readSuites();
+                suites = readSuites(projectId);
                 for(int j = 0; j < suites.size(); j++){
                     if(suites[j].projectId == projectId){
                         suitesOfProject.push_back(suites[j]);
@@ -56,9 +56,9 @@ void generateReport(user loggedUser){
                     }
                 }
                 for(int i = 0; i < cases.size(); i++){
-                    if(cases[i].suiteId == suiteId){
-                        casesOfSuite.push_back(cases[i]);
-                    }
+                    //if(cases[i].suiteId == suiteId){
+                    casesOfSuite.push_back(cases[i]);
+                    //}
                 }
 
                 generateSuiteReport(suiteOfReport, casesOfSuite);
@@ -73,7 +73,7 @@ void generateReport(user loggedUser){
             break;
         }
         case '2':{
-            suites = readSuites();
+            suites = readSuites(projectId);
             projects = arquiveToArray();
 
             cout << "Digite o código do projeto base para o relatório:" << endl;
@@ -139,7 +139,7 @@ void generateSuiteReport(suite reportSuite, vector<Case> suiteTestCases){
     float problemsPercentage;
     float notExecutedPercentage;
 
-    std::ofstream reportFile(SUITES_PATH + reportSuite.id, std::ios::in);
+    std::ofstream reportFile(SUITES_PATH + to_string(reportSuite.id) + ".dat", std::ios::in);
 
     reportFile << "Relatório da suíte de testes " << reportSuite.name << endl;
     cout << "Relatório da suíte de testes " << reportSuite.name << endl;
@@ -278,7 +278,6 @@ void generateUserReport(string userLogin, vector<Project> projects){
     vector<Project> userProjects;
     vector<suite> suites;
     vector<Case> cases;
-    suites = readSuites();
 
     reportFile << "Relatório de participação do usuário " << userLogin << endl;
     cout << "Relatório de participação do usuário" << userLogin << endl;
@@ -306,6 +305,7 @@ void generateUserReport(string userLogin, vector<Project> projects){
         cout << "Dono do projeto: " << userProjects[i].owner << endl;
         reportFile << "" << endl;
         cout << "" << endl;
+        suites = readSuites(userProjects[i].id);
         for(int j = 0; j < suites.size(); j++){
             if(suites[j].projectId == userProjects[i].id){
                 reportFile << "Nome da suite de testes: " << suites[j].name << endl;
