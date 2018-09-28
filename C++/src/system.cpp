@@ -1,6 +1,7 @@
 #include "system.h"
 #include "constants.h"
 #include "suiteTest.h"
+#include "myUser.h"
 
 using namespace std;
 
@@ -25,17 +26,19 @@ void systemMenu(user loggedUser, bool *isDone) {
             optionInput = readOption();
             cin.ignore();
 
-            if (isMenuInputStringValid(optionInput, CREATE_PROJECT, MAIN_EXIT) == false) {
+            if (isMenuInputStringValid(optionInput, MY_USER, MAIN_EXIT) == false) {
                 printInvalidOptionMessage();
             }
 
-        } while (isMenuInputStringValid(optionInput, CREATE_PROJECT, MAIN_EXIT) == false);
+        } while (isMenuInputStringValid(optionInput, MY_USER, MAIN_EXIT) == false);
 
         selectedOption = optionInput[0];
 
         switch(selectedOption){
+            case MY_USER:
+                myUserMenu();
+                break;
             case CREATE_PROJECT:
-                cout << "Projeto criado" << endl;
                 suiteTestMenu();
                 //TODO: Criar projetos
                 break;
@@ -68,7 +71,6 @@ void systemMenu(user loggedUser, bool *isDone) {
 }
 
 void printSystemMenu(string userName) {
-    system(CLEAR);
     printHeader(MAIN_HEADER);
     cout << MAIN_MENU << endl;
 }

@@ -1,5 +1,6 @@
 #include "validation.h"
 #include "constants.h"
+#include "generalPrints.h"
 
 using namespace std;
 
@@ -82,4 +83,18 @@ bool isStringNumeric(string str) {
         result = isCharANumber(str[i]);
     }
     return result;
+}
+
+bool verifyPasswords(string password, string password2) {
+    bool isValid = true;
+    
+    if (password.compare(password2) != 0) {
+        showMessage(PASSWORDS_NOT_MATCH);
+        isValid = false;
+    } else if (password.size() < MIN_PASSWORD_CHARACTERES) {
+        showMessage(PASSWORD_SHOULD_CONTAINS_MIN_CHARACTERS);
+        isValid = false;
+    }
+
+    return isValid;
 }
