@@ -71,21 +71,41 @@ void generateReport(user loggedUser){
             cout << "Digite o código do projeto base para o relatório:" << endl;
             cin >> projectId;
 
-            for(int j = 0; j < suites.size(); j++){
-                if(suites[j].projectId == projectId){
-                    projectSuites.push_back(suites[i]);
-                }
-            }
-
-            for(int i = 0; i < projects.size(); i++){
+            bool isAllowed = false;
+            vector<Project> projects;
+            project = arquiveToArray();
+            for(int i = 0; i < project.size(); i++){
                 if(projects[i].id == projectId){
-                    projectOfReport = projects[i];
+                    for(int j = 0; j < projects[i].users.size(); j++){
+                        if(projects[i].users[j] == loggedUser){
+                            isAllowed = true;
+                        }
+                    }
                 }
             }
 
-            generateProjectReport(projectOfReport, projectSuites);
-            cout << "" << endl;
-            cout << "Relatório do projeto gerado com sucesso" << endl;
+            if(isAllowed){
+                for(int j = 0; j < suites.size(); j++){
+                    if(suites[j].projectId == projectId){
+                        projectSuites.push_back(suites[i]);
+                    }
+                }
+
+                for(int i = 0; i < projects.size(); i++){
+                    if(projects[i].id == projectId){
+                        projectOfReport = projects[i];
+                    }
+                }
+
+                generateProjectReport(projectOfReport, projectSuites);
+                cout << "" << endl;
+                cout << "Relatório do projeto gerado com sucesso" << endl;
+            }
+            else{
+                cout << "Usuário logado no sistema não tem acesso a esse projeto" << endl;
+                cout << "Redirecionado ao menu inicial..." << endl;
+                systemMenu();
+            }
         case '3':
             vector<Project> projects;
             projects = arquiveToArray();
