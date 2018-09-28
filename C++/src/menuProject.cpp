@@ -95,8 +95,7 @@ void projectMenuOwner(int id, user loggedUser){
                 break;
             case '5':
                 deleteProject(id);
-                selectedOption = '6';
-                pauseSystem();
+                selectedOption = '7';
                 break;
             case '6':
                 suiteTestMenu(id);

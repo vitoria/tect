@@ -71,6 +71,8 @@ Case readCaseInformation() {
     Case newCase;
     Step newStep;
 
+    cin.ignore();
+
     cout << NAME;
     getline(cin, newCase.name);
 

@@ -94,6 +94,7 @@ void allowPermissions(int id){
                 string fileInput;
                 cout << "Dar permissão de acesso no projeto " << projects[aux].name;
                 cout << " ao usuário " << projects[aux].requests[i] << " (S/N)? ";
+                cin.ignore();
                 getline(cin, fileInput);
                 if (isMenuInputStringValid(stringToUpper(fileInput), 'S', 'S')){
                     projects[aux].users.push_back(projects[aux].requests[i]);

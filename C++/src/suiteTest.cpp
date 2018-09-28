@@ -79,11 +79,11 @@ int generateId(vector<suite> suites) {
  */
 suite readSuiteInformation() {
     suite newSuite;
-
+    
+    cin.ignore();
+    
     cout << NAME;
     getline(cin, newSuite.name);
-
-    cin.ignore();
 
     cout << DESCRIPTION;
     getline(cin, newSuite.description);
