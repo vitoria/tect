@@ -285,7 +285,7 @@ void showSuite(suite current) {
     showID(current.id);
     cout << "\nNome: " << current.name << endl;
     cout << "Descrição: " << current.description << endl;
-    cout << "Status: " << "100\n";
+    cout << "Status: " << calculateStatus(current, 2) << "% dos casos de testes passaram." << endl;
 
     pauseSystem();
 }
@@ -396,4 +396,21 @@ void suiteTestMenu(int projectId) {
         goToProcediment(optionSelected[0], projectId);
 
     } while (optionSelected[0] != GO_BACK);
+}
+
+float calculateStatus(suite suite, int whichStatus){
+    vector<Case> cases = readCases(suite.projectId, suite.id);
+
+    float status = 0.0;
+
+    if (cases.size() > 0){
+        float statusCases = 0;
+        for (int i = 0; i < cases.size(); i++){         
+            if(cases[i].status == whichStatus){
+                statusCases++;
+            }
+        }
+        status = (statusCases / cases.size()) * 100;
+    }
+    return status;
 }

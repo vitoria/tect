@@ -197,26 +197,22 @@ void generateSuiteReport(suite reportSuite, vector<Case> suiteTestCases){
         }
     }
 
-    notExecutedPercentage /= suiteTestCases.size();
-    notExecutedPercentage *= 100;
+    notExecutedPercentage = calculateStatus(reportSuite, 1);
 
-    passingPercentage /= suiteTestCases.size();
-    passingPercentage *= 100;
+    passingPercentage = calculateStatus(reportSuite, 2);
 
-    notPassingPercentage /= suiteTestCases.size();
-    notPassingPercentage *= 100;
+    notPassingPercentage = calculateStatus(reportSuite, 3);
 
-    problemsPercentage /= suiteTestCases.size();
-    problemsPercentage *= 100;
+    problemsPercentage = calculateStatus(reportSuite, 4);
 
-    reportFile << "Percentual de casos de testes que passaram: " << int(passingPercentage) << endl;
-    cout << "Percentual de casos de testes que passaram: " << int(passingPercentage) << endl;
-    reportFile << "Percentual de casos de testes que não passaram: " << int(notPassingPercentage) << endl;
-    cout << "Percentual de casos de testes que não passaram: " << int(notPassingPercentage) << endl;
-    reportFile << "Percentual de casos de testes em que ocorreram problemas de execução: " << int(problemsPercentage) << endl;
-    cout << "Percentual de casos de testes em que ocorreram problemas de execução: " << int(problemsPercentage) << endl;
-    reportFile << "Percentual de casos de testes não executados: " << int(notExecutedPercentage) << endl;
-    cout << "Percentual de casos de testes não executados: " << int(notExecutedPercentage) << endl;
+    reportFile << "Percentual de casos de testes que passaram: " << int(passingPercentage) << "%" << endl;
+    cout << "Percentual de casos de testes que passaram: " << int(passingPercentage) << "%" << endl;
+    reportFile << "Percentual de casos de testes que não passaram: " << int(notPassingPercentage) << "%" << endl;
+    cout << "Percentual de casos de testes que não passaram: " << int(notPassingPercentage) << "%" << endl;
+    reportFile << "Percentual de casos de testes em que ocorreram problemas de execução: " << int(problemsPercentage) << "%" << endl;
+    cout << "Percentual de casos de testes em que ocorreram problemas de execução: " << int(problemsPercentage) << "%" << endl;
+    reportFile << "Percentual de casos de testes não executados: " << int(notExecutedPercentage) << "%" << endl;
+    cout << "Percentual de casos de testes não executados: " << int(notExecutedPercentage) << "%" << endl;
 
 }
 
