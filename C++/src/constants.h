@@ -20,7 +20,8 @@
 #define MY_USER_MENU "(1) Ver perfil\n(2) Alterar senha\n(3) Voltar"
 #define LOGIN_MENU "(1) Efetuar login\n(2) Cadastrar novo usuário\n(3) Sair"
 #define MAIN_MENU "(1) Meu usuario\n(2) Criar Projeto\n(3) Pedir acesso a um projeto\n(4) Pesquisar Projeto\n(5) Editar Projeto\n(6) Logout\n(7) Sair"
-#define SUITE_MENU "(1) Criar suite de teste\n(2) Listar suites de teste\n(3) Pesquisar suite de teste\n(4) Editar suite de teste\n(5) Apagar suite de teste\n(6) Voltar"
+#define SUITE_MENU "(1) Criar suite de teste\n(2) Listar suites de teste\n(3) Pesquisar suite de teste\n(4) Editar suite de teste\n(5) Apagar suite de teste\n(6) Gerenciar casos de teste\n(7) Voltar"
+#define TEST_CASE_MENU "(1) Criar caso de teste\n(2) Listar casos de teste\n(3) Pesquisar caso de teste\n(4) Editar caso de teste\n(5) Apagar caso de teste\n(6) Voltar"
 
 // Main menu options
 #define MY_USER                '1'
@@ -42,20 +43,55 @@
 #define EXIT    '3'
 
 // Suite Tests menu options
-#define CREATE_SUITE '1'
-#define LIST_SUITES  '2'
-#define SEARCH_SUITE '3'
-#define EDIT_SUITE   '4'
-#define DELETE_SUITE '5'
-#define GO_BACK      '6'
+#define CREATE_SUITE        '1'
+#define LIST_SUITES         '2'
+#define SEARCH_SUITE        '3'
+#define EDIT_SUITE          '4'
+#define DELETE_SUITE        '5'
+#define MANAGE_TEST_CASES   '6'
+#define GO_BACK             '7'
+
+//All from testCase
+#define OBJECTIVE "Objetivo: "
+#define PRECONDITIONS "Pré-condições: "
+#define CASE_NOT_EXECUTED 0
+#define CASE_PASSED 1
+#define CASE_NOT_PASSED 2
+#define CASE_ERROR 3
+#define CASE_STEPS_READING_HEADER " - Passos de execução do caso de testes - "
+#define CASE_STEP_DESCRIPTION "Descrição do passo: "
+#define CASE_STEP_EXPECTED_RESULT "Resultado esperado para o passo: "
+#define CASE_STEP_CONTINUE_MESSAGE "Deseja inserir outro passo (S/N)?"
+#define CREATE_CASE_HEADER     "#----------# CRIAR CASO DE TESTE #---------#"
+#define SEARCH_CASE_HEADER     "#--------# PESQUISAR CASO DE TESTE #-------#"
+#define CASE_DETAILS           "#-------# DETALHES DO CASO DE TESTE #------#"
+#define EDIT_CASE_HEADER       "#---------# EDITAR CASO DE TESTE #---------#"
+#define DELETE_CASE_HEADER     "#--------# EXCLUIR CASO DE TESTE #---------#"
+#define TEST_CASE_MENU_HEADER  "#--------# MENU DE CASOS DE TESTE #--------#"
+#define TEST_CASE_MANAGER_HEADER  "#-------# GERENCIAR CASOS DE TESTE #-------#"
+#define TEST_CASE_HEADER       "#--------------------# CASOS DE TESTE #------------------------#"
+#define TEST_CASE_TABLE_HEADER "-     ID     |             Nome            |       Status      -"
+#define TEST_CASE_TABLE_LINE   "----------------------------------------------------------------"
+#define CHOOSE_CASE "Informe o nome ou ID do Caso de Teste: "
+#define CASE_NOT_FOUND "Caso não encontrado."
+#define CASE_EDITED "Caso editado com sucesso!"
+#define CASE_DELETED "Caso deletado com sucesso!"
+#define CREATE_CASE '1'
+#define LIST_CASES '2'
+#define SEARCH_CASES '3'
+#define EDIT_CASES '4'
+#define DELETE_CASES '5'
+#define GO_BACK_TEST_CASES '6'
 
 // Paths
 #define DATA_FOLDER_PATH "data"
-#define SUITES_PATH "suites.dat"
+#define SUITES_FILE_PATH "suites.dat"
 #define USERS_FILE_PATH "data/users.dat"
 #define LOGGED_USER_FILE_PATH "data/logged.dat"
 
 #define MIN_PASSWORD_CHARACTERES 4
+
+#define FOLDER_CREATION_PARAMETER 0700
 
 #define CLEAR "clear"
 #define INVALID_OPTION "Opção inválida!"

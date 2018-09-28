@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <string>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 bool isMenuInputStringValid(std::string, char, char);
 
@@ -26,4 +29,10 @@ bool isCharANumber(char);
 
 bool isStringNumeric(std::string);
 
+std::string stringToUpper(std::string);
+
 bool verifyPasswords(std::string, std::string);
+
+bool isFolderCreated (std::string);
+
+bool createFolder(std::string);

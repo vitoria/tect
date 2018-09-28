@@ -41,7 +41,7 @@ void verifyUserToProject(user loggedUser){
         cout << PAUSE_MSG << endl;
         cin.get();
         system(CLEAR);
-        systemMenu(loggedUser);
+        //systemMenu(loggedUser);
     }    
 }
 
@@ -87,7 +87,7 @@ void projectMenuOwner(int id, user loggedUser){
                 selectedOption = '7';
                 break;
             case '5':
-                suiteTestMenu();
+                suiteTestMenu(id);
                 break;
             case '6':
                 generateReport(id);
@@ -134,7 +134,7 @@ void projectMenuUser(int id, user loggedUser){
 
         switch(selectedOption){
             case '1':
-                suiteTestMenu();
+                suiteTestMenu(id);
                 break;
             case '2':
                 generateReport(id);

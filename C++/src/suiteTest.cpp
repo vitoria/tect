@@ -1,26 +1,57 @@
 #include "suiteTest.h"
+#include "constants.h"
+#include "validation.h"
+#include "generalPrints.h"
+#include "testCase.h"
+#include <string>
+#include <vector>
+#include <fstream>
 
 using namespace std;
 
 /**
+ * This struct represents a suite
+ * that contains an automatic generated id,
+ * a name and a simple description.
+ */
+struct suite {
+    int id;
+    string name;
+    string description;
+};
+
+string generateTestSuiteFilePath(int projectId) {
+    return string(DATA_FOLDER_PATH) + "/" + to_string(projectId) + "/" + string(SUITES_FILE_PATH);
+}
+
+string generateTestSuiteFolderPath(int projectId) {
+    return string(DATA_FOLDER_PATH) + "/" + to_string(projectId);
+}
+
+/**
  * This method receive a list of suites and write them in a file.
  */
-void writeSuites(vector<suite> suites) {
-    ofstream suitesFile(SUITES_PATH, ios::out);
-    for (int i = 0; i < suites.size(); i++) {
-        suitesFile << suites[i].id << endl;
-        suitesFile << suites[i].name << endl;
-        suitesFile << suites[i].description << endl;
+void writeSuites(vector<suite> suites, int projectId) {
+    string filePath = generateTestSuiteFilePath(projectId);
+    string folderPath = generateTestSuiteFolderPath(projectId);
+    if (isFolderCreated(folderPath)){
+        ofstream suitesFile(filePath, ios::out);
+        for (int i = 0; i < suites.size(); i++) {
+            suitesFile << suites[i].id << endl;
+            suitesFile << suites[i].name << endl;
+            suitesFile << suites[i].description << endl;
+        }
+        suitesFile.close();
     }
-    suitesFile.close();
 }
 
 /**
  * This method read all the suites writen in a file
  * and put them in a vector and return it.
  */
-vector<suite> readSuites() {
-    ifstream suitesFile(SUITES_PATH, ios::in);
+vector<suite> readSuites(int projectId) {
+    string filePath = generateTestSuiteFilePath(projectId);
+    ifstream suitesFile(filePath, ios::in);
     vector<suite> suites;
     suite current;
 
@@ -55,6 +86,8 @@ suite readSuiteInformation() {
 
     cout << NAME;
     cin >> newSuite.name;
+
+    cin.ignore();
 
     cout << DESCRIPTION;
     cin >> newSuite.description;
@@ -123,9 +156,9 @@ bool containsSuite(vector<suite> suites, int id) {
  * This method creates a new suite if there isnt one with the same name
  * already created and save it in the suites file.
  */
-void createSuite() {
+void createSuite(int projectId) {
     printHeader(CREATE_SUITE_HEADER);
-    vector<suite> suites = readSuites();
+    vector<suite> suites = readSuites(projectId);
     suite newSuite = readSuiteInformation();
 
     if (containsSuite(suites, newSuite.name)) {
@@ -133,7 +166,7 @@ void createSuite() {
     } else {
         newSuite.id = generateId(suites);
         suites.push_back(newSuite);
-        writeSuites(suites);
+        writeSuites(suites, projectId);
         showMessage(CREATION_SUCCESS);
     }
 }
@@ -142,9 +175,9 @@ void createSuite() {
  * This method shows the informations about all suites
  * saved in the suites file.
  */
-void listSuites() {
+void listSuites(int projectId) {
     printHeader(SUITE_LIST_HEADER);
-    vector<suite> suites = readSuites();
+    vector<suite> suites = readSuites(projectId);
 
     showLine();
     cout << TABLE_HEADER << endl;
@@ -171,7 +204,7 @@ string readSelectedSuite() {
 /**
  * Edit the suite in the index position.
  */
-void editSuite(vector<suite> suites, int index) {
+void editSuite(vector<suite> suites, int index, int projectId) {
     printHeader();
     cout << "#----------# EDITING SUITE ";
     showID(suites[index].id);
@@ -184,7 +217,7 @@ void editSuite(vector<suite> suites, int index) {
     } else {
         suites[index].name = editedSuite.name;
         suites[index].description = editedSuite.description;
-        writeSuites(suites);
+        writeSuites(suites, projectId);
         showMessage(SUITE_EDITED);
     }
 
@@ -193,21 +226,21 @@ void editSuite(vector<suite> suites, int index) {
 /**
  * Edit suuite procedure.
  */
-void editSuite() {
+void editSuite(int projectId) {
     printHeader(EDIT_SUITE_HEADER);
     string selectedSuite = readSelectedSuite();
-    vector<suite> suites = readSuites();
+    vector<suite> suites = readSuites(projectId);
 
     if (isStringNumeric(selectedSuite)) {
         int id = stringToInteger(selectedSuite);
         if (containsSuite(suites, id)) {
-            editSuite(suites, searchSuite(suites, id));
+            editSuite(suites, searchSuite(suites, id), projectId);
         } else {
             showMessage(SUITE_NOT_FOUND);
         }
     } else {
         if (containsSuite(suites, selectedSuite)) {
-            editSuite(suites, searchSuite(suites, selectedSuite));
+            editSuite(suites, searchSuite(suites, selectedSuite), projectId);
         } else {
             showMessage(SUITE_NOT_FOUND);
         }
@@ -217,30 +250,30 @@ void editSuite() {
 /**
  * It deletes the suite from index in the suites.
  */
-void deleteSuite(vector<suite> suites, int index) {
+void deleteSuite(vector<suite> suites, int index, int projectId) {
     suites.erase(suites.begin() + index);
-    writeSuites(suites);
+    writeSuites(suites, projectId);
 }
 
 /**
  * Delete suite test procedure.
  */
-void deleteSuite() {
+void deleteSuite(int projectId) {
     printHeader(DELETE_SUITE_HEADER);
     string selectedSuite = readSelectedSuite();
-    vector<suite> suites = readSuites();
+    vector<suite> suites = readSuites(projectId);
 
     if (isStringNumeric(selectedSuite)) {
         int id = stringToInteger(selectedSuite);
         if (containsSuite(suites, id)) {
-            deleteSuite(suites, searchSuite(suites, id));
+            deleteSuite(suites, searchSuite(suites, id), projectId);
             showMessage(SUITE_DELETED);
         } else {
             showMessage(SUITE_NOT_FOUND);
         }
     } else {
         if (containsSuite(suites, selectedSuite)) {
-            deleteSuite(suites, searchSuite(suites, selectedSuite));
+            deleteSuite(suites, searchSuite(suites, selectedSuite), projectId);
             showMessage(SUITE_DELETED);
         } else {
             showMessage(SUITE_NOT_FOUND);
@@ -265,10 +298,10 @@ void showSuite(suite current) {
 /**
  * Search suite procedure.
  */
-void searchSuite() {
+void searchSuite(int projectId) {
     printHeader(SEARCH_SUITE_HEADER);
     string selectedSuite = readSelectedSuite();
-    vector<suite> suites = readSuites();
+    vector<suite> suites = readSuites(projectId);
     if (isStringNumeric(selectedSuite)) {
         int id = stringToInteger(selectedSuite);
         if (containsSuite(suites, id)) {
@@ -279,6 +312,29 @@ void searchSuite() {
     } else {
         if (containsSuite(suites, selectedSuite)) {
             showSuite(suites[searchSuite(suites, selectedSuite)]);
+        } else {
+            showMessage(SUITE_NOT_FOUND);
+        }
+    }
+}
+
+/**
+ * This funcion opens the test case manager passing the test suite id.
+ */
+void manageTestCases(int projectId) {
+    printHeader(TEST_CASE_MANAGER_HEADER);
+    string selectedSuite = readSelectedSuite();
+    vector<suite> suites = readSuites(projectId);
+    if (isStringNumeric(selectedSuite)) {
+        int id = stringToInteger(selectedSuite);
+        if (containsSuite(suites, id)) {
+            testCaseMenu(projectId, id);
+        } else {
+            showMessage(SUITE_NOT_FOUND);
+        }
+    } else {
+        if (containsSuite(suites, selectedSuite)) {
+            testCaseMenu(projectId, searchSuite(suites, selectedSuite));
         } else {
             showMessage(SUITE_NOT_FOUND);
         }
@@ -297,22 +353,25 @@ void showSuiteTestMenu() {
  * This method chooses the procedure that should be
  * executed according to the selected option. 
  */
-void goToProcediment(char optionSelected) {
+void goToProcediment(char optionSelected, int projectId) {
     switch(optionSelected) {
         case CREATE_SUITE:
-            createSuite();
+            createSuite(projectId);
             break;
         case LIST_SUITES:
-            listSuites();
+            listSuites(projectId);
             break;
         case SEARCH_SUITE:
-            searchSuite();
+            searchSuite(projectId);
             break;
         case EDIT_SUITE:
-            editSuite();
+            editSuite(projectId);
             break;
         case DELETE_SUITE:
-            deleteSuite();
+            deleteSuite(projectId);
+            break;
+        case MANAGE_TEST_CASES:
+            manageTestCases(projectId);
             break;
         default:
             break;
@@ -322,7 +381,7 @@ void goToProcediment(char optionSelected) {
 /**
  * This method initializes the suiteTests module.
  */
-void suiteTestMenu() {
+void suiteTestMenu(int projectId) {
     string optionSelected;
     bool isOptionValid;
 
@@ -339,7 +398,7 @@ void suiteTestMenu() {
 
         } while (!isOptionValid);
 
-        goToProcediment(optionSelected[0]);
+        goToProcediment(optionSelected[0], projectId);
 
     } while (optionSelected[0] != GO_BACK);
 }

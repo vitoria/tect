@@ -20,17 +20,16 @@ struct suite {
     int projectId;
 };
 
+void suiteTestMenu(int);
 
-void suiteTestMenu();
-
-void createSuite();
+void createSuite(int);
 
 std::vector<suite> readSuites();
 
-void listSuites();
+void listSuites(int);
 
-void editSuite();
+void editSuite(int);
 
-void deleteSuite();
+void deleteSuite(int);
 
-void searchSuite();
+void searchSuite(int);
