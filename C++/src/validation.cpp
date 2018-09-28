@@ -1,5 +1,6 @@
 #include "validation.h"
 #include "constants.h"
+#include "generalPrints.h"
 
 using namespace std;
 
@@ -27,8 +28,8 @@ void printInvalidOptionMessage() {
     system (CLEAR);
 }
 
-std::string removeWhiteSpaces(std::string str) {
-    std::string result = "";
+string removeWhiteSpaces(string str) {
+    string result = "";
 
     for (int i = 0; i < str.size(); i++) {
         if (str[i] != ' ') {
@@ -39,8 +40,8 @@ std::string removeWhiteSpaces(std::string str) {
     return result;
 }
 
-bool isTextValid(std::string text) {
-    std::string currentText = removeWhiteSpaces(text);
+bool isTextValid(string text) {
+    string currentText = removeWhiteSpaces(text);
     return currentText.compare("") != 0;
 }
 
@@ -89,4 +90,18 @@ string stringToUpper(string str) {
         str[i] = toupper(str[i]);
     }
     return str;
+}
+
+bool verifyPasswords(string password, string password2) {
+    bool isValid = true;
+    
+    if (password.compare(password2) != 0) {
+        showMessage(PASSWORDS_NOT_MATCH);
+        isValid = false;
+    } else if (password.size() < MIN_PASSWORD_CHARACTERES) {
+        showMessage(PASSWORD_SHOULD_CONTAINS_MIN_CHARACTERS);
+        isValid = false;
+    }
+
+    return isValid;
 }

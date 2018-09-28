@@ -185,14 +185,15 @@ bool loginMenu(user *loggedUser, bool *isDone) {
         do {
             printLoginMenu();
 
-            getline(cin,optionInput);
+            optionInput = readOption();
+            cin.ignore();
 
         if (isMenuInputStringValid(optionInput, LOGIN, LOGOUT) == false) {
             printInvalidOptionMessage();
         }
     } while (isMenuInputStringValid(optionInput, LOGIN, LOGOUT) == false);
 
-        selectedOption = optionInput[0];
+    selectedOption = optionInput[0];
 
     switch(selectedOption){
         case LOGIN:
@@ -201,8 +202,8 @@ bool loginMenu(user *loggedUser, bool *isDone) {
         case SIGN_UP:
             registerNewUser();
             break;
-        case LOGOUT:
-            cout << "Encerrando sistema..." << endl;
+        case EXIT:
+            cout << EXIT_MSG << endl;
             isLogged = false;
             *isDone = true;
             break;
@@ -214,7 +215,7 @@ bool loginMenu(user *loggedUser, bool *isDone) {
         }
 
     } else {
-        cout << "Bem-vindo de volta " << loggedUser->name << "!" << endl;
+        cout << "Olá, " << loggedUser->name << ", você não encerrou sua sessão!" << endl;
     }
 
     cout << PAUSE_MSG << endl;

@@ -27,3 +27,5 @@ bool isCharANumber(char);
 bool isStringNumeric(std::string);
 
 std::string stringToUpper(std::string);
+
+bool verifyPasswords(std::string, std::string);

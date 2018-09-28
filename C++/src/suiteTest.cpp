@@ -6,6 +6,8 @@
 #include <vector>
 #include <fstream>
 
+using namespace std;
+
 /**
  * This struct represents a suite
  * that contains an automatic generated id,
@@ -13,19 +15,19 @@
  */
 struct suite {
     int id;
-    std::string name;
-    std::string description;
+    string name;
+    string description;
 };
 
 /**
  * This method receive a list of suites and write them in a file.
  */
-void writeSuites(std::vector<suite> suites) {
-    std::ofstream suitesFile(SUITES_PATH, std::ios::out);
+void writeSuites(vector<suite> suites) {
+    ofstream suitesFile(SUITES_PATH, ios::out);
     for (int i = 0; i < suites.size(); i++) {
-        suitesFile << suites[i].id << std::endl;
-        suitesFile << suites[i].name << std::endl;
-        suitesFile << suites[i].description << std::endl;
+        suitesFile << suites[i].id << endl;
+        suitesFile << suites[i].name << endl;
+        suitesFile << suites[i].description << endl;
     }
     suitesFile.close();
 }
@@ -34,9 +36,9 @@ void writeSuites(std::vector<suite> suites) {
  * This method read all the suites writen in a file
  * and put them in a vector and return it.
  */
-std::vector<suite> readSuites() {
-    std::ifstream suitesFile(SUITES_PATH, std::ios::in);
-    std::vector<suite> suites;
+vector<suite> readSuites() {
+    ifstream suitesFile(SUITES_PATH, ios::in);
+    vector<suite> suites;
     suite current;
 
     while(suitesFile >> current.id >> current.name >> current.description) {
@@ -51,7 +53,7 @@ std::vector<suite> readSuites() {
  * Generate the an id based on the last suite id. If there is 
  * no suite in the suites, the id is 1.
  */
-int generateId(std::vector<suite> suites) {
+int generateId(vector<suite> suites) {
     int id = 1;
     
     if (suites.size() > 0) {
@@ -68,11 +70,11 @@ int generateId(std::vector<suite> suites) {
 suite readSuiteInformation() {
     suite newSuite;
 
-    std::cout << NAME;
-    std::cin >> newSuite.name;
+    cout << NAME;
+    cin >> newSuite.name;
 
-    std::cout << DESCRIPTION;
-    std::cin >> newSuite.description;
+    cout << DESCRIPTION;
+    cin >> newSuite.description;
 
     return newSuite;
 }
@@ -82,8 +84,8 @@ suite readSuiteInformation() {
  * in the suites. If find it, returns a natural number,
  * otherwise returns a negative one.
  */
-int searchSuite(std::vector<suite> suites, std::string current) {
-    std::string name = removeWhiteSpaces(current);
+int searchSuite(vector<suite> suites, string current) {
+    string name = removeWhiteSpaces(current);
     int index = 0;
 
     while (index < suites.size() && 
@@ -103,7 +105,7 @@ int searchSuite(std::vector<suite> suites, std::string current) {
  * in the suites. If find it, returns a natural number,
  * otherwise returns a negative one.
  */
-int searchSuite(std::vector<suite> suites, int id) {
+int searchSuite(vector<suite> suites, int id) {
     int index = 0;
 
     while (index < suites.size() && 
@@ -122,7 +124,7 @@ int searchSuite(std::vector<suite> suites, int id) {
  * This method checks if the suites contains a suite with the same name
  * than the current.
  */
-bool containsSuite(std::vector<suite> suites, std::string current) {
+bool containsSuite(vector<suite> suites, string current) {
     return searchSuite(suites, current) != -1;
 }
 
@@ -130,7 +132,7 @@ bool containsSuite(std::vector<suite> suites, std::string current) {
  * This method checks if the suites contains a suite with the same id
  * than the current.
  */
-bool containsSuite(std::vector<suite> suites, int id) {
+bool containsSuite(vector<suite> suites, int id) {
     return searchSuite(suites, id) != -1;
 }
 
@@ -140,7 +142,7 @@ bool containsSuite(std::vector<suite> suites, int id) {
  */
 void createSuite() {
     printHeader(CREATE_SUITE_HEADER);
-    std::vector<suite> suites = readSuites();
+    vector<suite> suites = readSuites();
     suite newSuite = readSuiteInformation();
 
     if (containsSuite(suites, newSuite.name)) {
@@ -159,15 +161,15 @@ void createSuite() {
  */
 void listSuites() {
     printHeader(SUITE_LIST_HEADER);
-    std::vector<suite> suites = readSuites();
+    vector<suite> suites = readSuites();
 
     showLine();
-    std::cout << TABLE_HEADER << std::endl;
+    cout << TABLE_HEADER << endl;
     showLine();
     for (int i = 0; i < suites.size(); i++) {
-        std::cout << "-    ";
+        cout << "-    ";
         showID(suites[i].id);
-        std::cout << "    | " << truncate(suites[i].name, 28) << " -" << std::endl;
+        cout << "    | " << truncate(suites[i].name, 28) << " -" << endl;
     }
     showLine();
     pauseSystem();
@@ -176,21 +178,21 @@ void listSuites() {
 /**
  * It read the user's selected suite tests and returns it.
  */
-std::string readSelectedSuite() {
-    std::string selectedSuite;
-    std::cout << CHOOSE_SUITE;
-    std::cin >> selectedSuite;
+string readSelectedSuite() {
+    string selectedSuite;
+    cout << CHOOSE_SUITE;
+    cin >> selectedSuite;
     return selectedSuite;
 }
 
 /**
  * Edit the suite in the index position.
  */
-void editSuite(std::vector<suite> suites, int index) {
+void editSuite(vector<suite> suites, int index) {
     printHeader();
-    std::cout << "#----------# EDITING SUITE ";
+    cout << "#----------# EDITING SUITE ";
     showID(suites[index].id);
-    std::cout << " #----------#" << std::endl << std::endl;
+    cout << " #----------#" << endl << endl;
 
     suite editedSuite = readSuiteInformation();
 
@@ -210,8 +212,8 @@ void editSuite(std::vector<suite> suites, int index) {
  */
 void editSuite() {
     printHeader(EDIT_SUITE_HEADER);
-    std::string selectedSuite = readSelectedSuite();
-    std::vector<suite> suites = readSuites();
+    string selectedSuite = readSelectedSuite();
+    vector<suite> suites = readSuites();
 
     if (isStringNumeric(selectedSuite)) {
         int id = stringToInteger(selectedSuite);
@@ -232,7 +234,7 @@ void editSuite() {
 /**
  * It deletes the suite from index in the suites.
  */
-void deleteSuite(std::vector<suite> suites, int index) {
+void deleteSuite(vector<suite> suites, int index) {
     suites.erase(suites.begin() + index);
     writeSuites(suites);
 }
@@ -242,8 +244,8 @@ void deleteSuite(std::vector<suite> suites, int index) {
  */
 void deleteSuite() {
     printHeader(DELETE_SUITE_HEADER);
-    std::string selectedSuite = readSelectedSuite();
-    std::vector<suite> suites = readSuites();
+    string selectedSuite = readSelectedSuite();
+    vector<suite> suites = readSuites();
 
     if (isStringNumeric(selectedSuite)) {
         int id = stringToInteger(selectedSuite);
@@ -268,11 +270,11 @@ void deleteSuite() {
  */
 void showSuite(suite current) {
     printHeader(SUITE_DETAILS);
-    std::cout << "ID: ";
+    cout << "ID: ";
     showID(current.id);
-    std::cout << "\nNome: " << current.name << std::endl;
-    std::cout << "Descrição: " << current.description << std::endl;
-    std::cout << "Status: " << "100\n";
+    cout << "\nNome: " << current.name << endl;
+    cout << "Descrição: " << current.description << endl;
+    cout << "Status: " << "100\n";
 
     pauseSystem();
 }
@@ -282,8 +284,8 @@ void showSuite(suite current) {
  */
 void searchSuite() {
     printHeader(SEARCH_SUITE_HEADER);
-    std::string selectedSuite = readSelectedSuite();
-    std::vector<suite> suites = readSuites();
+    string selectedSuite = readSelectedSuite();
+    vector<suite> suites = readSuites();
     if (isStringNumeric(selectedSuite)) {
         int id = stringToInteger(selectedSuite);
         if (containsSuite(suites, id)) {
@@ -305,11 +307,11 @@ void searchSuite() {
  */
 void showSuiteTestMenu() {
     printHeader(SUITE_MENU_HEADER);
-    std::cout << SUITE_MENU << std::endl;
+    cout << SUITE_MENU << endl;
 }
 
 /**
- * This method chooses the procediment that should be
+ * This method chooses the procedure that should be
  * executed according to the selected option. 
  */
 void goToProcediment(char optionSelected) {
@@ -338,18 +340,18 @@ void goToProcediment(char optionSelected) {
  * This method initializes the suiteTests module.
  */
 void suiteTestMenu() {
-    std::string optionSelected;
+    string optionSelected;
     bool isOptionValid;
 
     do {
         do {
             showSuiteTestMenu();
-            optionSelected = readOption();;
+            optionSelected = readOption();
 
             isOptionValid = isMenuInputStringValid(optionSelected, CREATE_SUITE, GO_BACK);
 
             if (!isOptionValid) {
-                std::cout << INVALID_OPTION << std::endl;
+                cout << INVALID_OPTION << endl;
             }
 
         } while (!isOptionValid);

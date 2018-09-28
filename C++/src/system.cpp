@@ -2,6 +2,12 @@
 #include "constants.h"
 #include "suiteTest.h"
 
+#include "createrProject.h"
+#include "menuProject.h"
+
+#include "myUser.h"
+
+
 using namespace std;
 
 void running() {
@@ -10,62 +16,67 @@ void running() {
     
     while (!isDone) {
         if (loginMenu(&loggedUser, &isDone)){
-            systemMenu(loggedUser);
+            systemMenu(loggedUser, &isDone);
         }
     }
 }
 
-void systemMenu(user loggedUser) {
+void systemMenu(user loggedUser, bool *isDone) {
     string optionInput;
     char selectedOption;
     do {
         do {
             printSystemMenu(loggedUser.name);
 
-            getline(cin,optionInput);
+            optionInput = readOption();
+            cin.ignore();
 
-            if (isMenuInputStringValid(optionInput, CREATE_PROJECT, LOGOUT) == false) {
+            if (isMenuInputStringValid(optionInput, MY_USER, MAIN_EXIT) == false) {
                 printInvalidOptionMessage();
             }
 
-        } while (isMenuInputStringValid(optionInput, CREATE_PROJECT, LOGOUT) == false);
-
-        system(CLEAR);
+        } while (isMenuInputStringValid(optionInput, MY_USER, MAIN_EXIT) == false);
 
         selectedOption = optionInput[0];
 
         switch(selectedOption){
+            case MY_USER:
+                myUserMenu();
+                break;
             case CREATE_PROJECT:
+<<<<<<< HEAD
                 cout << "Projeto criado" << endl;
                 testCaseMenu(1, 1);
+=======
+                createProject(loggedUser);
+>>>>>>> master
                 break;
             case ASK_FOR_ACCESS_PROJECT:
-                cout << "Acesso solicitado" << endl;
+                askPermission(loggedUser);
                 break;
             case SEARCH_PROJECT:
-                cout << "Projeto encontrado" << endl;
+                // not implemented
                 break;
             case EDIT_PROJECT:
-                cout << "Projeto editado" << endl;
+                verifyUserToProject(loggedUser);
                 break;
-            case EXIT:
-                cout << "Saindo do usuário atual..." << endl;
+            case LOGOUT:
+                cout << LOGOUT_MSG << endl;
                 logout();
                 break;
+            case MAIN_EXIT:
+                *isDone = true;
+                return;
             default:
-                cout << "ERRO!" << endl;
+                cout << INVALID_OPTION << endl;
                 break;
         }
     
-        cout << PAUSE_MSG << endl;
-        cin.get();
-        system(CLEAR);
-    } while(selectedOption != LOGOUT);
+        pauseSystem();
+    } while(selectedOption != LOGOUT && selectedOption != MAIN_EXIT);
 }
 
 void printSystemMenu(string userName) {
-    system(CLEAR);
-    printHeader();
-    cout << "Bem-vindo " << userName << "! Selecione a opção desejada: \n";
+    printHeader(MAIN_HEADER);
     cout << MAIN_MENU << endl;
 }

@@ -9,5 +9,5 @@
 #include "testCase.h"
 
 void running();
-void systemMenu(user);
+void systemMenu(user, bool*);
 void printSystemMenu(std::string);
