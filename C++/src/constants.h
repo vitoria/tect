@@ -19,7 +19,7 @@
 // Menus
 #define MY_USER_MENU "(1) Ver perfil\n(2) Alterar senha\n(3) Voltar"
 #define LOGIN_MENU "(1) Efetuar login\n(2) Cadastrar novo usuário\n(3) Sair"
-#define MAIN_MENU "(1) Meu usuario\n(2) Criar Projeto\n(3) Pedir acesso a um projeto\n(4) Pesquisar Projeto\n(5) Editar Projeto\n(6) Logout\n(7) Sair"
+#define MAIN_MENU "(1) Meu usuario\n(2) Criar Projeto\n(3) Pedir acesso a um projeto\n(4) Listar Projetos\n(5) Gerenciar Projeto\n(6) Gerar Relatórios\n(7) Logout\n(8) Sair"
 #define SUITE_MENU "(1) Criar suite de teste\n(2) Listar suites de teste\n(3) Pesquisar suite de teste\n(4) Editar suite de teste\n(5) Apagar suite de teste\n(6) Gerenciar casos de teste\n(7) Voltar"
 #define TEST_CASE_MENU "(1) Criar caso de teste\n(2) Listar casos de teste\n(3) Pesquisar caso de teste\n(4) Editar caso de teste\n(5) Apagar caso de teste\n(6) Voltar"
 
@@ -29,8 +29,9 @@
 #define ASK_FOR_ACCESS_PROJECT '3'
 #define SEARCH_PROJECT         '4'
 #define EDIT_PROJECT           '5'
-#define LOGOUT                 '6'
-#define MAIN_EXIT              '7'
+#define REPORTS                '6'
+#define LOGOUT                 '7'
+#define MAIN_EXIT              '8'
 
 // My user menu options
 #define MY_PROFILE      '1'

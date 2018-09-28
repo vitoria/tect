@@ -13,31 +13,39 @@ void generateReport(user loggedUser){
     string userLogin;
     bool isAllowed;
 
-    cout << "Digite a opção desejada:" << endl;
-    cout << "Menu de geração de relatório" << endl;
+
+    system("clear");
+    printHeader("Menu de geração de relatório");
+
     cout << "(1) Gerar relatório de uma suite de testes" << endl;
     cout << "(2) Gerar relatório de um projeto" << endl;
     cout << "(3) Gerar relatório de participação de usuário em todos os projetos" << endl;
+    cout << "Informe a opção desejada: ";
 
     cin >> selectedOption;
 
     switch (selectedOption){
         case '1':{
-            cout << "Digite o código do projeto que contém a suite de testes:" << endl;
+            cout << "Digite o código do projeto que contém a suite de testes: ";
             cin >> projectId;
             isAllowed = false;
             projects = arquiveToArray();
             for(int i = 0; i < projects.size(); i++){
                 if(projects[i].id == projectId){
-                    for(int j = 0; j < projects[i].users.size(); j++){
-                        if(projects[i].users[j] == loggedUser.login){
-                            isAllowed = true;
+                    if (projects[i].owner.compare(loggedUser.login) == 0){
+                        isAllowed = true;
+                    } else {
+                        for(int j = 0; j < projects[i].users.size(); j++){
+                            if(projects[i].users[j] == loggedUser.login){
+                                isAllowed = true;
+                            }
                         }
                     }
+                    break;
                 }
             }
             if(isAllowed){
-                cout << "Digite o código da suite de testes:" << endl;
+                cout << "Digite o código da suite de testes: ";
                 cin >> suiteId;
 
                 suite suiteOfReport;
@@ -56,16 +64,16 @@ void generateReport(user loggedUser){
                     }
                 }
                 for(int i = 0; i < cases.size(); i++){
-                    //if(cases[i].suiteId == suiteId){
                     casesOfSuite.push_back(cases[i]);
-                    //}
                 }
 
+                system("clear");
                 generateSuiteReport(suiteOfReport, casesOfSuite);
                 cout << "" << endl;
                 cout << "Relatório da suite de testes gerado com sucesso" << endl;
             }
             else{
+                system("clear");
                 cout << "Usuário logado no sistema não tem acesso a esse projeto" << endl;
                 cout << "Redirecionado ao menu inicial..." << endl;
                 
@@ -76,16 +84,20 @@ void generateReport(user loggedUser){
             suites = readSuites(projectId);
             projects = arquiveToArray();
 
-            cout << "Digite o código do projeto base para o relatório:" << endl;
+            cout << "Digite o código do projeto base para o relatório: ";
             cin >> projectId;
 
             isAllowed = false;
             projects = arquiveToArray();
             for(int i = 0; i < projects.size(); i++){
                 if(projects[i].id == projectId){
-                    for(int j = 0; j < projects[i].users.size(); j++){
-                        if(projects[i].users[j] == loggedUser.login){
-                            isAllowed = true;
+                    if (projects[i].owner.compare(loggedUser.login) == 0){
+                        isAllowed = true;
+                    } else {
+                        for(int j = 0; j < projects[i].users.size(); j++){
+                            if(projects[i].users[j] == loggedUser.login){
+                                isAllowed = true;
+                            }
                         }
                     }
                 }
@@ -104,11 +116,13 @@ void generateReport(user loggedUser){
                     }
                 }
 
+                system("clear");
                 generateProjectReport(projectOfReport, projectSuites);
                 cout << "" << endl;
                 cout << "Relatório do projeto gerado com sucesso" << endl;
             }
             else{
+                system("clear");
                 cout << "Usuário logado no sistema não tem acesso a esse projeto" << endl;
                 cout << "Redirecionado ao menu inicial..." << endl;
 
@@ -117,9 +131,10 @@ void generateReport(user loggedUser){
         }
         case '3':{
             projects = arquiveToArray();
-            cout << "Digite o id do usuário base para o relatório" << endl;
+            cout << "Digite o login do usuário base para o relatório: ";
             cin >> userLogin;
 
+            system("clear");
             generateUserReport(userLogin, projects);
 
             break;
