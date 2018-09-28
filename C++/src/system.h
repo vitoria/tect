@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <string>
 #include "login.h"
+#include "testCase.h"
 
 void running();
 void systemMenu(user);

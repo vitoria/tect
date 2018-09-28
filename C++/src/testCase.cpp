@@ -23,6 +23,7 @@ void writeCases(vector<Case> cases, int projectId, int suiteId) {
                     casesFile << cases[i].steps[j].description << endl;
                     casesFile << cases[i].steps[j].expectedResult << endl;
                 }
+                casesFile << cases[i].status << endl;
             }
             casesFile.close();
         }
@@ -48,6 +49,7 @@ vector<Case> readCases(int projectId, int suiteId) {
                 casesFile >> currentCaseStep.description >> currentCaseStep.expectedResult;
                 currentCase.steps.push_back(currentCaseStep);
             }
+            casesFile >> currentCase.status;
             cases.push_back(currentCase);
         }
         casesFile.close();
@@ -62,7 +64,7 @@ bool isFolderCreated (string folderPath) {
     bool result;
     struct stat st = {0};
 
-    if (stat(folderPath.c_str, &st) == -1) {
+    if (stat(folderPath.c_str(), &st) == -1) {
         result = createFolder(folderPath);
     } else {
         result = true;
@@ -73,7 +75,7 @@ bool isFolderCreated (string folderPath) {
 
 bool createFolder(string folderPath) {
     bool result = false;
-    if (mkdir(folderPath.c_str, 0700) == 0) {
+    if (mkdir(folderPath.c_str(), 0700) == 0) {
         result = true;
     }
     return result;
@@ -82,6 +84,7 @@ bool createFolder(string folderPath) {
 Case readCaseInformation() {
     Case newCase;
     Step newStep;
+    cin.ignore();
 
     cout << NAME;
     getline(cin, newCase.name);
@@ -105,6 +108,8 @@ Case readCaseInformation() {
         cout << CASE_STEP_CONTINUE_MESSAGE << endl;
         getline(cin, hasAnotherStep);
     } while (isMenuInputStringValid(stringToUpper(hasAnotherStep), 'S', 'S'));
+
+    newCase.status = CASE_NOT_EXECUTED;
 
     return newCase;
 }
@@ -224,6 +229,10 @@ void searchCase(int projectId, int suiteId) {
     }
 }
 
+Case editCaseInformation(Case editedCase) {
+    return editedCase;
+}
+
 void editCase(vector<Case> cases, int index, int projectId, int suiteId) {
     printHeader();
     cout << "#----------# EDITANDO CASO ";
@@ -295,78 +304,6 @@ void deleteCase(int projectId, int suiteId) {
     }
 }
 
-
-
-void editTestsCases() {
-    char opcao;
-    cout << "Digite o nome do caso:" << endl;
-    string caseName;
-    getline(cin, caseName);
-    int posic = findTestCase(caseName);
-    if (posic = -1) {
-        cout << "Caso não encontrado" << endl;
-        return editTestsCases();
-    }
-    do{
-        opcao = editTestsMenu();
-        switch(opcao){
-            case '1':
-                cout << "Digite o novo nome:" << endl;
-                getline(cin, folder.cases[posic].name);
-                break;
-            case '2':
-                cout << "Digite o novo Objetivo:" << endl;
-                getline(cin, folder.cases[posic].objectives);
-                break;
-            case '3':
-                cout << "Digite as Pré-Condições:" << endl;
-                getline(cin, folder.cases[posic].preconditions);
-                break;
-            case '4':
-                cout << "Quer adicionar(1), alterar(2), ou remover(3)?" << endl;
-                int opcaoStep;
-                cin >> opcaoStep;
-                editStepTestCase(opcaoStep, posic);
-                break;
-            case '0':
-                return;
-            default:
-                cout << "Opção inválida" << endl;
-                break;
-        }
-    } while (isSelectedOptionValid(opcao, '0', '5') == true);
-}
-
-void editStepTestCase(int positSteps, int posic) {
-    Step novoStep;
-    int posStep;
-    switch(positSteps){
-        case 1:
-            cout << "Digite a nova descrição:" << endl;
-            getline(cin, novoStep.description);
-            cout << "Digite o novo resultado esperado:" << endl;
-            getline(cin, novoStep.expectedResult);
-            folder.cases[posic].steps.push_back(novoStep);
-            break;
-        case 2:
-            cout << "Qual passo voce deseja alterar?" << endl;
-            cin >> posStep;
-            cout << "Digite a nova descrição:" << endl;
-            getline(cin, folder.cases[posic].steps[posStep-1].description);
-            cout << "Digite o novo resultado esperado:" << endl;
-            getline(cin, folder.cases[posic].steps[posStep-1].expectedResult);
-            break;
-        case 3:
-            cout << "Qual passo voce deseja remover?" << endl;
-            cin >> posStep;
-            folder.cases[posic].steps.erase(folder.cases[posic].steps.begin() + (posStep-1));
-            break;
-        default:
-            cout << "Opção inválida" << endl;
-            break;
-    }
-}
-
 int generateId(vector<Case> cases) {
     int id = 1;
     
@@ -377,54 +314,173 @@ int generateId(vector<Case> cases) {
     return id;
 }
 
-char editTestsMenu() {
-    char opcao;
-    cout << "Deseja modificar qual atributo?" << endl;
-    cout << "(1) Nome" << endl;
-    cout << "(2) Objetivos" << endl;
-    cout << "(3) Pré-Condições" << endl;
-    cout << "(4) Passos" << endl;
-    cout << "(0) Sair" << endl;
-    cin >> opcao;
-    return opcao;
+void showTestCaseMenu() {
+    printHeader(TEST_CASE_MENU_HEADER);
+    std::cout << TEST_CASE_MENU << std::endl;
 }
 
-void menuPrincipalCases() {
-    printMenuPrincipal();
-    char opcaoMenu;
-    cin >> opcaoMenu;
-    if(isSelectedOptionValid(opcaoMenu, '1', '5') == false) {
-        cout << "Opção inválida" << endl;
-        return menuPrincipalCases();
-    }
-
-    switch(opcaoMenu){
-        case '1':
-            createCase();
+void goToProcediment(char optionSelected, int projectId, int suiteId) {
+    switch(optionSelected) {
+        case CREATE_CASE:
+            createCase(projectId, suiteId);
             break;
-        case '2':
-            editTestsCases();
+        case LIST_CASES:
+            listTestsCases(projectId, suiteId);
             break;
-        case '3':
-            listTestsCases();
+        case SEARCH_CASES:
+            searchCase(projectId, suiteId);
             break;
-        case '4':
-            searchTestsCases();
+        case EDIT_CASES:
+            editCase(projectId, suiteId);
             break;
-        case '5':
-            removeTestCase();
+        case DELETE_CASES:
+            deleteCase(projectId, suiteId);
             break;
         default:
-            cout << "Opção inválida" << endl;
             break;
     }
 }
 
-void printMenuPrincipal() {
-    cout << "O que você deseja fazer?" << endl;
-    cout << "(1) Criar um caso de teste" << endl;
-    cout << "(2) Editar um caso de teste" << endl;
-    cout << "(3) listar os casos teste" << endl;
-    cout << "(4) Pesquisar um caso de teste" << endl;
-    cout << "(5) remover um caso de teste" << endl;
+void testCaseMenu(int projectId, int suiteId) {
+    string optionSelected;
+    bool isOptionValid;
+
+    do {
+        do {
+            showTestCaseMenu();
+            optionSelected = readOption();;
+
+            isOptionValid = isMenuInputStringValid(optionSelected, CREATE_SUITE, GO_BACK);
+
+            if (!isOptionValid) {
+                std::cout << INVALID_OPTION << std::endl;
+            }
+
+        } while (!isOptionValid);
+
+        goToProcediment(optionSelected[0], projectId, suiteId);
+
+    } while (optionSelected[0] != GO_BACK);
 }
+
+// void editTestsCases() {
+//     char opcao;
+//     cout << "Digite o nome do caso:" << endl;
+//     string caseName;
+//     getline(cin, caseName);
+//     int posic = findTestCase(caseName);
+//     if (posic = -1) {
+//         cout << "Caso não encontrado" << endl;
+//         return editTestsCases();
+//     }
+//     do{
+//         opcao = editTestsMenu();
+//         switch(opcao){
+//             case '1':
+//                 cout << "Digite o novo nome:" << endl;
+//                 getline(cin, folder.cases[posic].name);
+//                 break;
+//             case '2':
+//                 cout << "Digite o novo Objetivo:" << endl;
+//                 getline(cin, folder.cases[posic].objectives);
+//                 break;
+//             case '3':
+//                 cout << "Digite as Pré-Condições:" << endl;
+//                 getline(cin, folder.cases[posic].preconditions);
+//                 break;
+//             case '4':
+//                 cout << "Quer adicionar(1), alterar(2), ou remover(3)?" << endl;
+//                 int opcaoStep;
+//                 cin >> opcaoStep;
+//                 editStepTestCase(opcaoStep, posic);
+//                 break;
+//             case '0':
+//                 return;
+//             default:
+//                 cout << "Opção inválida" << endl;
+//                 break;
+//         }
+//     } while (isSelectedOptionValid(opcao, '0', '5') == true);
+// }
+
+// void editStepTestCase(int positSteps, int posic) {
+//     Step novoStep;
+//     int posStep;
+//     switch(positSteps){
+//         case 1:
+//             cout << "Digite a nova descrição:" << endl;
+//             getline(cin, novoStep.description);
+//             cout << "Digite o novo resultado esperado:" << endl;
+//             getline(cin, novoStep.expectedResult);
+//             folder.cases[posic].steps.push_back(novoStep);
+//             break;
+//         case 2:
+//             cout << "Qual passo voce deseja alterar?" << endl;
+//             cin >> posStep;
+//             cout << "Digite a nova descrição:" << endl;
+//             getline(cin, folder.cases[posic].steps[posStep-1].description);
+//             cout << "Digite o novo resultado esperado:" << endl;
+//             getline(cin, folder.cases[posic].steps[posStep-1].expectedResult);
+//             break;
+//         case 3:
+//             cout << "Qual passo voce deseja remover?" << endl;
+//             cin >> posStep;
+//             folder.cases[posic].steps.erase(folder.cases[posic].steps.begin() + (posStep-1));
+//             break;
+//         default:
+//             cout << "Opção inválida" << endl;
+//             break;
+//     }
+// }
+
+// char editTestsMenu() {
+//     char opcao;
+//     cout << "Deseja modificar qual atributo?" << endl;
+//     cout << "(1) Nome" << endl;
+//     cout << "(2) Objetivos" << endl;
+//     cout << "(3) Pré-Condições" << endl;
+//     cout << "(4) Passos" << endl;
+//     cout << "(0) Sair" << endl;
+//     cin >> opcao;
+//     return opcao;
+// }
+
+// void menuPrincipalCases() {
+//     printMenuPrincipal();
+//     char opcaoMenu;
+//     cin >> opcaoMenu;
+//     if(isSelectedOptionValid(opcaoMenu, '1', '5') == false) {
+//         cout << "Opção inválida" << endl;
+//         return menuPrincipalCases();
+//     }
+
+//     switch(opcaoMenu){
+//         case '1':
+//             createCase();
+//             break;
+//         case '2':
+//             editTestsCases();
+//             break;
+//         case '3':
+//             listTestsCases();
+//             break;
+//         case '4':
+//             searchTestsCases();
+//             break;
+//         case '5':
+//             removeTestCase();
+//             break;
+//         default:
+//             cout << "Opção inválida" << endl;
+//             break;
+//     }
+// }
+
+// void printMenuPrincipal() {
+//     cout << "O que você deseja fazer?" << endl;
+//     cout << "(1) Criar um caso de teste" << endl;
+//     cout << "(2) Editar um caso de teste" << endl;
+//     cout << "(3) listar os casos teste" << endl;
+//     cout << "(4) Pesquisar um caso de teste" << endl;
+//     cout << "(5) remover um caso de teste" << endl;
+// }

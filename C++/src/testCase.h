@@ -33,6 +33,8 @@
 #define CASE_DETAILS           "#-------# DETALHES DO CASO DE TESTE #------#"
 #define EDIT_CASE_HEADER       "#---------# EDITAR CASO DE TESTE #---------#"
 #define DELETE_CASE_HEADER     "#--------# EXCLUIR CASO DE TESTE #---------#"
+#define TEST_CASE_MENU_HEADER  "#--------# MENU DE CASOS DE TESTE #--------#"
+#define TEST_CASE_MENU         "(1) Criar caso de teste\n(2) Listar casos de teste\n(3) Pesquisar caso de teste\n(4) Editar caso de teste\n(5) Apagar caso de teste\n(6) Voltar"
 #define TEST_CASE_HEADER       "#--------------------# CASOS DE TESTE #------------------------#"
 #define TEST_CASE_TABLE_HEADER "-     ID     |             Nome            |       Status      -"
 #define TEST_CASE_TABLE_LINE   "----------------------------------------------------------------"
@@ -40,6 +42,11 @@
 #define CASE_NOT_FOUND "Caso não encontrado."
 #define CASE_EDITED "Caso editado com sucesso!"
 #define CASE_DELETED "Caso deletado com sucesso!"
+#define CREATE_CASE '1'
+#define LIST_CASES '2'
+#define SEARCH_CASES '3'
+#define EDIT_CASES '4'
+#define DELETE_CASES '5'
 
 
 const std::string caseStatusMessage[] = {"Não executado", "Passou", "Não passou", "Erro na execução"};
@@ -58,21 +65,47 @@ struct Case{
     int status;
 };
 
+std::string generateTestCaseFilePath(int, int);
+std::string generateTestCaseFolderPath(int);
+void writeCases(std::vector<Case>, int, int);
+std::vector<Case> readCases(int, int);
+bool isFolderCreated (std::string);
+bool createFolder(std::string);
 Case readCaseInformation();
 int searchCase(std::vector<Case>, std::string);
 int searchCase(std::vector<Case>, int);
 bool containsCase(std::vector<Case>, std::string);
 bool containsCase(std::vector<Case>, int);
 void createCase(int, int);
-void listTestsCases();
-void searchTestsCases();
-void editTestsCases();
-int findTestCase(std::string);
-void removeTestCase();
-int findTestCasePorId(int);
-void removeTestCase();
-void editStepTestCase(int, int);
-int generateId();
-char editTestsMenu();
-void menuPrincipalCases();
-void printMenuPrincipal();
+void listTestsCases(int, int);
+std::string readSelectedCase();
+void showCase(Case);
+void searchCase(int, int);
+Case editCaseInformation(Case);
+void editCase(std::vector<Case>, int, int, int);
+void editCase(int, int);
+void deleteCase(std::vector<Case>, int, int, int);
+void deleteCase(int, int);
+int generateId(std::vector<Case>);
+void showTestCaseMenu();
+void goToProcediment(char, int, int);
+void testCaseMenu(int, int);
+
+// Case readCaseInformation();
+// int searchCase(std::vector<Case>, std::string);
+// int searchCase(std::vector<Case>, int);
+// bool containsCase(std::vector<Case>, std::string);
+// bool containsCase(std::vector<Case>, int);
+// void createCase(int, int);
+// void listTestsCases();
+// void searchTestsCases();
+// void editTestsCases();
+// int findTestCase(std::string);
+// void removeTestCase();
+// int findTestCasePorId(int);
+// void removeTestCase();
+// void editStepTestCase(int, int);
+// int generateId();
+// char editTestsMenu();
+// void menuPrincipalCases();
+// void printMenuPrincipal();

@@ -37,7 +37,7 @@ void systemMenu(user loggedUser) {
         switch(selectedOption){
             case CREATE_PROJECT:
                 cout << "Projeto criado" << endl;
-                suiteTestMenu();
+                testCaseMenu(1, 1);
                 break;
             case ASK_FOR_ACCESS_PROJECT:
                 cout << "Acesso solicitado" << endl;
