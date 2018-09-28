@@ -35,6 +35,7 @@ void writeSuites(vector<suite> suites, int projectId) {
             suitesFile << suites[i].id << endl;
             suitesFile << suites[i].name << endl;
             suitesFile << suites[i].description << endl;
+            suitesFile << suites[i].projectId << endl;
         }
         suitesFile.close();
     }
@@ -50,7 +51,7 @@ vector<suite> readSuites(int projectId) {
     vector<suite> suites;
     suite current;
 
-    while(suitesFile >> current.id >> current.name >> current.description) {
+    while(suitesFile >> current.id >> current.name >> current.description >> current.projectId) {
         suites.push_back(current);
     }
     suitesFile.close();
@@ -80,12 +81,12 @@ suite readSuiteInformation() {
     suite newSuite;
 
     cout << NAME;
-    cin >> newSuite.name;
+    getline(cin, newSuite.name);
 
     cin.ignore();
 
     cout << DESCRIPTION;
-    cin >> newSuite.description;
+    getline(cin, newSuite.description);
 
     return newSuite;
 }
@@ -329,7 +330,7 @@ void manageTestCases(int projectId) {
         }
     } else {
         if (containsSuite(suites, selectedSuite)) {
-            testCaseMenu(projectId, searchSuite(suites, selectedSuite));
+            testCaseMenu(projectId, suites[searchSuite(suites, selectedSuite)].id);
         } else {
             showMessage(SUITE_NOT_FOUND);
         }
@@ -398,11 +399,10 @@ void suiteTestMenu(int projectId) {
     } while (optionSelected[0] != GO_BACK);
 }
 
-float calculateStatus(suite suite, int whichStatus){
-    vector<Case> cases = readCases(suite.projectId, suite.id);
+float calculateStatus(suite currentSuite, int whichStatus){
+    vector<Case> cases = readCases(currentSuite.projectId, currentSuite.id);
 
     float status = 0.0;
-
     if (cases.size() > 0){
         float statusCases = 0;
         for (int i = 0; i < cases.size(); i++){         
