@@ -16,6 +16,15 @@ int throughArray(int id, vector<Project> projects){
     return aux;
 }
 
+void listProjects(){
+    vector<Project> projects = arquiveToArray();
+
+    for(int i = 0; i < projects.size(); i++){
+        cout << "Id do Projeto: " << projects[i].id << " - Nome: " << projects[i].name << " - Description: "
+        << projects[i].description << " - Dono: " << projects[i].owner << endl;
+    }
+}
+
 void editNameProject(int id){
     vector<Project> projects = arquiveToArray();
 

@@ -50,7 +50,9 @@ void systemMenu(user loggedUser, bool *isDone) {
                 askPermission(loggedUser);
                 break;
             case SEARCH_PROJECT:
-                // not implemented
+                //Method responsible for listing all projects is being called in the menu option 
+                //to search a project. Review this later.
+                listProjects();
                 break;
             case EDIT_PROJECT:
                 verifyUserToProject(loggedUser);
