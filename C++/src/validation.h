@@ -25,3 +25,5 @@ int stringToInteger(std::string);
 bool isCharANumber(char);
 
 bool isStringNumeric(std::string);
+
+bool verifyPasswords(std::string, std::string);

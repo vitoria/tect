@@ -311,7 +311,7 @@ void showSuiteTestMenu() {
 }
 
 /**
- * This method chooses the procediment that should be
+ * This method chooses the procedure that should be
  * executed according to the selected option. 
  */
 void goToProcediment(char optionSelected) {
