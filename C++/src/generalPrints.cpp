@@ -17,7 +17,7 @@ void printHeader(string subtitle) {
 void showMessage(string msg) {
     cout << msg;
     cin.get();
-    cin.get();
+    cin.ignore();
     system(CLEAR);
 }
 
@@ -28,7 +28,7 @@ void pauseSystem() {
 string readOption() {
     string optionSelected;
     cout << endl << CHOOSE_OPTION;
-    cin >> optionSelected;
+    getline(cin, optionSelected);
     return optionSelected;
 }
 

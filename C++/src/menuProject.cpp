@@ -5,6 +5,7 @@
 #include "system.h"
 #include "constants.h"
 #include "suiteTest.h"
+#include "generalPrints.h"
 
 using namespace std;
 
@@ -15,44 +16,51 @@ void verifyUserToProject(user loggedUser){
     cout << "Informe id do projeto: ";
     getline(cin, input);
 
-    int id = stoi(input);
+    if (input.compare("") == 0) {
+        showMessage("Voce precisa informar o id do projeto!");
+    } else {
+        int id = stoi(input);
 
-    int aux = throughArray(id, projects);
+        int aux = throughArray(id, projects);
 
-    if ((aux > -1) && (projects[aux].id == id)){
-        if (projects[aux].owner.compare(loggedUser.login) == 0){
-            projectMenuOwner(id, loggedUser);
-        } else {
-            bool isAllowedUser = false;
-            for (int i = 0; i < projects[aux].users.size(); i++){
-                if (projects[aux].users[i].compare(loggedUser.login) == 0){
-                    isAllowedUser =  true;
-                    break;
+        if ((aux > -1) && (projects[aux].id == id)){
+            if (projects[aux].owner.compare(loggedUser.login) == 0){
+                projectMenuOwner(id, loggedUser);
+            } else {
+                bool isAllowedUser = false;
+                for (int i = 0; i < projects[aux].users.size(); i++){
+                    if (projects[aux].users[i].compare(loggedUser.login) == 0){
+                        isAllowedUser =  true;
+                        break;
+                    }
+                }
+                if (isAllowedUser){
+                    projectMenuUser(id, loggedUser);
+                } else {
+                    cout << "Usuário não tem permissão de acesso a esse projeto." << endl;
                 }
             }
-            if (isAllowedUser){
-                projectMenuUser(id, loggedUser);
-            } else {
-                cout << "Usuário não tem permissão de acesso a esse projeto." << endl;
-            }
+        } else {
+            cout << "Projeto não encontrado." << endl;
+            cout << PAUSE_MSG << endl;
+            cin.get();
+            system(CLEAR);
         }
-    } else {
-        cout << "Projeto não encontrado." << endl;
-        cout << PAUSE_MSG << endl;
-        cin.get();
-        system(CLEAR);
     }    
 }
 
-void printProjectMenuOwner(){
-    system ("clear");
-    printHeader("Menu Projeto Dono");
-    cout << "(1) Editar nome do projeto" << endl;
-    cout << "(2) Editar descrição do projeto" << endl;
-    cout << "(3) Verificar pedidos de permissão" << endl;
-    cout << "(4) Excluir projeto" << endl;
-    cout << "(5) Gerenciar suítes de teste" << endl;
-    cout << "(6) Sair do projeto" << endl;
+void printProjectMenuOwner(int id){
+    printHeader();
+    cout << "#--------# GERENCIAR PROJETO ";
+    showID(id);
+    cout << " #--------#" << endl << endl;
+    cout << "(1) Ver informações do projeto" << endl;
+    cout << "(2) Editar nome do projeto" << endl;
+    cout << "(3) Editar descrição do projeto" << endl;
+    cout << "(4) Verificar pedidos de permissão" << endl;
+    cout << "(5) Excluir projeto" << endl;
+    cout << "(6) Gerenciar suítes de teste" << endl;
+    cout << "(7) Sair do projeto" << endl;
 
 }
 
@@ -60,44 +68,46 @@ void projectMenuOwner(int id, user loggedUser){
     char selectedOption = '0';
     do {
         do {
-            printProjectMenuOwner();
-            cout << "Selecione a opção desejada: ";
-            cin.get(selectedOption);
-            cin.ignore();
+            printProjectMenuOwner(id);
+            selectedOption = readOption()[0];
 
             if (isSelectedOptionValid(selectedOption, '1', '6') == false) {
                 printInvalidOptionMessage();
             }
         } while (isSelectedOptionValid(selectedOption, '1', '6') == false);
 
+        cout << endl;
         switch(selectedOption){
             case '1':
-                editNameProject(id);
+                showProject(id);
                 break;
             case '2':
-                editDescriptionProject(id);
+                editNameProject(id);
+                pauseSystem();
                 break;
             case '3':
-                allowPermissions(id);
+                editDescriptionProject(id);
+                pauseSystem();
                 break;
             case '4':
-                deleteProject(id);
-                selectedOption = '6';
+                allowPermissions(id);
+                pauseSystem();
                 break;
             case '5':
-                suiteTestMenu(id);
+                deleteProject(id);
+                selectedOption = '6';
+                pauseSystem();
                 break;
             case '6':
-                cout << "Saindo do projeto" << endl;
+                suiteTestMenu(id);
+                break;
+            case '7':
+                pauseSystem();
                 break;
             default:
-                cout << "ERRO!" << endl;
+                showMessage(INVALID_OPTION);
                 break;
         }
-    
-        cout << "Pressione qualquer tecla para continuar..." << endl;
-        cin.get();
-        system ("clear");
     } while (selectedOption != '6');
 }
 
@@ -116,9 +126,7 @@ void projectMenuUser(int id, user loggedUser){
         do {
             printProjectMenuUser();
 
-            cout << "Selecione a opção desejada: ";
-            cin.get(selectedOption);
-            cin.ignore();
+            selectedOption = readOption()[0];
 
             if (isSelectedOptionValid(selectedOption, '1', '2') == false) {
                 printInvalidOptionMessage();
@@ -137,8 +145,6 @@ void projectMenuUser(int id, user loggedUser){
                 break;
         }
     
-        cout << "Pressione qualquer tecla para continuar..." << endl;
-        cin.get();
-        system ("clear");
+        pauseSystem();
     } while (selectedOption != '2');
 }

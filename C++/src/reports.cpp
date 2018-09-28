@@ -15,14 +15,13 @@ void generateReport(user loggedUser){
 
 
     system("clear");
-    printHeader("Menu de geração de relatório");
+    printHeader(GENERATE_REPORT_HEADER);
 
     cout << "(1) Gerar relatório de uma suite de testes" << endl;
     cout << "(2) Gerar relatório de um projeto" << endl;
     cout << "(3) Gerar relatório de participação de usuário em todos os projetos" << endl;
-    cout << "Informe a opção desejada: ";
-
-    cin >> selectedOption;
+    
+    selectedOption = readOption()[0];
 
     switch (selectedOption){
         case '1':{
@@ -44,7 +43,7 @@ void generateReport(user loggedUser){
                     break;
                 }
             }
-            if(isAllowed){
+            if(isAllowed) {
                 cout << "Digite o código da suite de testes: ";
                 cin >> suiteId;
 
@@ -69,14 +68,11 @@ void generateReport(user loggedUser){
 
                 system("clear");
                 generateSuiteReport(suiteOfReport, casesOfSuite);
-                cout << "" << endl;
-                cout << "Relatório da suite de testes gerado com sucesso" << endl;
+                cout << endl;
+                showMessage("Relatório da suite de testes gerado com sucesso");
             }
             else{
-                system("clear");
-                cout << "Usuário logado no sistema não tem acesso a esse projeto" << endl;
-                cout << "Redirecionado ao menu inicial..." << endl;
-                
+                showMessage("Você não tem acesso a esse projeto!");
             }
             break;
         }
@@ -140,7 +136,7 @@ void generateReport(user loggedUser){
             break;
         }
         default:{
-            cout << "Opção inválida" << endl;
+            showMessage(INVALID_OPTION);
             break;
         }
     }
@@ -153,6 +149,8 @@ void generateSuiteReport(suite reportSuite, vector<Case> suiteTestCases){
     float notPassingPercentage;
     float problemsPercentage;
     float notExecutedPercentage;
+
+    cout << SUITES_PATH + to_string(reportSuite.id) + ".dat" << endl;
 
     std::ofstream reportFile(SUITES_PATH + to_string(reportSuite.id) + ".dat", std::ios::in);
 

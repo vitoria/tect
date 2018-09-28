@@ -9,10 +9,7 @@ void createProject(user creater){
 
     Project newProject;
 
-    system("clear");
-    printHeader();
-
-    cout << "#------------# CRIAÇÃO DE PROJETO #----------#" << endl;
+    printHeader("#------------# CRIAÇÃO DE PROJETO #----------#");
 
     string name;
 
@@ -25,20 +22,24 @@ void createProject(user creater){
     } while (verifyExistingProject(name) == true);
     newProject.name = name;
     
-    cout << "Descrição do projeto: ";
-    getline(cin, newProject.description);
+    if (newProject.name.compare("") == 0) {
+        showMessage("Voce precisa informar um nome valido!");
+    } else {
+        cout << "Descrição do projeto: ";
+        getline(cin, newProject.description);
 
-    system("clear");
+        newProject.owner = creater.login;
+        vector<string> users;
+        vector<string> requests;
+        newProject.numberOfUsers = 0;
+        newProject.users = users;
+        newProject.numberOfRequests = 0;
+        newProject.requests = requests;
 
-    newProject.owner = creater.login;
-    vector<string> users;
-    vector<string> requests;
-    newProject.numberOfUsers = 0;
-    newProject.users = users;
-    newProject.numberOfRequests = 0;
-    newProject.requests = requests;
+        saveProject(newProject);
 
-    saveProject(newProject);
+        showMessage("\nProjeto criado!");
+    }
     
 }
 
@@ -50,26 +51,8 @@ void saveProject(Project project){
     vector<Project> projects = arquiveToArray();
     projects.push_back(project);
     arrayToArquive(projects);
-
-    //createArquive(project.id);
-
     
 }
-
-/*void createArquive(int id){
-    string fileUsersPath = generateProjectFolderPath(id) + "/users.dat";
-    string fileRequestsPath = generateProjectFolderPath(id) + "/requests.dat";
-    string folderPath = generateProjectFolderPath(id);
-
-    if (isFolderCreated(folderPath)){
-        ftream file;
-
-    }
-}*/
-
-/*string generateTestCaseFilePath(int projectId, int suiteId) {
-    return string(DATA_FOLDER_PATH) + "/" + to_string(projectId) + "/" + to_string(suiteId) + ".dat";
-}*/
 
 string generateProjectFolderPath(int projectId) {
     return string(DATA_FOLDER_PATH) + "/" + to_string(projectId);
