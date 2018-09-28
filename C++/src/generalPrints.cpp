@@ -28,7 +28,7 @@ void pauseSystem() {
 string readOption() {
     string optionSelected;
     cout << endl << CHOOSE_OPTION;
-    getline(cin, optionSelected);
+    cin >> optionSelected;
     return optionSelected;
 }
 
