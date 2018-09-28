@@ -6,6 +6,7 @@
 #include "constants.h"
 #include "validation.h"
 
+
 using namespace std;
 
 int throughArray(int id, vector<Project> projects){
@@ -53,7 +54,9 @@ void editNameProject(int id){
     if (projects[aux].id == id){
         cout << "Nome atual: " << projects[aux].name << endl;
         cout << "Novo nome: ";
+        cin.ignore();
         getline(cin, projects[aux].name);
+        
 
         arrayToArquive(projects);
         showMessage("Nome de projeto editado com sucesso.");
@@ -70,6 +73,7 @@ void editDescriptionProject(int id){
     if (projects[aux].id == id){
         cout << "Descrição atual: " << projects[aux].description << endl;
         cout << "Nova descrição: ";
+        cin.ignore();
         getline(cin, projects[aux].description);
         arrayToArquive(projects);
         showMessage("Descrição de projeto editado com sucesso.");
@@ -186,6 +190,7 @@ void deleteProject(int id){
     projects.erase(projects.begin() + aux);
 
     arrayToArquive(projects);
+
 }
 
 void swapProject(vector<Project> projects, int aux){
