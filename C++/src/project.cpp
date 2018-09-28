@@ -191,3 +191,25 @@ void swapProject(vector<Project> projects, int aux){
         projects[aux] = projects[aux+1];
     }
 }
+
+void showProject(int id) {
+    printHeader();
+    cout << "#--------# GERENCIAR PROJETO ";
+    showID(id);
+    cout << " #--------#" << endl << endl;
+
+    vector<Project> projects = arquiveToArray();
+
+    int aux = throughArray(id, projects);
+
+    if (projects[aux].id == id){
+        cout << "ID: ";
+        showID(id);
+        cout << "\nNome: " << projects[aux].name << endl;
+        cout << "Descrição: " << projects[aux].description << endl;
+        cout << "Dono: " << projects[aux].owner << endl << endl;
+        pauseSystem();
+    } else {
+        cout << "Id não encontrado" << endl;
+    }
+}

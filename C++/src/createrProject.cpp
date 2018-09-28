@@ -28,8 +28,6 @@ void createProject(user creater){
         cout << "Descrição do projeto: ";
         getline(cin, newProject.description);
 
-        system("clear");
-
         newProject.owner = creater.login;
         vector<string> users;
         vector<string> requests;
@@ -39,6 +37,8 @@ void createProject(user creater){
         newProject.requests = requests;
 
         saveProject(newProject);
+
+        showMessage("\nProjeto criado!");
     }
     
 }

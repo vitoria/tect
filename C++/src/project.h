@@ -37,3 +37,4 @@ void split(std::string, std::vector<std::string>);
 void deleteProject(int);
 void generateReport(int);
 void swapProject(std::vector<Project>, int);
+void showProject(int);

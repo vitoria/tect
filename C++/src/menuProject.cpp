@@ -54,12 +54,13 @@ void printProjectMenuOwner(int id){
     cout << "#--------# GERENCIAR PROJETO ";
     showID(id);
     cout << " #--------#" << endl << endl;
-    cout << "(1) Editar nome do projeto" << endl;
-    cout << "(2) Editar descrição do projeto" << endl;
-    cout << "(3) Verificar pedidos de permissão" << endl;
-    cout << "(4) Excluir projeto" << endl;
-    cout << "(5) Gerenciar suítes de teste" << endl;
-    cout << "(6) Sair do projeto" << endl;
+    cout << "(1) Ver informações do projeto" << endl;
+    cout << "(2) Editar nome do projeto" << endl;
+    cout << "(3) Editar descrição do projeto" << endl;
+    cout << "(4) Verificar pedidos de permissão" << endl;
+    cout << "(5) Excluir projeto" << endl;
+    cout << "(6) Gerenciar suítes de teste" << endl;
+    cout << "(7) Sair do projeto" << endl;
 
 }
 
@@ -78,32 +79,35 @@ void projectMenuOwner(int id, user loggedUser){
         cout << endl;
         switch(selectedOption){
             case '1':
-                editNameProject(id);
+                showProject(id);
                 break;
             case '2':
-                editDescriptionProject(id);
+                editNameProject(id);
+                pauseSystem();
                 break;
             case '3':
-                allowPermissions(id);
+                editDescriptionProject(id);
+                pauseSystem();
                 break;
             case '4':
-                deleteProject(id);
-                selectedOption = '6';
+                allowPermissions(id);
+                pauseSystem();
                 break;
             case '5':
-                suiteTestMenu(id);
+                deleteProject(id);
+                selectedOption = '6';
+                pauseSystem();
                 break;
             case '6':
-                cout << "Saindo do projeto" << endl;
+                suiteTestMenu(id);
+                break;
+            case '7':
+                pauseSystem();
                 break;
             default:
-                cout << "ERRO!" << endl;
+                showMessage(INVALID_OPTION);
                 break;
         }
-    
-        cout << "Pressione qualquer tecla para continuar..." << endl;
-        cin.get();
-        system ("clear");
     } while (selectedOption != '6');
 }
 
