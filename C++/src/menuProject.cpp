@@ -37,7 +37,7 @@ void verifyUserToProject(user loggedUser){
                 if (isAllowedUser){
                     projectMenuUser(id, loggedUser);
                 } else {
-                    cout << "Usuário não tem permissão de acesso a esse projeto." << endl;
+                    showMessage("Usuário não tem permissão de acesso a esse projeto.");
                 }
             }
         } else {
@@ -71,10 +71,10 @@ void projectMenuOwner(int id, user loggedUser){
             printProjectMenuOwner(id);
             selectedOption = readOption()[0];
 
-            if (isSelectedOptionValid(selectedOption, '1', '6') == false) {
+            if (isSelectedOptionValid(selectedOption, '1', '7') == false) {
                 printInvalidOptionMessage();
             }
-        } while (isSelectedOptionValid(selectedOption, '1', '6') == false);
+        } while (isSelectedOptionValid(selectedOption, '1', '7') == false);
 
         cout << endl;
         switch(selectedOption){
@@ -108,7 +108,7 @@ void projectMenuOwner(int id, user loggedUser){
                 showMessage(INVALID_OPTION);
                 break;
         }
-    } while (selectedOption != '6');
+    } while (selectedOption != '7');
 }
 
 void printProjectMenuUser(){

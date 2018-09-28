@@ -38,7 +38,7 @@ void listProjects(){
         }
         showLine();
     } else {
-        cout << "Nenhum projeto inserido." << endl;
+        showMessage("Nenhum projeto inserido.");
     }
 
     cout << endl;
@@ -56,9 +56,9 @@ void editNameProject(int id){
         getline(cin, projects[aux].name);
 
         arrayToArquive(projects);
-        cout << "Nome de projeto editado com sucesso." << endl;
+        showMessage("Nome de projeto editado com sucesso.");
     } else {
-        cout << "Id não encontrado" << endl;
+        showMessage("Id não encontrado");
     }
 }
 
@@ -72,9 +72,9 @@ void editDescriptionProject(int id){
         cout << "Nova descrição: ";
         getline(cin, projects[aux].description);
         arrayToArquive(projects);
-        cout << "Descrição de projeto editado com sucesso." << endl;
+        showMessage("Descrição de projeto editado com sucesso.");
     } else {
-        cout << "Id não encontrado" << endl;
+        showMessage("Id não encontrado");
     }
 }
 
@@ -87,26 +87,28 @@ void allowPermissions(int id){
             string usersString = "";
             vector<string> vetor;
             for (int i = 0; i < projects[aux].requests.size(); i++){
-                char fileInput;
+                string fileInput;
                 cout << "Dar permissão de acesso no projeto " << projects[aux].name;
-                cout << " ao usuário " << projects[aux].requests[i] << " (s/n)? ";
-                cin >> fileInput;
-                if (fileInput == 's'){
+                cout << " ao usuário " << projects[aux].requests[i] << " (S/N)? ";
+                getline(cin, fileInput);
+                if (isMenuInputStringValid(stringToUpper(fileInput), 'S', 'S')){
                     projects[aux].users.push_back(projects[aux].requests[i]);
                     projects[aux].numberOfUsers++;
                     projects[aux].requests.erase(projects[aux].requests.begin() + i);
                     projects[aux].numberOfRequests--;
-
+                    cout << "Permissão concedida." << endl;
+                } else {
+                    cout << "Permissão não concedida." << endl;
                 }
             }
 
             arrayToArquive(projects);
-            cout << "Permissões dadas com sucesso" << endl;
+            showMessage("Alterações feitas com sucesso");
         } else {
-            cout << "Nenhum pedido de acesso." << endl;
+            showMessage("Nenhum pedido de acesso.");
         }
     } else {
-        cout << "Id não encontrado" << endl;
+        showMessage("Id não encontrado");
     }
 }
 
@@ -123,13 +125,13 @@ void askPermission(user loggedUser){
                 projects[aux].requests.push_back(loggedUser.login);
                 projects[aux].numberOfRequests++;
                 arrayToArquive(projects);
-                cout << "Pedido Realizado com Sucesso." << endl;
+                showMessage("Pedido Realizado com Sucesso.");
             }
         } else {
-        cout << "Projeto não encontrado." << endl;
+        showMessage("Projeto não encontrado.");
         }
     } else {
-        cout << "Projeto não encontrado." << endl;
+        showMessage("Projeto não encontrado.");
     }
 
 }
@@ -138,13 +140,13 @@ bool verifyUserAskingPermission(Project project, user loggedUser){
     bool verify = false;
     if (loggedUser.login.compare(project.owner) == 0){
         verify = true;
-        cout << "Você é o dono desse projeto." << endl;
+        showMessage("Você é o dono desse projeto.");
     }
     if (!verify){
         for (int i = 0; i < project.users.size(); i++){
             if(loggedUser.login.compare(project.users[i]) == 0){
                 verify = true;
-                cout << "Você já tem permissão de acesso a esse projeto." << endl;
+                showMessage("Você já tem permissão de acesso a esse projeto.");
                 break;
             }
         }
@@ -153,7 +155,7 @@ bool verifyUserAskingPermission(Project project, user loggedUser){
         for (int i = 0; i < project.requests.size(); i++){
             if(loggedUser.login.compare(project.requests[i]) == 0){
                 verify = true;
-                cout << "Você já pediu permissão de acesso a esse projeto." << endl;
+                showMessage("Você já pediu permissão de acesso a esse projeto.");
                 break;
             }
         }
@@ -210,6 +212,6 @@ void showProject(int id) {
         cout << "Dono: " << projects[aux].owner << endl << endl;
         pauseSystem();
     } else {
-        cout << "Id não encontrado" << endl;
+        showMessage("Id não encontrado");
     }
 }
