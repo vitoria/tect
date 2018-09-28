@@ -1,9 +1,12 @@
 #include "system.h"
 #include "constants.h"
 #include "suiteTest.h"
+
 #include "createrProject.h"
 #include "menuProject.h"
-#include "dataManagerProject.h"
+
+#include "myUser.h"
+
 
 using namespace std;
 
@@ -13,12 +16,12 @@ void running() {
     
     while (!isDone) {
         if (loginMenu(&loggedUser, &isDone)){
-            systemMenu(loggedUser);
+            systemMenu(loggedUser, &isDone);
         }
     }
 }
 
-void systemMenu(user loggedUser) {
+void systemMenu(user loggedUser, bool *isDone) {
     string optionInput;
     char selectedOption;
     do {
@@ -28,17 +31,18 @@ void systemMenu(user loggedUser) {
             optionInput = readOption();
             cin.ignore();
 
-            if (isMenuInputStringValid(optionInput, CREATE_PROJECT, LOGOUT) == false) {
+            if (isMenuInputStringValid(optionInput, MY_USER, MAIN_EXIT) == false) {
                 printInvalidOptionMessage();
             }
 
-        } while (isMenuInputStringValid(optionInput, CREATE_PROJECT, LOGOUT) == false);
-
-        system(CLEAR);
+        } while (isMenuInputStringValid(optionInput, MY_USER, MAIN_EXIT) == false);
 
         selectedOption = optionInput[0];
 
         switch(selectedOption){
+            case MY_USER:
+                myUserMenu();
+                break;
             case CREATE_PROJECT:
                 createProject(loggedUser);
                 break;
@@ -55,20 +59,19 @@ void systemMenu(user loggedUser) {
                 cout << LOGOUT_MSG << endl;
                 logout();
                 break;
+            case MAIN_EXIT:
+                *isDone = true;
+                return;
             default:
                 cout << INVALID_OPTION << endl;
                 break;
         }
     
-        cout << PAUSE_MSG << endl;
-        cin.get();
-        system(CLEAR);
-    } while(selectedOption != LOGOUT);
+        pauseSystem();
+    } while(selectedOption != LOGOUT && selectedOption != MAIN_EXIT);
 }
 
 void printSystemMenu(string userName) {
-    system(CLEAR);
-    printHeader();
-    cout << "Bem-vindo " << userName << "!" << endl;
+    printHeader(MAIN_HEADER);
     cout << MAIN_MENU << endl;
 }
