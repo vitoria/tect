@@ -44,8 +44,7 @@ void systemMenu(user loggedUser, bool *isDone) {
                 myUserMenu();
                 break;
             case CREATE_PROJECT:
-                //createProject(loggedUser);
-                testCaseMenu(1,1,loggedUser);
+                createProject(loggedUser);
                 break;
             case ASK_FOR_ACCESS_PROJECT:
                 askPermission(loggedUser);
