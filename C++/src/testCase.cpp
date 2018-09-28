@@ -179,24 +179,93 @@ void listTestsCases(int projectId, int suiteId) {
     pauseSystem();
 }
 
-void searchTestsCases() {
+string readSelectedCase() {
+    string selectedCase;
+    cout << CHOOSE_CASE;
+    cin >> selectedCase;
+    return selectedCase;
+}
 
-    cout << "Digite o nome do caso:" << endl;
-    string caseName;
-    getline(cin, caseName);
-    int posic = findTestCase(caseName);
-    if (posic = -1) {
-        cout << "Caso não encontrado" << endl;
-        return searchTestsCases();
+void showCase(Case current) {
+    printHeader(CASE_DETAILS);
+    cout << "ID: ";
+    showID(current.id);
+    cout << "\nNome: " << current.name << endl;
+    cout << "Objetivos: " << current.objectives << endl;
+    cout << "Pré-condições: " << current.preconditions;
+    cout << "Passos: " << endl;
+    for (int i = 0; i < current.steps.size(); i++) {
+        cout << "Passo " << i + 1 << ":" << endl;
+        cout << "\tDescrição: " << current.steps[i].description << endl;
+        cout << "\tResultado esperado: " << current.steps[i].expectedResult << endl;
     }
-    cout << "Nome: " << folder.cases[posic].name << endl;
-    cout << "Objetivos: " << folder.cases[posic].objectives << endl;
-    cout << "Pré-condições: " << folder.cases[posic].preconditions << endl;
-    for(int j = 0; j < folder.cases[posic].steps.size(); j++) {
-        cout << "Descrição: " << folder.cases[posic].steps[j].description << endl;
-        cout << "Resultados esperados: " << folder.cases[posic].steps[j].expectedResult << endl;
+    cout << "Status: " << caseStatusMessage[current.status] << endl;
+
+    pauseSystem();
+}
+
+void searchCase(int projectId, int suiteId) {
+    printHeader(SEARCH_CASE_HEADER);
+    string selectedCase = readSelectedCase();
+    vector<Case> cases = readCases(projectId, suiteId);
+    if (isStringNumeric(selectedCase)) {
+        int id = stringToInteger(selectedCase);
+        if (containsCase(cases, id)) {
+            showCase(cases[searchCase(cases, id)]);
+        } else {
+            showMessage(CASE_NOT_FOUND);
+        }
+    } else {
+        if (containsCase(cases, selectedCase)) {
+            showCase(cases[searchCase(cases, selectedCase)]);
+        } else {
+            showMessage(CASE_NOT_FOUND);
         }
     }
+}
+
+void editCase(vector<Case> cases, int index, int projectId, int suiteId) {
+    printHeader();
+    cout << "#----------# EDITANDO CASO ";
+    showID(cases[index].id);
+    cout << " #----------#" << endl << endl;
+
+    Case editedCase = readCaseInformation();
+
+    if (containsCase(cases, editedCase.name)) {
+        showMessage(CREATION_FAILED);
+    } else {
+        cases[index].name = editedCase.name;
+        cases[index].objectives = editedCase.objectives;
+        cases[index].preconditions = editedCase.preconditions;
+        cases[index].status = editedCase.status;
+        cases[index].steps = editedCase.steps;
+        writeCases(cases, projectId, suiteId);
+        showMessage(CASE_EDITED);
+    }
+
+}
+
+void editCase(int projectId, int suiteId) {
+    printHeader(EDIT_CASE_HEADER);
+    string selectedCase = readSelectedCase();
+    vector<Case> cases = readCases(projectId, suiteId);
+
+    if (isStringNumeric(selectedCase)) {
+        int id = stringToInteger(selectedCase);
+        if (containsCase(cases, id)) {
+            editCase(cases, searchCase(cases, id), projectId, suiteId);
+        } else {
+            showMessage(CASE_NOT_FOUND);
+        }
+    } else {
+        if (containsCase(cases, selectedCase)) {
+            editCase(cases, searchCase(cases, selectedCase), projectId, suiteId);
+        } else {
+            showMessage(CASE_NOT_FOUND);
+        }
+    }
+}
 
 void editTestsCases() {
     char opcao;
@@ -238,24 +307,6 @@ void editTestsCases() {
     } while (isSelectedOptionValid(opcao, '0', '5') == true);
 }
 
-
-int findTestCase(string name) {
-    for(int i = 0; i < folder.cases.size(); i++) {
-         if(name == folder.cases[i].name) {
-             return i;
-         }
-    }
-    return -1;    
-}
-
-int findTestCasePorId(int id) {
-    for(int i = 0; i < folder.cases.size(); i++) {
-         if(id == folder.cases[i].id) {
-             return i;
-         }
-    }
-    return -1;    
-}
 
 void removeTestCase() {
     cout << "Qual caso voce deseja remover? (por id)" << endl;
@@ -359,34 +410,3 @@ void printMenuPrincipal() {
     cout << "(4) Pesquisar um caso de teste" << endl;
     cout << "(5) remover um caso de teste" << endl;
 }
-
-
-
-
-// void saveCaseInFile(Case currentCase) {
-
-//     stringstream convertString;
-//     convertString << currentCase.idProject <<endl;
-//     string fileName = convertString.str();
-
-//     fstream outFile;
-//     outFile.open(fileName + ".dat", ios::out | ios::app);
-//     if (outFile.is_open()) {
-//         outFile << currentCase.idProject << endl;
-//         outFile << currentCase.name << endl;
-//         outFile << currentCase.objectives << endl;
-//         outFile << currentCase.preconditions << endl;
-//         outFile << "Lista de passos:" << endl;
-//         for (int i = 0; i < currentCase.numberOfSteps; i++) {
-//             outFile << currentCase.steps[i].description << endl;
-//             outFile << currentCase.steps[i].expectedResult << endl;
-//         }
-//         outFile.close();
-//         cout << "Caso de teste criado com sucesso!" << endl;
-//     } else {
-//         cout << "Erro ao salvar caso de teste " << endl;
-//     }
-// }
-
-
-
