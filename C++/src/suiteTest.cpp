@@ -285,7 +285,7 @@ void showSuite(suite current) {
     showID(current.id);
     cout << "\nNome: " << current.name << endl;
     cout << "Descrição: " << current.description << endl;
-    cout << "Status: " << calculateStatus(current, 2) << "% dos casos de testes passaram." << endl;
+    cout << "Status: " << calculateStatus(current, CASE_PASSED) << "% dos casos de testes passaram." << endl;
 
     pauseSystem();
 }

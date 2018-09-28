@@ -197,13 +197,13 @@ void generateSuiteReport(suite reportSuite, vector<Case> suiteTestCases){
         }
     }
 
-    notExecutedPercentage = calculateStatus(reportSuite, 1);
+    notExecutedPercentage = calculateStatus(reportSuite, CASE_NOT_EXECUTED);
 
-    passingPercentage = calculateStatus(reportSuite, 2);
+    passingPercentage = calculateStatus(reportSuite, CASE_PASSED);
 
-    notPassingPercentage = calculateStatus(reportSuite, 3);
+    notPassingPercentage = calculateStatus(reportSuite, CASE_NOT_PASSED);
 
-    problemsPercentage = calculateStatus(reportSuite, 4);
+    problemsPercentage = calculateStatus(reportSuite, CASE_ERROR);
 
     reportFile << "Percentual de casos de testes que passaram: " << int(passingPercentage) << "%" << endl;
     cout << "Percentual de casos de testes que passaram: " << int(passingPercentage) << "%" << endl;
