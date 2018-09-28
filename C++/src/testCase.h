@@ -32,12 +32,14 @@
 #define SEARCH_CASE_HEADER     "#--------# PESQUISAR CASO DE TESTE #-------#"
 #define CASE_DETAILS           "#-------# DETALHES DO CASO DE TESTE #------#"
 #define EDIT_CASE_HEADER       "#---------# EDITAR CASO DE TESTE #---------#"
+#define DELETE_CASE_HEADER     "#--------# EXCLUIR CASO DE TESTE #---------#"
 #define TEST_CASE_HEADER       "#--------------------# CASOS DE TESTE #------------------------#"
 #define TEST_CASE_TABLE_HEADER "-     ID     |             Nome            |       Status      -"
 #define TEST_CASE_TABLE_LINE   "----------------------------------------------------------------"
 #define CHOOSE_CASE "Informe o nome ou ID do Caso de Teste: "
 #define CASE_NOT_FOUND "Caso não encontrado."
 #define CASE_EDITED "Caso editado com sucesso!"
+#define CASE_DELETED "Caso deletado com sucesso!"
 
 
 const std::string caseStatusMessage[] = {"Não executado", "Passou", "Não passou", "Erro na execução"};

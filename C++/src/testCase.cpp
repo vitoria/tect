@@ -267,6 +267,36 @@ void editCase(int projectId, int suiteId) {
     }
 }
 
+void deleteCase(vector<Case> cases, int index, int projectId, int suiteId) {
+    cases.erase(cases.begin() + index);
+    writeCases(cases, projectId, suiteId);
+}
+
+void deleteCase(int projectId, int suiteId) {
+    printHeader(DELETE_CASE_HEADER);
+    string selectedCase = readSelectedCase();
+    vector<Case> cases = readCases(projectId, suiteId);
+
+    if (isStringNumeric(selectedCase)) {
+        int id = stringToInteger(selectedCase);
+        if (containsCase(cases, id)) {
+            deleteCase(cases, searchCase(cases, id), projectId, suiteId);
+            showMessage(CASE_DELETED);
+        } else {
+            showMessage(CASE_NOT_FOUND);
+        }
+    } else {
+        if (containsCase(cases, selectedCase)) {
+            deleteCase(cases, searchCase(cases, selectedCase), projectId, suiteId);
+            showMessage(CASE_DELETED);
+        } else {
+            showMessage(CASE_NOT_FOUND);
+        }
+    }
+}
+
+
+
 void editTestsCases() {
     char opcao;
     cout << "Digite o nome do caso:" << endl;
@@ -305,18 +335,6 @@ void editTestsCases() {
                 break;
         }
     } while (isSelectedOptionValid(opcao, '0', '5') == true);
-}
-
-
-void removeTestCase() {
-    cout << "Qual caso voce deseja remover? (por id)" << endl;
-    for(int i = 0; i < folder.cases.size(); i++) {
-        cout << folder.cases[i].id << " " << folder.cases[i].name << endl;
-    }
-    int idEscolhido;
-    cin >> idEscolhido;
-    int i = findTestCasePorId(idEscolhido);
-    folder.cases.erase(folder.cases.begin()+ i);
 }
 
 void editStepTestCase(int positSteps, int posic) {
