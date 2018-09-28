@@ -28,7 +28,12 @@
 #define CASE_STEP_DESCRIPTION "Descrição do passo: "
 #define CASE_STEP_EXPECTED_RESULT "Resultado esperado para o passo: "
 #define CASE_STEP_CONTINUE_MESSAGE "Deseja inserir outro passo (S/N)?"
-#define CREATE_CASE_HEADER "#----------# CRIAR CASO DE TESTE #---------#"
+#define CREATE_CASE_HEADER     "#----------# CRIAR CASO DE TESTE #---------#"
+#define TEST_CASE_HEADER       "#--------------------# CASOS DE TESTE #------------------------#"
+#define TEST_CASE_TABLE_HEADER "-     ID     |             Nome            |       Status      -"
+#define TEST_CASE_TABLE_LINE   "----------------------------------------------------------------"
+
+const std::string caseStatusMessage[] = {"Não executado", "Passou", "Não passou", "Erro na execução"};
 
 struct Step {
     std::string description;

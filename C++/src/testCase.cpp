@@ -163,12 +163,20 @@ void createCase(int projectId, int suiteId) {
     cases.push_back(newCase);
 }
 
-void listTestsCases() {
-
-    cout << "Lista de casos de teste:" << endl;
-    for(int i = 0; i < folder.cases.size(); i++) {
-        cout << "Caso " << i+1 << " Nome: " << folder.cases[i].name <<endl;
+void listTestsCases(int projectId, int suiteId) {
+    printHeader(TEST_CASE_HEADER);
+    vector<Case> cases = readCases(projectId, suiteId);
+    
+    cout << TEST_CASE_TABLE_LINE << endl;
+    cout << TEST_CASE_TABLE_HEADER << endl;
+    cout << TEST_CASE_TABLE_LINE << endl;
+    for(int i = 0; i < cases.size(); i++) {
+        cout << "-    ";
+        showID(cases[i].id);
+        cout << "    | " << truncate(cases[i].name, 28) << "|" << truncate(caseStatusMessage[cases[i].status], 16) << "-" << endl;
     }
+    cout << TEST_CASE_TABLE_LINE << endl;
+    pauseSystem();
 }
 
 void searchTestsCases() {
