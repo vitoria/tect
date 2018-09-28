@@ -1,23 +1,6 @@
 #include "suiteTest.h"
-#include "constants.h"
-#include "validation.h"
-#include "generalPrints.h"
-#include <string>
-#include <vector>
-#include <fstream>
 
 using namespace std;
-
-/**
- * This struct represents a suite
- * that contains an automatic generated id,
- * a name and a simple description.
- */
-struct suite {
-    int id;
-    string name;
-    string description;
-};
 
 /**
  * This method receive a list of suites and write them in a file.

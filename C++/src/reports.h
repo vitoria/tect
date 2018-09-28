@@ -13,8 +13,12 @@
 #include "project.h"
 #include "suiteTest.h"
 #include "testCase.h"
+#include "login.h"
+#include "dataManagerProject.h"
+#include "constants.h"
 
-void generateSuiteReport(suite, vector<Case>);
-void generateProjectReport(Project, vector<suite>);
-void generateUserReport(string, vector<Project>);
+
+void generateSuiteReport(suite, std::vector<Case>);
+void generateProjectReport(Project, std::vector<suite>);
+void generateUserReport(std::string, std::vector<Project>);
 void generateReport(user);
