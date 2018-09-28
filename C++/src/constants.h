@@ -9,11 +9,12 @@
 #define LOGIN '1'
 #define SIGN_UP '2'
 #define LOGOUT '5'
+#define MAIN_EXIT '6'
 #define LOGOUT_MSG "Saindo do usuário atual..."
 #define CLEAR "clear"
 #define PAUSE_MSG "Pressione ENTER para continuar..." 
 #define INVALID_OPTION "Opção inválida!"
-#define MAIN_MENU "(1) Criar Projeto\n(2) Pedir acesso a um projeto\n(3) Pesquisar Projeto\n(4) Editar Projeto\n(5) Logout"
+#define MAIN_MENU "(1) Criar Projeto\n(2) Pedir acesso a um projeto\n(3) Pesquisar Projeto\n(4) Editar Projeto\n(5) Logout\n(6) Sair"
 #define LOGIN_MENU "(1) Efetuar login\n(2) Cadastrar novo usuário\n(3) Sair"
 #define SUITE_MENU "(1) Criar suite de teste\n(2) Listar suites de teste\n(3) Pesquisar suite de teste\n(4) Editar suite de teste\n(5) Apagar suite de teste\n(6) Voltar"
 #define CREATE_SUITE '1'
