@@ -46,6 +46,7 @@ void systemMenu(user loggedUser) {
                 askPermission(loggedUser);
                 break;
             case SEARCH_PROJECT:
+                cleanFile();
                 // not implemented
                 break;
             case EDIT_PROJECT:

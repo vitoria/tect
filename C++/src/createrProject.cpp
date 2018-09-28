@@ -33,7 +33,9 @@ void createProject(user creater){
     newProject.owner = creater.login;
     vector<string> users;
     vector<string> requests;
+    newProject.numberOfUsers = 0;
     newProject.users = users;
+    newProject.numberOfRequests = 0;
     newProject.requests = requests;
 
     saveProject(newProject);

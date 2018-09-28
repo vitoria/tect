@@ -52,26 +52,28 @@ void allowPermissions(int id){
     vector<Project> projects = arquiveToArray();
 
     int aux = throughArray(id, projects);
-
     if (projects[aux].id == id){
         if (projects[aux].requests.size() > 0){
             string usersString = "";
-
             vector<string> vetor;
             for (int i = 0; i < projects[aux].users.size(); i++){
                 usersString += projects[aux].users[i];
             }
             for (int i = 0; i < projects[aux].requests.size(); i++){
                 char fileInput;
-                cout << "Dar permissão de acesso no projeto  " << projects[aux].name;
+                cout << "Dar permissão de acesso no projeto " << projects[aux].name;
                 cout << " ao usuário " << projects[aux].requests[i] << " (s/n)? ";
                 cin >> fileInput;
                 if (fileInput == 's'){
-                    usersString += projects[aux].requests[i];
+                    usersString += projects[aux].requests[i] + " ";
+                    projects[aux].numberOfUsers++;
                 }
             }
-
             split(usersString, vetor);
+
+            for (int i = 0; i < vetor.size(); i++){
+                projects[aux].users.push_back(vetor[i]);
+            }
 
             arrayToArquive(projects);
             cout << "Permissões dadas com sucesso" << endl;
@@ -85,21 +87,17 @@ void allowPermissions(int id){
 
 void askPermission(user loggedUser){
     vector<Project> projects = arquiveToArray();
-
     string input;
     cout << "Informe id do projeto: ";
     getline(cin, input);
-
     int id = stoi(input);
-
     int aux = throughArray(id, projects);
-
     if (projects[aux].id == id){
         projects[aux].requests.push_back(loggedUser.login);
+        projects[aux].numberOfRequests++;
     }
 
     arrayToArquive(projects);
-
 }
 
 void split(string usersString, vector<string> vetor){
@@ -113,6 +111,7 @@ void split(string usersString, vector<string> vetor){
             aux += usersString[i];
         }
     }
+    cout << vetor[vetor.size()-1] << endl;
 }
 
 void deleteProject(int id){
