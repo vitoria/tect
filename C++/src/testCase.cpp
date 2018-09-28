@@ -37,15 +37,19 @@ vector<Case> readCases(int projectId, int suiteId) {
     vector<Case> cases;
     Case currentCase;
     Step currentCaseStep;
-    int stepsVectorSize;
+    string stepsVectorSize;
+    string id;
 
     ifstream casesFile(filePath, ios::in);
     if (casesFile.is_open()) {
 
-        while(casesFile >> currentCase.id) {
-            casesFile >> currentCase.name >> currentCase.objectives >> currentCase.preconditions;
-            casesFile >> stepsVectorSize;
-            for (int i = 0; i < stepsVectorSize; i++) {
+        while(getline(casesFile, id)) {
+            currentCase.id = stringToInteger(id);
+            getline(casesFile, currentCase.name);
+            getline(casesFile, currentCase.objectives);
+            getline(casesFile, currentCase.preconditions);
+            getline(casesFile, stepsVectorSize);
+            for (int i = 0; i < stringToInteger(stepsVectorSize); i++) {
                 casesFile >> currentCaseStep.description >> currentCaseStep.expectedResult;
                 currentCase.steps.push_back(currentCaseStep);
             }
@@ -105,6 +109,8 @@ Case readCaseInformation() {
         cout << CASE_STEP_EXPECTED_RESULT;
         getline(cin, newStep.expectedResult);
 
+        newCase.steps.push_back(newStep);
+
         cout << CASE_STEP_CONTINUE_MESSAGE << endl;
         getline(cin, hasAnotherStep);
     } while (isMenuInputStringValid(stringToUpper(hasAnotherStep), 'S', 'S'));
@@ -157,6 +163,7 @@ void createCase(int projectId, int suiteId) {
     printHeader(CREATE_CASE_HEADER);
     vector<Case> cases = readCases(projectId, suiteId);
     Case newCase = readCaseInformation();
+
     if (containsCase(cases, newCase.name)) {
         showMessage(CREATION_FAILED);
     } else {
@@ -165,7 +172,6 @@ void createCase(int projectId, int suiteId) {
         writeCases(cases, projectId, suiteId);
         showMessage(CREATION_SUCCESS);
     }
-    cases.push_back(newCase);
 }
 
 void listTestsCases(int projectId, int suiteId) {
@@ -197,7 +203,7 @@ void showCase(Case current) {
     showID(current.id);
     cout << "\nNome: " << current.name << endl;
     cout << "Objetivos: " << current.objectives << endl;
-    cout << "Pré-condições: " << current.preconditions;
+    cout << "Pré-condições: " << current.preconditions << endl;
     cout << "Passos: " << endl;
     for (int i = 0; i < current.steps.size(); i++) {
         cout << "Passo " << i + 1 << ":" << endl;
