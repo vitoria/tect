@@ -18,6 +18,7 @@
 #include "constants.h"
 #include "generalPrints.h"
 #include "login.h"
+#include "myUser.h"
 
 #define OBJECTIVE "Objetivo: "
 #define PRECONDITIONS "Pré-condições: "
@@ -64,6 +65,7 @@ struct Case{
     std::string preconditions;
     std::vector<Step> steps;
     int status;
+    std::string authorUser;
 };
 
 std::string generateTestCaseFilePath(int, int);
@@ -77,7 +79,7 @@ int searchCase(std::vector<Case>, std::string);
 int searchCase(std::vector<Case>, int);
 bool containsCase(std::vector<Case>, std::string);
 bool containsCase(std::vector<Case>, int);
-void createCase(int, int);
+void createCase(int, int, user);
 void listTestsCases(int, int);
 std::string readSelectedCase();
 void showCase(Case);
@@ -89,5 +91,5 @@ void deleteCase(std::vector<Case>, int, int, int);
 void deleteCase(int, int);
 int generateId(std::vector<Case>);
 void showTestCaseMenu();
-void goToProcediment(char, int, int);
-void testCaseMenu(int, int);
+void goToProcediment(char, int, int, user);
+void testCaseMenu(int, int, user);

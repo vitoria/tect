@@ -44,12 +44,8 @@ void systemMenu(user loggedUser, bool *isDone) {
                 myUserMenu();
                 break;
             case CREATE_PROJECT:
-<<<<<<< HEAD
-                cout << "Projeto criado" << endl;
-                testCaseMenu(1, 1);
-=======
-                createProject(loggedUser);
->>>>>>> master
+                //createProject(loggedUser);
+                testCaseMenu(1,1,loggedUser);
                 break;
             case ASK_FOR_ACCESS_PROJECT:
                 askPermission(loggedUser);

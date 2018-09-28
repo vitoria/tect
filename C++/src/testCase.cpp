@@ -24,6 +24,7 @@ void writeCases(vector<Case> cases, int projectId, int suiteId) {
                     casesFile << cases[i].steps[j].expectedResult << endl;
                 }
                 casesFile << cases[i].status << endl;
+                casesFile << cases[i].authorUser << endl;
             }
             casesFile.close();
         }
@@ -52,10 +53,13 @@ vector<Case> readCases(int projectId, int suiteId) {
             casesFile >> stepsVectorSize;
             getline(casesFile, trash);
             for (int i = 0; i < stepsVectorSize; i++) {
-                casesFile >> currentCaseStep.description >> currentCaseStep.expectedResult;
+                getline(casesFile, currentCaseStep.description);
+                getline(casesFile, currentCaseStep.expectedResult);
                 currentCase.steps.push_back(currentCaseStep);
             }
             casesFile >> currentCase.status;
+            getline(casesFile, trash);
+            getline(casesFile, currentCase.authorUser);
             cases.push_back(currentCase);
         }
         casesFile.close();
@@ -161,7 +165,7 @@ bool containsCase(vector<Case> cases, int id) {
     return searchCase(cases, id) != -1;
 }
 
-void createCase(int projectId, int suiteId) {
+void createCase(int projectId, int suiteId, user loggedUser) {
     printHeader(CREATE_CASE_HEADER);
     vector<Case> cases = readCases(projectId, suiteId);
     Case newCase = readCaseInformation();
@@ -170,6 +174,7 @@ void createCase(int projectId, int suiteId) {
         showMessage(CREATION_FAILED);
     } else {
         newCase.id = generateId(cases);
+        newCase.authorUser = loggedUser.login;
         cases.push_back(newCase);
         writeCases(cases, projectId, suiteId);
         showMessage(CREATION_SUCCESS);
@@ -213,6 +218,7 @@ void showCase(Case current) {
         cout << "\tResultado esperado: " << current.steps[i].expectedResult << endl;
     }
     cout << "Status: " << caseStatusMessage[current.status] << endl;
+    cout << "Autor: " << current.authorUser << endl;
 
     pauseSystem();
 }
@@ -387,10 +393,10 @@ void showTestCaseMenu() {
     std::cout << TEST_CASE_MENU << std::endl;
 }
 
-void goToProcediment(char optionSelected, int projectId, int suiteId) {
+void goToProcediment(char optionSelected, int projectId, int suiteId, user loggedUser) {
     switch(optionSelected) {
         case CREATE_CASE:
-            createCase(projectId, suiteId);
+            createCase(projectId, suiteId, loggedUser);
             break;
         case LIST_CASES:
             listTestsCases(projectId, suiteId);
@@ -409,7 +415,7 @@ void goToProcediment(char optionSelected, int projectId, int suiteId) {
     }
 }
 
-void testCaseMenu(int projectId, int suiteId) {
+void testCaseMenu(int projectId, int suiteId, user loggedUser) {
     string optionSelected;
     bool isOptionValid;
 
@@ -426,7 +432,7 @@ void testCaseMenu(int projectId, int suiteId) {
 
         } while (!isOptionValid);
 
-        goToProcediment(optionSelected[0], projectId, suiteId);
+        goToProcediment(optionSelected[0], projectId, suiteId, loggedUser);
 
     } while (optionSelected[0] != GO_BACK);
 }
