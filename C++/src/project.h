@@ -26,6 +26,7 @@ struct Project{
 };
 
 void verifyUserToProject(user, int);
+void listProjects();
 int throughArray(int, std::vector<Project>);
 void editNameProject(int);
 void editDescriptionProject(int);
