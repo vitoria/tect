@@ -82,7 +82,7 @@ void projectMenuOwner(int id, user loggedUser){
                 break;
             case '4':
                 deleteProject(id);
-                selectedOption = '7';
+                selectedOption = '6';
                 break;
             case '5':
                 suiteTestMenu(id);
