@@ -4,6 +4,7 @@
 
 #include "createrProject.h"
 #include "menuProject.h"
+#include "reports.h"
 
 #include "myUser.h"
 
@@ -56,6 +57,9 @@ void systemMenu(user loggedUser, bool *isDone) {
                 break;
             case EDIT_PROJECT:
                 verifyUserToProject(loggedUser);
+                break;
+            case REPORTS:
+                generateReport(loggedUser);
                 break;
             case LOGOUT:
                 cout << LOGOUT_MSG << endl;

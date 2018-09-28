@@ -1,6 +1,7 @@
 #include "project.h"
 #include "dataManagerProject.h"
 #include "login.h"
+#include "reports.h"
 
 using namespace std;
 
@@ -18,10 +19,13 @@ int throughArray(int id, vector<Project> projects){
 
 void listProjects(){
     vector<Project> projects = arquiveToArray();
-
-    for(int i = 0; i < projects.size(); i++){
-        cout << "Id do Projeto: " << projects[i].id << " - Nome: " << projects[i].name << " - Description: "
-        << projects[i].description << " - Dono: " << projects[i].owner << endl;
+    if (projects.size() > 0){
+        for(int i = 0; i < projects.size(); i++){
+            cout << "Id do Projeto: " << projects[i].id << " - Nome: " << projects[i].name << " - Description: "
+            << projects[i].description << " - Dono: " << projects[i].owner << endl;
+        }
+    } else {
+        cout << "Nenhum projeto inserido." << endl;
     }
 }
 
@@ -156,8 +160,3 @@ void swapProject(vector<Project> projects, int aux){
         projects[aux] = projects[aux+1];
     }
 }
-
-void generateReport(int id){
-    //not implemented
-}
-

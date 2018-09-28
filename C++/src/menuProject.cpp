@@ -41,7 +41,6 @@ void verifyUserToProject(user loggedUser){
         cout << PAUSE_MSG << endl;
         cin.get();
         system(CLEAR);
-        //systemMenu(loggedUser);
     }    
 }
 
@@ -53,8 +52,7 @@ void printProjectMenuOwner(){
     cout << "(3) Verificar pedidos de permissão" << endl;
     cout << "(4) Excluir projeto" << endl;
     cout << "(5) Gerenciar suítes de teste" << endl;
-    cout << "(6) Gerar relatório de projeto" << endl;
-    cout << "(7) Sair do projeto" << endl;
+    cout << "(6) Sair do projeto" << endl;
 
 }
 
@@ -67,10 +65,10 @@ void projectMenuOwner(int id, user loggedUser){
             cin.get(selectedOption);
             cin.ignore();
 
-            if (isSelectedOptionValid(selectedOption, '1', '7') == false) {
+            if (isSelectedOptionValid(selectedOption, '1', '6') == false) {
                 printInvalidOptionMessage();
             }
-        } while (isSelectedOptionValid(selectedOption, '1', '7') == false);
+        } while (isSelectedOptionValid(selectedOption, '1', '6') == false);
 
         switch(selectedOption){
             case '1':
@@ -90,10 +88,6 @@ void projectMenuOwner(int id, user loggedUser){
                 suiteTestMenu(id);
                 break;
             case '6':
-                generateReport(id);
-                cout << "Relatório gerado com sucesso" << endl;
-                break;
-            case '7':
                 cout << "Saindo do projeto" << endl;
                 break;
             default:
@@ -104,7 +98,7 @@ void projectMenuOwner(int id, user loggedUser){
         cout << "Pressione qualquer tecla para continuar..." << endl;
         cin.get();
         system ("clear");
-    } while (selectedOption != '7');
+    } while (selectedOption != '6');
 }
 
 void printProjectMenuUser(){
@@ -112,8 +106,7 @@ void printProjectMenuUser(){
     printHeader();
     cout << "Menu Projeto Usuário Com Acesso" << endl; 
     cout << "(1) Gerenciar suítes de teste" << endl;
-    cout << "(2) Gerar relatório de projeto" << endl;
-    cout << "(3) Sair do projeto" << endl;
+    cout << "(2) Sair do projeto" << endl;
 
 }
 
@@ -127,20 +120,16 @@ void projectMenuUser(int id, user loggedUser){
             cin.get(selectedOption);
             cin.ignore();
 
-            if (isSelectedOptionValid(selectedOption, '1', '3') == false) {
+            if (isSelectedOptionValid(selectedOption, '1', '2') == false) {
                 printInvalidOptionMessage();
             }
-        } while (isSelectedOptionValid(selectedOption, '1', '3') == false);
+        } while (isSelectedOptionValid(selectedOption, '1', '2') == false);
 
         switch(selectedOption){
             case '1':
                 suiteTestMenu(id);
                 break;
             case '2':
-                generateReport(id);
-                cout << "Relatório gerado com sucesso" << endl;
-                break;
-            case '3':
                 cout << "Saindo do projeto" << endl;
                 break;
             default:
@@ -151,5 +140,5 @@ void projectMenuUser(int id, user loggedUser){
         cout << "Pressione qualquer tecla para continuar..." << endl;
         cin.get();
         system ("clear");
-    } while (selectedOption != '3');
+    } while (selectedOption != '2');
 }

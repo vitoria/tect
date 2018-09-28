@@ -24,7 +24,7 @@ void suiteTestMenu(int);
 
 void createSuite(int);
 
-std::vector<suite> readSuites();
+std::vector<suite> readSuites(int);
 
 void listSuites(int);
 
