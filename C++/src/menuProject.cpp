@@ -41,7 +41,7 @@ void verifyUserToProject(user loggedUser){
         cout << PAUSE_MSG << endl;
         cin.get();
         system(CLEAR);
-        systemMenu(loggedUser);
+        //systemMenu(loggedUser);
     }    
 }
 

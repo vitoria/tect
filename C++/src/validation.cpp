@@ -85,6 +85,13 @@ bool isStringNumeric(string str) {
     return result;
 }
 
+string stringToUpper(string str) {
+    for (int i = 0; i < str.size(); i++) {
+        str[i] = toupper(str[i]);
+    }
+    return str;
+}
+
 bool verifyPasswords(string password, string password2) {
     bool isValid = true;
     
