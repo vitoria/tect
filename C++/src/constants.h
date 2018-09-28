@@ -91,6 +91,8 @@
 
 #define MIN_PASSWORD_CHARACTERES 4
 
+#define FOLDER_CREATION_PARAMETER 0700
+
 #define CLEAR "clear"
 #define INVALID_OPTION "Opção inválida!"
 #define EXIT_MSG "Encerrando sistema..."

@@ -108,9 +108,9 @@ bool verifyPasswords(string password, string password2) {
 
 bool isFolderCreated (string folderPath) {
     bool result;
-    struct stat st = {0};
+    struct stat folderRestrict = {0};
 
-    if (stat(folderPath.c_str(), &st) == -1) {
+    if (stat(folderPath.c_str(), &folderRestrict) == -1) {
         result = createFolder(folderPath);
     } else {
         result = true;
@@ -121,7 +121,7 @@ bool isFolderCreated (string folderPath) {
 
 bool createFolder(string folderPath) {
     bool result = false;
-    if (mkdir(folderPath.c_str(), 0700) == 0) {
+    if (mkdir(folderPath.c_str(), FOLDER_CREATION_PARAMETER) == 0) {
         result = true;
     }
     return result;

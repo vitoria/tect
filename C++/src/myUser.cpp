@@ -62,6 +62,9 @@ user readCurrentUser() {
     return current;
 }
 
+/**
+ * This method returns a string that contains the logged user's username.
+ */
 string getLoggedUser() {
     return readCurrentUser().username;
 }
