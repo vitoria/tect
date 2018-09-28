@@ -50,7 +50,29 @@ void saveProject(Project project){
     vector<Project> projects = arquiveToArray();
     projects.push_back(project);
     arrayToArquive(projects);
+
+    //createArquive(project.id);
+
     
+}
+
+/*void createArquive(int id){
+    string fileUsersPath = generateProjectFolderPath(id) + "/users.dat";
+    string fileRequestsPath = generateProjectFolderPath(id) + "/requests.dat";
+    string folderPath = generateProjectFolderPath(id);
+
+    if (isFolderCreated(folderPath)){
+        ftream file;
+
+    }
+}*/
+
+/*string generateTestCaseFilePath(int projectId, int suiteId) {
+    return string(DATA_FOLDER_PATH) + "/" + to_string(projectId) + "/" + to_string(suiteId) + ".dat";
+}*/
+
+string generateProjectFolderPath(int projectId) {
+    return string(DATA_FOLDER_PATH) + "/" + to_string(projectId);
 }
 
 /*

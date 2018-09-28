@@ -4,7 +4,6 @@
 
 using namespace std;
 
-
 int throughArray(int id, vector<Project> projects){
     int aux = -1;
 
@@ -56,23 +55,18 @@ void allowPermissions(int id){
         if (projects[aux].requests.size() > 0){
             string usersString = "";
             vector<string> vetor;
-            for (int i = 0; i < projects[aux].users.size(); i++){
-                usersString += projects[aux].users[i];
-            }
             for (int i = 0; i < projects[aux].requests.size(); i++){
                 char fileInput;
                 cout << "Dar permissão de acesso no projeto " << projects[aux].name;
                 cout << " ao usuário " << projects[aux].requests[i] << " (s/n)? ";
                 cin >> fileInput;
                 if (fileInput == 's'){
-                    usersString += projects[aux].requests[i] + " ";
+                    projects[aux].users.push_back(projects[aux].requests[i]);
                     projects[aux].numberOfUsers++;
-                }
-            }
-            split(usersString, vetor);
+                    projects[aux].requests.erase(projects[aux].requests.begin() + i);
+                    projects[aux].numberOfRequests--;
 
-            for (int i = 0; i < vetor.size(); i++){
-                projects[aux].users.push_back(vetor[i]);
+                }
             }
 
             arrayToArquive(projects);
@@ -93,11 +87,35 @@ void askPermission(user loggedUser){
     int id = stoi(input);
     int aux = throughArray(id, projects);
     if (projects[aux].id == id){
-        projects[aux].requests.push_back(loggedUser.login);
-        projects[aux].numberOfRequests++;
+        if (!verifyUserAskingPermission(projects[aux], loggedUser)){
+            projects[aux].requests.push_back(loggedUser.login);
+            projects[aux].numberOfRequests++;
+            arrayToArquive(projects);
+        }
     }
 
-    arrayToArquive(projects);
+}
+
+bool verifyUserAskingPermission(Project project, user loggedUser){
+    bool verify = false;
+    for (int i = 0; i < project.users.size(); i++){
+        if(loggedUser.login.compare(project.users[i]) == 0){
+            verify = true;
+            cout << "Você já tem permissão de acesso a esse projeto." << endl;
+            break;
+        }
+    }
+    if (!verify){
+        for (int i = 0; i < project.requests.size(); i++){
+            if(loggedUser.login.compare(project.requests[i]) == 0){
+                verify = true;
+                cout << "Você já pediu permissão de acesso a esse projeto." << endl;
+                break;
+            }
+        }
+    }
+    return verify;
+
 }
 
 void split(string usersString, vector<string> vetor){

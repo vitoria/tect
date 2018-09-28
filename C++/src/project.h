@@ -31,6 +31,7 @@ void editNameProject(int);
 void editDescriptionProject(int);
 void allowPermissions(int);
 void askPermission(user);
+bool verifyUserAskingPermission(Project, user);
 void split(std::string, std::vector<std::string>);
 void deleteProject(int);
 void generateReport(int);
