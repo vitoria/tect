@@ -2,6 +2,9 @@
 #include "dataManagerProject.h"
 #include "login.h"
 #include "reports.h"
+#include "generalPrints.h"
+#include "constants.h"
+#include "validation.h"
 
 using namespace std;
 
@@ -18,15 +21,28 @@ int throughArray(int id, vector<Project> projects){
 }
 
 void listProjects(){
+    printHeader(LIST_PROJECTS_HEADER);
     vector<Project> projects = arquiveToArray();
     if (projects.size() > 0){
+        showLine();
+        cout << LIST_PROJECTS_TABLE_HEADER << endl;
+        showLine();
         for(int i = 0; i < projects.size(); i++){
-            cout << "Id do Projeto: " << projects[i].id << " - Nome: " << projects[i].name << " - Description: "
-            << projects[i].description << " - Dono: " << projects[i].owner << endl;
+            cout << "- ";
+            showID(projects[i].id);
+            cout << " | ";
+            cout << truncate(projects[i].name, 20);
+            cout << " | ";
+            cout << truncate(projects[i].owner, 12);
+            cout << " | " << endl;
         }
+        showLine();
     } else {
         cout << "Nenhum projeto inserido." << endl;
     }
+
+    cout << endl;
+    pauseSystem();
 }
 
 void editNameProject(int id){
@@ -35,6 +51,7 @@ void editNameProject(int id){
     int aux = throughArray(id, projects);
 
     if (projects[aux].id == id){
+        cout << "Nome atual: " << projects[aux].name << endl;
         cout << "Novo nome: ";
         getline(cin, projects[aux].name);
 
@@ -51,6 +68,7 @@ void editDescriptionProject(int id){
     int aux = throughArray(id, projects);
 
     if (projects[aux].id == id){
+        cout << "Descrição atual: " << projects[aux].description << endl;
         cout << "Nova descrição: ";
         getline(cin, projects[aux].description);
         arrayToArquive(projects);

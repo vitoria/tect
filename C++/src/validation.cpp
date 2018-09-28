@@ -21,7 +21,6 @@ bool isSelectedOptionValid(char option, char intervalBegin, char intervalEnd) {
 }
 
 void printInvalidOptionMessage() {
-    system (CLEAR);
     cout << INVALID_OPTION << endl;
     cout << PAUSE_MSG << endl;
     cin.get();
@@ -55,7 +54,7 @@ string getWhiteSpaces(int size) {
 
 string truncate(string text, int size) {
     if (text.size() > size) {
-        text = text.substr(size - 3);
+        text = text.substr(0, size - 4);
         text += SUSPENSION_POINTS;
     }
     return (text + getWhiteSpaces(size - text.size()));
