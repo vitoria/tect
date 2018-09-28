@@ -158,18 +158,23 @@ void createCase(int projectId, int suiteId) {
 }
 
 void listTestsCases(int projectId, int suiteId) {
-    printHeader(TEST_CASE_HEADER);
+    printHeader2(TEST_CASE_HEADER);
     vector<Case> cases = readCases(projectId, suiteId);
     
     cout << TEST_CASE_TABLE_LINE << endl;
     cout << TEST_CASE_TABLE_HEADER << endl;
     cout << TEST_CASE_TABLE_LINE << endl;
     for(int i = 0; i < cases.size(); i++) {
-        cout << "-    ";
+        cout << "- ";
         showID(cases[i].id);
-        cout << "    | " << truncate(cases[i].name, 28) << "|" << truncate(caseStatusMessage[cases[i].status], 16) << "-" << endl;
+        cout << " | ";
+        cout << truncate(cases[i].name, 22);
+        cout << " | ";
+        cout << truncate(caseStatusMessage[cases[i].status], 21);
+        cout << " - " << endl;
     }
     cout << TEST_CASE_TABLE_LINE << endl;
+    cout << endl;
     pauseSystem();
 }
 

@@ -14,6 +14,12 @@ void printHeader(string subtitle) {
     cout << subtitle << endl << endl;
 }
 
+void printHeader2(string subtitle) {
+    system(CLEAR);
+    cout << HEADER2 << endl;
+    cout << subtitle << endl << endl;
+}
+
 void showMessage(string msg) {
     cout << msg;
     cin.get();
