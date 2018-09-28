@@ -17,6 +17,7 @@
 #include "validation.h"
 #include "constants.h"
 #include "generalPrints.h"
+#include "login.h"
 
 #define OBJECTIVE "Objetivo: "
 #define PRECONDITIONS "Pré-condições: "
@@ -90,22 +91,3 @@ int generateId(std::vector<Case>);
 void showTestCaseMenu();
 void goToProcediment(char, int, int);
 void testCaseMenu(int, int);
-
-// Case readCaseInformation();
-// int searchCase(std::vector<Case>, std::string);
-// int searchCase(std::vector<Case>, int);
-// bool containsCase(std::vector<Case>, std::string);
-// bool containsCase(std::vector<Case>, int);
-// void createCase(int, int);
-// void listTestsCases();
-// void searchTestsCases();
-// void editTestsCases();
-// int findTestCase(std::string);
-// void removeTestCase();
-// int findTestCasePorId(int);
-// void removeTestCase();
-// void editStepTestCase(int, int);
-// int generateId();
-// char editTestsMenu();
-// void menuPrincipalCases();
-// void printMenuPrincipal();
