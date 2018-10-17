@@ -104,9 +104,9 @@ module Constants where
         logout_msg = "Saindo do usuário atual..."
         pause_msg = "Pressione ENTER para continuar..." 
 
-        name = "Nome: "
-        username = "Username: "
-        password = "Senha: "
+        name_const = "Nome: "
+        username_const = "Username: "
+        password_const = "Senha: "
         confirmation_password = "Digite a senha novamente: "
         suspension_points = "..."
         description = "Descrição: "
