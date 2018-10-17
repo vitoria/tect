@@ -1,3 +1,4 @@
+import Constants
 type Name = String
 type Username = String
 type Password = String
@@ -5,18 +6,18 @@ type User = (Name, Username, Password)
 
 fazerCadastro :: IO User
 fazerCadastro = do
-                putStr ("Nome: ")
+                putStr (name)
                 name <- getLine
-                putStr ("Username: ")
+                putStr (username)
                 username <- getLine
-                putStr ("Senha: ")
+                putStr (password)
                 password <- getLine
                 verifySenha <- pegarSenha password
                 return (name, username, password)
 
 pegarSenha :: String -> IO String
 pegarSenha x = do 
-                putStr ("Digite a senha novamente: ")
+                putStr (confirmation_password)
                 senha <- getLine
                 if senha == x 
                     then 
