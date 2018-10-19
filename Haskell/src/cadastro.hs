@@ -6,11 +6,18 @@ data User = User {
     password :: String
 } deriving (Eq, Show)
 
+-- Para fazer testes
+aa = User {name = "Douglas", username = "douglaslimaxx", password = "123"}
+dd = User {name = "Douglas", username = "douglasli", password = "123"}
 
-{-type Name = String
-type Username = String
-type Password = String
-type User = (Name, Username, Password)-}
+a = "douglaslimaxx"
+d = "douglasli"
+b = "bubu"
+
+aaa = [aa, dd]
+ddd = [dd]
+zzz = []
+-- Teste/
 
 fazerCadastro :: IO User
 fazerCadastro = do
@@ -33,5 +40,10 @@ pegarSenha x = do
                     else 
                         pegarSenha x
 
-{-verificarUserExistente [User]-}
+verificarUserExistente :: String -> [User] -> Bool
+verificarUserExistente _ [] = False
+verificarUserExistente a (x:xs) | verificarUserExistenteAux a x == True = True
+                                | otherwise = verificarUserExistente a xs
 
+verificarUserExistenteAux :: String -> User -> Bool
+verificarUserExistenteAux u (User _ a _) = if u == a then True else False
