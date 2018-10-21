@@ -20,33 +20,34 @@ ddd = [dd]
 zzz = []
 -- Teste/
 
-fazerCadastro :: IO User
-fazerCadastro = do
+registerNewUser :: IO User
+registerNewUser = do
                 putStrLn (header)
                 putStrLn (sign_up_header)
                 putStrLn ("")
                 putStr (name_const)
                 n <- getLine
-                u <-pegarUser
+                u <-getUser
                 putStr (password_const)
                 p <- getLine
-                verifySenha <- pegarSenha p
+                verifySenha <- getPassword p
                 putStrLn ("Usuário cadastrado com sucesso!")
                 return User {name = n, username = u, password = p}
 
-pegarUser :: IO String
-pegarUser = do 
+getUser :: IO String
+getUser = do 
                 putStr (username_const)
                 u <- getLine
-                if (verificarUserExistente u aaa) -- lista (aaa) utilizada como paremetro deve ser uma lista gerada a partir do arquivo com os usuários
+                if (verifyExistingUser
+                 u aaa) -- lista (aaa) utilizada como paremetro deve ser uma lista gerada a partir do arquivo com os usuários
                     then 
-                        pegarUser
+                        getUser
                     else 
                         return u
 
 
-pegarSenha :: String -> IO String
-pegarSenha x = do 
+getPassword :: String -> IO String
+getPassword x = do 
                 putStr (confirmation_password)
                 senha <- getLine
                 if senha == x 
@@ -54,18 +55,19 @@ pegarSenha x = do
                         return senha 
                     else 
                         -- error "Senha não confere"
-                        pegarSenha x
+                        getPassword x
 
-verificarUserExistente :: String -> [User] -> Bool
-verificarUserExistente _ [] = False
-verificarUserExistente a (x:xs) | verificarUserExistenteAux a x == True = True
-                                | otherwise = verificarUserExistente a xs
+verifyExistingUser :: String -> [User] -> Bool
+verifyExistingUser _ [] = False
+verifyExistingUser a (x:xs) | verifyExistingUserAux a x == True = True
+                                | otherwise = verifyExistingUser
+                             a xs
 
-verificarUserExistenteAux :: String -> User -> Bool
-verificarUserExistenteAux u (User _ a _) = if u == a then True else False
+verifyExistingUserAux :: String -> User -> Bool
+verifyExistingUserAux u (User _ a _) = if u == a then True else False
 
-salvaUser :: User -> IO ()
-salvaUser (User n u p)= do
+saveUser :: User -> IO ()
+saveUser (User n u p)= do
                 arq <- openFile "data/users.dat" AppendMode
                 hPutStr arq n
                 hPutStr arq "\n"
@@ -76,11 +78,11 @@ salvaUser (User n u p)= do
                 hFlush arq
                 hClose arq
 
--- Para testar o limparArquivo
+-- Para testar o cleanFile
 user_path = "data/users.dat"
 
-limparArquivo :: String -> IO ()
-limparArquivo a = do
+cleanFile :: String -> IO ()
+cleanFile a = do
                 arq <- openFile a WriteMode
                 hPutStr arq ""
                 hFlush arq
