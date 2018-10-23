@@ -3,11 +3,17 @@ import GeneralPrints
 import Validation
 
 data Suite = Suite {
-    id :: Int,
+    suiteId :: Int,
     name :: String,
-    description :: String,
+    suiteDescription :: String,
     projectId :: Int
 } deriving(Eq, Show)
+
+createSuite :: Int -> String -> String -> Int -> Suite
+createSuite idInput nameInput descriptionInput projectIdInput = Suite {suiteId = idInput,
+                                                                       name = nameInput,
+                                                                       suiteDescription = descriptionInput,
+                                                                       projectId = projectIdInput}
 
 chooseProcedure :: Char -> IO()
 chooseProcedure option
