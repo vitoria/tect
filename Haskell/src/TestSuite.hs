@@ -4,8 +4,9 @@ import Validation
 import System.IO
 import System.IO.Unsafe
 import System.Directory
+import System.FilePath
 import Data.List
-
+import Control.Monad
 
 data Suite = Suite {
     suiteId :: Int,
@@ -14,13 +15,24 @@ data Suite = Suite {
     projectId :: Int
 } deriving(Eq, Show)
 
-readSuitesToStr :: Int -> IO [String]
-readSuitesToStr projId = do
+-- readSuites :: Int -> [Suite]
+-- readSuites projId = do
+--     let suiteStrList = unsafePerformIO $ readSuitesToStr projId
+--         suiteList = stringListToSuiteList suiteStrList
+--     return suiteList
+
+stringListToSuiteList :: [String] -> [Suite]
+stringListToSuiteList [] = []
+stringListToSuiteList (sId:(name:(sDes:(pId:strList)))) = (createSuite (read sId) name sDes (read pId)):(stringListToSuiteList strList)
+
+readSuites :: Int -> IO [Suite]
+readSuites projId = do
     let filePath = data_folder_path ++ "/" ++ (show projId) ++ "/" ++ suites_file_path
     handle <- openFile filePath ReadMode
     fileContents <- hGetContents handle
+    hClose handle
     let contentsList = lines fileContents
-    return contentsList
+    return (stringListToSuiteList contentsList)
 
 writeSuite :: Suite -> Int -> IO()
 writeSuite suite projId = do
@@ -29,18 +41,25 @@ writeSuite suite projId = do
     if unsafePerformIO $ doesFileExist filePath
         then do
             handle <- openFile filePath ReadMode
-            tempdir <- getTemporaryDirectory
-            (tempName, tempHandle) <- openTempFile tempdir "temp"
             fileContents <- hGetContents handle
+            --fileContents <- readTextFile filePath
             let newSuitesStrings = fileContents ++ (suiteToString suite)
-            hPutStr tempHandle newSuitesStrings
             hClose handle
-            hClose tempHandle
-            removeFile filePath
-            renameFile tempName filePath
+            
+            handle <- openFile filePath WriteMode
+            hPutStr handle newSuitesStrings
+            hClose handle
+            --hClose tempHandle
+            --removeFile filePath
+            --renameFile tempName suites_file_path
         else do
             if unsafePerformIO $ doesDirectoryExist data_folder_path
-                then do createDirectory (data_folder_path ++ "/")
+                then do
+                    if unsafePerformIO $ doesDirectoryExist folderPath
+                        then do
+                            putStrLn("Diretório encontrado.")
+                        else do
+                            createDirectory folderPath
                 else do 
                     createDirectory (data_folder_path ++ "/")
                     createDirectory folderPath
@@ -51,8 +70,6 @@ writeSuite suite projId = do
             hPutStr tempHandle newSuitesStrings
             hClose tempHandle
             --renameFile tempName filePath
-
-
 
 suiteToString :: Suite -> String
 suiteToString (Suite suiteId name suiteDescription projectId) = (show suiteId) ++ "\n" ++ name ++ "\n" ++ suiteDescription ++ "\n" ++ (show projectId) ++ "\n"
