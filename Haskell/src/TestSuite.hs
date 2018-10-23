@@ -25,19 +25,51 @@ stringListToSuiteList :: [String] -> [Suite]
 stringListToSuiteList [] = []
 stringListToSuiteList (sId:(name:(sDes:(pId:strList)))) = (createSuite (read sId) name sDes (read pId)):(stringListToSuiteList strList)
 
+suiteListToString :: [Suite] -> String
+suiteListToString [] = []
+stringListToSuite (suite:list) = (suiteToString suite) ++ (suiteListToString list)
+
+suiteListToStringList :: [Suite] -> [String]
+suiteListToStringList suiteList = lines (suiteListToString suiteList)
+
 readSuites :: Int -> IO [Suite]
 readSuites projId = do
     let filePath = data_folder_path ++ "/" ++ (show projId) ++ "/" ++ suites_file_path
-    handle <- openFile filePath ReadMode
-    fileContents <- hGetContents handle
+    if unsafePerformIO $ doesFileExist filePath
+        then do
+            handle <- openFile filePath ReadMode
+            fileContents <- hGetContents handle
+            hClose handle
+            let contentsList = lines fileContents
+            return (stringListToSuiteList contentsList)
+        else do
+            return []
+
+writeSuites :: Int -> [Suite] -> IO()
+writeSuites projId suites = do
+    let filePath = data_folder_path ++ "/" ++ (show projId) ++ "/" ++ suites_file_path
+    let projectFolderPath = data_folder_path ++ "/" ++ (show projId) ++ "/"
+    let suitesToFile = (suiteListToString suites)
+
+    if unsafePerformIO $ doesDirectoryExist data_folder_path
+        then do
+            if not (unsafePerformIO $ doesDirectoryExist projectFolderPath)
+                then do
+                    createDirectory projectFolderPath
+                else do
+                    putStrLn "Gravando suites de teste..."
+        else do
+            createDirectory (data_folder_path ++ "/")
+            createDirectory projectFolderPath
+    
+    handle <- openFile filePath WriteMode
+    hPutStr handle suitesToFile
     hClose handle
-    let contentsList = lines fileContents
-    return (stringListToSuiteList contentsList)
 
 writeSuite :: Suite -> Int -> IO()
 writeSuite suite projId = do
     let filePath = data_folder_path ++ "/" ++ (show projId) ++ "/" ++ suites_file_path
-    let folderPath = data_folder_path ++ "/" ++ (show projId) ++ "/"
+    let projectFolderPath = data_folder_path ++ "/" ++ (show projId) ++ "/"
     if unsafePerformIO $ doesFileExist filePath
         then do
             handle <- openFile filePath ReadMode
@@ -55,14 +87,14 @@ writeSuite suite projId = do
         else do
             if unsafePerformIO $ doesDirectoryExist data_folder_path
                 then do
-                    if unsafePerformIO $ doesDirectoryExist folderPath
+                    if unsafePerformIO $ doesDirectoryExist projectFolderPath
                         then do
                             putStrLn("Diretório encontrado.")
                         else do
-                            createDirectory folderPath
+                            createDirectory projectFolderPath
                 else do 
                     createDirectory (data_folder_path ++ "/")
-                    createDirectory folderPath
+                    createDirectory projectFolderPath
             --tempdir <- getTemporaryDirectory
             --(tempName, tempHandle) <- openTempFile tempdir "temp"
             tempHandle <- openFile filePath WriteMode
