@@ -9,7 +9,10 @@ module Validation where
     isCharInInterval ch intervalBegin intervalEnd = ch `elem` [intervalBegin..intervalEnd]
 
     isOptionInputStringValid :: String -> Bool
+    isOptionInputStringValid [] = False
     isOptionInputStringValid str = not (length str > 1)
 
     isOptionValid :: String -> Char -> Char -> Bool
-    isOptionValid input intervalBegin intervalEnd = (isCharInInterval (input !! 0) intervalBegin intervalEnd) && (isOptionInputStringValid input)
+    isOptionValid input intervalBegin intervalEnd = if isOptionInputStringValid input
+                                                        then isCharInInterval (input !! 0) intervalBegin intervalEnd
+                                                        else False

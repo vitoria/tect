@@ -24,8 +24,8 @@ showSuiteMenu :: IO()
 showSuiteMenu = do
     printHeaderWithSubtitle suite_menu
 
-suiteMenu :: IO()
-suiteMenu = do
+suiteMenu :: Int -> IO()
+suiteMenu projId = do
     showSuiteMenu
     putStrLn choose_option
     input <- getLine
@@ -37,13 +37,13 @@ suiteMenu = do
                 else do
                     chooseProcedure option
                     systemPause
-                    suiteMenu
+                    suiteMenu projId
         else do
             putStrLn invalid_option
             systemPause
-            suiteMenu
+            suiteMenu projId
 
 main :: IO()
 main = do
-    suiteMenu
+    suiteMenu 1
     
