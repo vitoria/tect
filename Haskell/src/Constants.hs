@@ -123,3 +123,4 @@ module Constants where
         choose_suite = "Informe o nome ou ID da suite: "
         creation_failed = "Nao eh possivel realizar cadastro duplicado :/"
         password_should_contains_min_characters = "A senha deve conter pelo menos 4 caracteres!"
+        user_already_registered = "Usuário já cadastrado! Por favor, informe um usuário diferente."

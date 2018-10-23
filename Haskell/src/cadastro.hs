@@ -1,25 +1,13 @@
 import Constants
 import System.IO
+import System.IO.Unsafe
 import Data.List
 
 data User = User {
     name :: String,
     username :: String,
     password :: String
-} deriving (Eq, Show)
-
--- Para fazer testes
-aa = User {name = "Douglas", username = "douglaslimaxx", password = "123"}
-dd = User {name = "Douglas", username = "douglasli", password = "123"}
-
-a = "douglaslimaxx"
-d = "douglasli"
-b = "bubu"
-
-aaa = [aa, dd]
-ddd = [dd]
-zzz = []
--- Teste/
+} deriving (Eq, Show, Read) 
 
 registerNewUser :: IO ()
 registerNewUser = do
@@ -39,9 +27,10 @@ getUser :: IO String
 getUser = do 
                 putStr (username_const)
                 u <- getLine
-                if (verifyExistingUser u aaa) -- lista (aaa) utilizada como paremetro deve ser uma lista gerada a partir do arquivo com os usuários
+                
+                if (verifyExistingUser u (unsafePerformIO readFileUsers)) --lista (aaa) utilizada como paremetro deve ser uma lista gerada a partir do arquivo com os usuários
                     then do 
-                        putStr ("Username já cadastrado\n")
+                        putStrLn (user_already_registered)
                         getUser
                     else 
                         return u
@@ -55,21 +44,20 @@ getPassword x = do
                     then 
                         return senha 
                     else do
-                        putStr ("Senhas não confere\n")
+                        putStrLn (passwords_not_match)
                         getPassword x
 
 verifyExistingUser :: String -> [User] -> Bool
 verifyExistingUser _ [] = False
 verifyExistingUser a (x:xs) | verifyExistingUserAux a x == True = True
-                                | otherwise = verifyExistingUser
-                             a xs
+                            | otherwise = verifyExistingUser a xs
 
 verifyExistingUserAux :: String -> User -> Bool
 verifyExistingUserAux u (User _ a _) = if u == a then True else False
 
 saveUser :: User -> IO ()
 saveUser (User n u p)= do
-                arq <- openFile "data/users.dat" AppendMode
+                arq <- openFile users_file_path AppendMode
                 hPutStr arq n
                 hPutStr arq "\n"
                 hPutStr arq u
@@ -79,9 +67,6 @@ saveUser (User n u p)= do
                 hFlush arq
                 hClose arq
 
--- Para testar o cleanFile
-user_path = "data/users.dat"
-
 cleanFile :: String -> IO ()
 cleanFile a = do
                 arq <- openFile a WriteMode
@@ -89,11 +74,13 @@ cleanFile a = do
                 hFlush arq
                 hClose arq
 
+
 readFileUsers :: IO [User]
 readFileUsers = do
-            content <- readFile "data/users.dat"
+            content <- readFile users_file_path
             let listUser = content
             let lineUser = (lines listUser)
+            --return (lineUser)
             return (stringsToUser lineUser)
 
 
