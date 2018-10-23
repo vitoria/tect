@@ -1,6 +1,7 @@
 import Constants
 import GeneralPrints
 import Validation
+import System.IO
 
 data Suite = Suite {
     suiteId :: Int,
@@ -15,9 +16,19 @@ createSuite idInput nameInput descriptionInput projectIdInput = Suite {suiteId =
                                                                        suiteDescription = descriptionInput,
                                                                        projectId = projectIdInput}
 
-chooseProcedure :: Char -> IO()
-chooseProcedure option
-    | option == create_suite = do print "CREATE SUITE"
+chooseProcedure :: Int -> Char -> IO()
+chooseProcedure projId option
+    | option == create_suite = do
+        putStrLn create_suite_header
+        putStrLn "Informe o ID da Suite: "
+        idInput <- getLine
+        putStrLn "Informe o Nome da Suite: "
+        nameInput <- getLine
+        putStrLn "Informe a descricão da Suite: "
+        descrInput <- getLine
+        let newSuite = createSuite (read idInput) nameInput descrInput projId
+        putStrLn(show newSuite)
+
     | option == list_suites = do print "LIST SUITE"
     | option == search_suite = do print "SEARCH SUITE"
     | option == edit_suite = do print "EDIT SUITE"
@@ -41,7 +52,8 @@ suiteMenu projId = do
             if option == go_back
                 then systemPause
                 else do
-                    chooseProcedure option
+                    clearScreen
+                    chooseProcedure projId option
                     systemPause
                     suiteMenu projId
         else do
