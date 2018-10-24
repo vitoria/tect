@@ -22,3 +22,9 @@ module GeneralPrints where
     clearScreen = do
         _ <- system "clear"
         return ()
+
+    readOption :: IO Int
+    readOption = do
+        putStrLn choose_option
+        line <- getLine
+        return (read line :: Int)

@@ -2,11 +2,30 @@ import Constants
 import GeneralPrints
 -- module TestCase where
 
+-- Nome:
+-- Objetivo:
+-- Pré-condições:
+--  - Passos de execução do caso de testes -
+--  - Passo 1
+-- Descrição do passo: 
+-- Resultado esperado para o passo:
+-- Deseja inserir outro passo (S/N)?
+
+createTestCase :: IO()
+createTestCase = do
+    putStr name_const
+    name <- getLine
+    putStr objective
+    goals <- getLine
+    putStr preconditions
+    preConditions <- getLine
+    return ()
+
 isOptionValid :: Int -> Bool
 isOptionValid option = option >= 1 && option <= 6
 
 chooseProcedure :: Int -> IO()
-chooseProcedure 1 = do print "CREATE"
+chooseProcedure 1 = do createTestCase
 chooseProcedure 2 = do print "CREATE"
 chooseProcedure 3 = do print "CREATE"
 chooseProcedure 4 = do print "CREATE"
@@ -22,9 +41,7 @@ showMenu = do
 menu :: IO()
 menu = do
     showMenu
-    putStrLn choose_option
-    input <- getLine
-    let option = read input :: Int
+    option <- readOption
     if isOptionValid option
         then chooseProcedure option
     else do
