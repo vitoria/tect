@@ -16,12 +16,6 @@ data Suite = Suite {
     projectId :: Int
 } deriving(Eq, Show)
 
--- readSuites :: Int -> [Suite]
--- readSuites projId = do
---     let suiteStrList = unsafePerformIO $ readSuitesToStr projId
---         suiteList = stringListToSuiteList suiteStrList
---     return suiteList
-
 stringListToSuiteList :: [String] -> [Suite]
 stringListToSuiteList [] = []
 stringListToSuiteList (sId:(name:(sDes:(pId:strList)))) = (createSuite (read sId) name sDes (read pId)):(stringListToSuiteList strList)
@@ -39,10 +33,6 @@ readSuites projId = do
     let filePath = data_folder_path ++ "/" ++ (show projId) ++ "/" ++ suites_file_path
     if unsafePerformIO $ doesFileExist filePath
         then do
-            -- handle <- openFile filePath ReadMode
-            -- fileContents <- hGetContents handle
-            -- hClose handle
-            -- let contentsList = lines fileContents
             fileContents <- readFile filePath
             let contentsList = lines fileContents
             return (stringListToSuiteList contentsList)
@@ -66,14 +56,7 @@ writeSuites projId suites = do
             createDirectory (data_folder_path ++ "/")
             createDirectory projectFolderPath
     
-    -- if unsafePerformIO $ doesFileExist filePath
-    --     then do removeFile filePath
-    --     else do putStrLn "Analisando integridade do arquivo..."
-
     rnf suitesToFile `seq` (writeFile filePath $ suitesToFile)
-    -- handle <- openFile filePath WriteMode
-    -- hPutStr handle suitesToFile
-    -- hClose handle
 
 suiteToString :: Suite -> String
 suiteToString (Suite suiteId name suiteDescription projectId) = (show suiteId) ++ "\n" ++ name ++ "\n" ++ suiteDescription ++ "\n" ++ (show projectId) ++ "\n"
