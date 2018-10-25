@@ -75,43 +75,6 @@ writeSuites projId suites = do
     -- hPutStr handle suitesToFile
     -- hClose handle
 
-writeSuite :: Suite -> Int -> IO()
-writeSuite suite projId = do
-    let filePath = data_folder_path ++ "/" ++ (show projId) ++ "/" ++ suites_file_path
-    let projectFolderPath = data_folder_path ++ "/" ++ (show projId) ++ "/"
-    if unsafePerformIO $ doesFileExist filePath
-        then do
-            handle <- openFile filePath ReadMode
-            fileContents <- hGetContents handle
-            --fileContents <- readTextFile filePath
-            let newSuitesStrings = fileContents ++ (suiteToString suite)
-            hClose handle
-            
-            handle <- openFile filePath WriteMode
-            hPutStr handle newSuitesStrings
-            hClose handle
-            --hClose tempHandle
-            --removeFile filePath
-            --renameFile tempName suites_file_path
-        else do
-            if unsafePerformIO $ doesDirectoryExist data_folder_path
-                then do
-                    if unsafePerformIO $ doesDirectoryExist projectFolderPath
-                        then do
-                            putStrLn("Diretório encontrado.")
-                        else do
-                            createDirectory projectFolderPath
-                else do 
-                    createDirectory (data_folder_path ++ "/")
-                    createDirectory projectFolderPath
-            --tempdir <- getTemporaryDirectory
-            --(tempName, tempHandle) <- openTempFile tempdir "temp"
-            tempHandle <- openFile filePath WriteMode
-            let newSuitesStrings = suiteToString suite
-            hPutStr tempHandle newSuitesStrings
-            hClose tempHandle
-            --renameFile tempName filePath
-
 suiteToString :: Suite -> String
 suiteToString (Suite suiteId name suiteDescription projectId) = (show suiteId) ++ "\n" ++ name ++ "\n" ++ suiteDescription ++ "\n" ++ (show projectId) ++ "\n"
 
