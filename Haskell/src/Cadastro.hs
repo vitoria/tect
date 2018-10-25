@@ -4,6 +4,7 @@ import Constants
 import System.IO
 import System.IO.Unsafe
 import Data.List
+import GeneralPrints
 
 data User = User {
     name :: String,
@@ -13,8 +14,8 @@ data User = User {
 
 registerNewUser :: IO ()
 registerNewUser = do
-                putStrLn (header)
-                putStrLn (sign_up_header)
+                clearScreen
+                printHeaderWithSubtitle (sign_up_header)
                 putStrLn ("")
                 putStr (name_const)
                 n <- getLine
@@ -22,7 +23,7 @@ registerNewUser = do
                 putStr (password_const)
                 p <- getLine
                 verifySenha <- getPassword p
-                putStrLn ("Usuário cadastrado com sucesso!")
+                putStrLn (user_registered)
                 saveUser User {name = n, username = u, password = p}
 
 getUser :: IO String
@@ -30,7 +31,7 @@ getUser = do
                 putStr (username_const)
                 u <- getLine
                 
-                if (verifyExistingUser u listUser) --lista (aaa) utilizada como paremetro deve ser uma lista gerada a partir do arquivo com os usuários
+                if (verifyExistingUser u listUser) 
                     then do 
                         putStrLn (user_already_registered)
                         getUser
@@ -91,4 +92,5 @@ stringsToUser (x:(y:(z:xs))) = (User x y z) : stringsToUser xs
 
 listUser :: [User]
 listUser = unsafePerformIO readFileUsers
+
 

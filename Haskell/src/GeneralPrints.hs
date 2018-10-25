@@ -27,6 +27,12 @@ module GeneralPrints where
 
     readOption :: IO Int
     readOption = do
+<<<<<<< HEAD
         putStrLn ("\n" ++ choose_option)
         line <- getLine
         return (read line :: Int)
+=======
+        putStrLn choose_option
+        line <- getLine
+        return (read line :: Int)
+>>>>>>> Organizei os menus

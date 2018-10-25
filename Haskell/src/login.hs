@@ -3,38 +3,36 @@ import Cadastro
 import Data.List
 import System.IO
 import System.IO.Unsafe
+import GeneralPrints
 
-getUserPassword :: IO  User
-getUserPassword = do
-                    putStrLn (username_const)
-                    u <- getLine
-                    putStrLn (password_const)
-                    p <- getLine
-                    let isLogged = existingUserLogin u p
-                    if (isLogged)
-                        then 
-                            return User {name = (getNameUser (searchUserByUsername u listUser)), username = u, password = p}
-                        else
-                            return Nothing
-
-existingUserLogin :: String -> String -> Maybe Bool
-existingUserLogin u p = do
-                        if (verifyExistingUser u listUser)
-                            then 
-                                if (verifingPassword u p listUser)
-                                    then
-                                        return Just True
-                                    else
-                                        return Just False
+loginUser :: IO User
+loginUser = do  
+                clearScreen
+                printHeaderWithSubtitle (login_header)
+                putStr (username_const)
+                u <- getLine
+                putStr (password_const)
+                p <- getLine
+                if (verifyExistingUser u listUser)
+                    then 
+                        if (verifingPassword u p listUser)
+                            then
+                                --putStrLn ("Login efetuado")
+                                return User {name = (getNameUser (searchUserByUsername u listUser)), username = u, password = p}
                             else
-                                return Just False
-                        {-where
-                            u = (unsafePerformIO getUserPassword ) !! 0
-                            p = (unsafePerformIO getUserPassword ) !! 1-}
+                                --putStrLn (password_incorrect)
+                                return User {name = "", username = "", password = password_incorrect}
+                    else
+                        --putStrLn (user_not_registered)
+                        return User {name = user_not_registered, username = "", password = ""}
 
 
 verifingPassword :: String -> String -> [User] -> Bool
-verifingPassword u p l = (verifingPasswordAux user p) 
+verifingPassword u p l = if (verifingPasswordAux user p) 
+                            then 
+                                True
+                            else
+                                False
                         where 
                             user = searchUserByUsername u l
 
@@ -55,3 +53,6 @@ msgIncorrectPassword = do
 
 getNameUser :: User -> String
 getNameUser (User name _ _) = name
+
+register :: IO ()
+register = registerNewUser
