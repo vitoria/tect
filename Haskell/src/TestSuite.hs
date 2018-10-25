@@ -264,7 +264,7 @@ deleteSuiteFromSystem projId suiteId = do
     let suites = unsafePerformIO $ readSuites projId
     if isSuiteOnListId suiteId suites
         then do
-            let newSuites = deleteSuiteFromList projId suites
+            let newSuites = deleteSuiteFromList suiteId suites
             writeSuites projId newSuites
             putStrLn "Suite excluída com sucesso."
         else do
