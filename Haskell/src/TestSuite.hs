@@ -206,6 +206,41 @@ searchSuiteName suiteName (suite:suites)
     | (getSuiteName suite) == suiteName = suite
     | otherwise = searchSuiteName suiteName suites
 
+editSuite :: Int -> IO()
+editSuite projId = do
+    let suites = unsafePerformIO $ readSuites projId
+    putStrLn edit_suite_header
+    putStrLn "Informe o ID da Suite:"
+    suiteId <- getLine
+    if isStringNumeric suiteId
+        then do
+            if isSuiteOnListId (read suiteId) suites
+                then do
+                    let foundSuite = searchSuiteId (read suiteId) suites
+                    clearScreen
+                    putStrLn edit_suite_header
+                    putStrLn("Dados atuais da Suite:\n" ++ showSuite foundSuite)
+                    putStrLn "\n"
+                    putStrLn "Informe o novo Nome da Suite: "
+                    nameInput <- getLine
+                    putStrLn "Informe a nova descricão da Suite: "
+                    descrInput <- getLine
+                    let editedSuite = generateEditedSuite foundSuite nameInput descrInput
+                        newSuites = swapEditedSuite editedSuite suites
+                    writeSuites projId newSuites
+                    putStrLn "Suite editada com sucesso."
+                else do putStrLn "A suite com o ID informado não foi encontrada."
+        else do putStrLn "ID da Suite inválido."
+
+generateEditedSuite :: Suite -> String -> String -> Suite
+generateEditedSuite (Suite {suiteId = sId, projectId = pId}) newName newDescription = (Suite sId newName newDescription pId)
+
+swapEditedSuite :: Suite -> [Suite] -> [Suite]
+swapEditedSuite editedSuite [] = []
+swapEditedSuite editedSuite (suite:suites)
+    | (getSuiteId editedSuite) == (getSuiteId suite) = editedSuite:suites
+    | otherwise = suite:(swapEditedSuite editedSuite suites)
+
 deleteSuiteFromList :: Int -> [Suite] -> [Suite]
 deleteSuiteFromList suiteId [] = []
 deleteSuiteFromList suiteId (suite:suites)
@@ -248,7 +283,7 @@ chooseProcedure projId option
     | option == create_suite = do createNewSuite projId
     | option == list_suites = do showSuites projId
     | option == search_suite = do searchSuite projId
-    | option == edit_suite = do print "EDIT SUITE"
+    | option == edit_suite = do editSuite projId
     | option == delete_suite = do deleteSuite projId
     | option == manage_test_cases = do print "MANAGE CASES"
     | option == go_back = do print "GO BACK"
