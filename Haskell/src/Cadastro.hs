@@ -1,3 +1,5 @@
+module Cadastro where
+
 import Constants
 import System.IO
 import System.IO.Unsafe
@@ -80,10 +82,12 @@ readFileUsers = do
             content <- readFile users_file_path
             let listUser = content
             let lineUser = (lines listUser)
-            --return (lineUser)
             return (stringsToUser lineUser)
 
 
 stringsToUser :: [String] -> [User]
 stringsToUser [] = []
 stringsToUser (x:(y:(z:xs))) = (User x y z) : stringsToUser xs
+
+getUser :: String -> [User] -> User
+getUser a _ = 
