@@ -52,7 +52,7 @@ module Constants where
         go_back = '7'
 
         -- All from testCase
-        objective = "Objetivo: "
+        goal = "Objetivo: "
         preconditions = "Pré-condições: "
         case_not_executed = 0
         case_passed = 1

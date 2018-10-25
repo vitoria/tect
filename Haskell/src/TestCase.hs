@@ -1,5 +1,18 @@
 import Constants
 import GeneralPrints
+
+data Step = Step {
+    description :: String,
+    result :: String
+} deriving (Eq, Show, Read) 
+
+data TestCase = TestCase {
+    name :: String,
+    objective :: String,
+    preConditions :: String,
+    steps :: [Step]
+} deriving (Eq, Show, Read) 
+
 -- module TestCase where
 
 -- Nome:
@@ -10,14 +23,14 @@ import GeneralPrints
 -- Descrição do passo: 
 -- Resultado esperado para o passo:
 -- Deseja inserir outro passo (S/N)?
-
+./
 createTestCase :: IO()
 createTestCase = do
-    putStr name_const
+    putStrLn name_const
     name <- getLine
-    putStr objective
+    putStrLn goal
     goals <- getLine
-    putStr preconditions
+    putStrLn preconditions
     preConditions <- getLine
     return ()
 
