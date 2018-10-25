@@ -1,0 +1,1 @@
+TestCase {name = "Test 2", goals = "um objetivo", preConditions = "uma pre-condicao", steps = [Step {details = "um passo", expectedResult = "um resultado"}]}

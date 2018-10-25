@@ -1,5 +1,9 @@
 import Constants
 import GeneralPrints
+import Data.List.Split
+
+import System.IO
+import System.IO.Unsafe
 
 data Step = Step {
     details :: String,
@@ -15,13 +19,18 @@ data TestCase = TestCase {
 
 -- module TestCase where
 
+removeLastElement :: [t] -> [t]
+removeLastElement [] = []
+removeLastElement [_] = []
+removeLastElement (h:body) = (h:(removeLastElement body))
+
 createStep :: String -> String -> Step
 createStep details expectedResult = Step {
     details = details,
     expectedResult = expectedResult
 }
 
-createTestCaseType :: String -> String -> String -> TestCase
+createTestCaseType :: String -> String -> String -> [Step] -> TestCase
 createTestCaseType name goals preConditions steps = TestCase {
     name = name,
     goals = goals,
@@ -29,7 +38,18 @@ createTestCaseType name goals preConditions steps = TestCase {
     steps = steps
 }
 
+-- readTestCasesFromFile :: IO [TestCase]
+-- readTestCasesFromFile = do
+--     content <- readFile "data/testCases.dat"
+--     let testCasesPerLine = lines content
+--     return (tes)
 
+writeTestCaseInFile :: TestCase -> IO()
+writeTestCaseInFile testCase = do
+    file <- openFile "data/testCases.dat" AppendMode
+    hPrint file testCase
+    hFlush file
+    hClose file 
 
 createTestCase :: IO()
 createTestCase = do
@@ -40,25 +60,29 @@ createTestCase = do
     putStrLn preconditions
     preConditions <- getLine
     putStrLn case_steps_reading_header
-    createSteps (createTestCaseType name goals preConditions []) 0 []
+    createSteps 0 (createTestCaseType name goals preConditions [])
     return ()
 
-createSteps :: TestCase -> Int -> [Step] -> IO()
-createSteps testCase stepsQuantity steps = do
+createSteps :: Int -> TestCase -> IO()
+createSteps stepsQuantity (TestCase name goals preConditions steps)  = do
     putStrLn ("Passo " ++ show (stepsQuantity + 1))
     putStrLn case_step_description
     caseDescription <- getLine
     putStrLn case_step_expected_result
     caseExpectedResult <- getLine
     let currentStep = createStep caseDescription caseExpectedResult
+    let testCaseUpdated = createTestCaseType name goals preConditions (currentStep:steps)
     putStrLn case_step_continue_message
     resp <- getLine
     if resp == "N" || resp == "n"
         then do
-            print "Should save the test case in the database"
-            print (currentStep:steps)
+            print "Saving the test case into the file..."
+            -- let waza = createTestCaseType testCase (currentStep:steps)
+            writeTestCaseInFile testCaseUpdated
+            print "Saved!"
+
     else do
-        createSteps testCase (stepsQuantity + 1) (currentStep:steps)
+        createSteps (stepsQuantity + 1) testCaseUpdated
     return (())
 
 isOptionValid :: Int -> Bool
@@ -88,5 +112,42 @@ menu = do
         systemPause
         menu
 
+stringToStep :: String -> Step
+stringToStep str = do
+    let splitedStr = splitOn "Step {details = \"" str
+    let splitedStr2 = splitOn "\", expectedResult = \"" (splitedStr!!1)
+    let splitedStr3 = splitOn "\"}" (splitedStr2!!1)
+
+    let details = (splitedStr2!!0)
+    let expectedResult = (splitedStr3!!0)
+
+    createStep details expectedResult
+
+stringsToSteps :: [String] -> [Step]
+stringsToSteps [] = []
+stringsToSteps (head:body) = ((stringToStep head):(stringsToSteps body))
+
+stringToTestCase :: String -> TestCase
+stringToTestCase str = do
+    let splitedStr = splitOn "TestCase {name = " str
+    let splitedStr2 = splitOn ", goals = " (splitedStr!!1)
+    let splitedStr3 = splitOn ", preConditions = " (splitedStr2!!1)
+    let splitedStr4 = splitOn ", steps = [" (splitedStr3!!1)
+    let splitedStr5 = splitOn "]}" (splitedStr4!!1)
+    
+    let name = ((splitOn "\"" (splitedStr2!!0))!!1)
+    let goals = ((splitOn "\"" (splitedStr3!!0))!!1)
+    let preConditions = ((splitOn "\"" (splitedStr4!!0))!!1)
+
+    createTestCaseType name goals preConditions (stringsToSteps (removeLastElement splitedStr5))
+
+stringsToTestCase :: [String] -> [TestCase]
+stringsToTestCase [] = []
+stringsToTestCase (current:body) = ((stringToTestCase current):(stringsToTestCase body))
+
 main = do
-    menu
+    content <- readFile "data/testCases.dat"
+    let listUser = content
+    let lineUser = (lines listUser)
+
+    print (stringsToTestCase lineUser)
