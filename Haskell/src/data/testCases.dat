@@ -1,1 +1,5 @@
-TestCase {name = "Test 2", goals = "um objetivo", preConditions = "uma pre-condicao", steps = [Step {details = "um passo", expectedResult = "um resultado"}]}
+TestCase {cod = "2", name = "sdfsd", goals = "sdfsdfsdf", status = "dfsdfsdfsdf", preConditions = "Statusssd", steps = [Step {details = "sdsadasd", expectedResult = "asdasdasdasda"}]}
+TestCase {cod = "2", name = "dfsdf", goals = "sdfsdfsdf", status = "sdfsdfsdfds", preConditions = "Statusssd", steps = [Step {details = "sdfsfdf", expectedResult = "sdfsdf"}]}
+TestCase {cod = "3", name = "sdfsdf", goals = "sdfsdfsdf", status = "sdfsdfsdfsdf", preConditions = "Statusssd", steps = [Step {details = "sdfsdfsdf", expectedResult = "sdfsdfsdf"}]}
+TestCase {cod = "4", name = "dfdsf", goals = "dfdfddfdsf", status = "dsfsdfsdf", preConditions = "Statusssd", steps = [Step {details = "dfsdfsdf", expectedResult = "sdfsdfsdfsdf"}]}
+TestCase {cod = "5", name = "dfgdfg", goals = "dfgdfgdfg", status = "dfgdfgdfgdfg", preConditions = "Statusssd", steps = [Step {details = "dfgdfdfgdfg", expectedResult = "dfgdfgdfg"}]}

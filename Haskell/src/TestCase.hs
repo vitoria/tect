@@ -97,13 +97,13 @@ getcodFromTestCase (TestCase cod _ _ _ _ _) = do
     let codInt = read cod :: Int
     codInt
 
-generatecod :: Int
+generatecod :: String
 generatecod = do
     let testCases = unsafePerformIO readTestCasesFromFile
     let size = length testCases
-    if size == 0 then 0
+    if size == 0 then "1"
     else do
-        let newcod = getcodFromTestCase (testCases!!(size - 1)) + 1
+        let newcod = show (getcodFromTestCase (testCases!!(size - 1)) + 1)
         newcod
 
 createTestCase :: IO()
@@ -115,27 +115,25 @@ createTestCase = do
     putStrLn preconditions
     preConditions <- getLine
     putStrLn case_steps_reading_header
-    createSteps 0 (createTestCaseType name goals preConditions [])
+    let cod = generatecod
+    print cod
+    createSteps 0 (createTestCaseType cod name goals preConditions "Statusssd" [])
     return ()
 
 createSteps :: Int -> TestCase -> IO()
-createSteps stepsQuantity (TestCase name goals preConditions steps)  = do
+createSteps stepsQuantity (TestCase cod name goals preConditions status steps)  = do
     putStrLn ("Passo " ++ show (stepsQuantity + 1))
     putStrLn case_step_description
     caseDescription <- getLine
     putStrLn case_step_expected_result
     caseExpectedResult <- getLine
     let currentStep = createStep caseDescription caseExpectedResult
-    let testCaseUpdated = createTestCaseType name goals preConditions (currentStep:steps)
+    let testCaseUpdated = createTestCaseType cod name goals preConditions status (currentStep:steps)
     putStrLn case_step_continue_message
     resp <- getLine
     if resp == "N" || resp == "n"
         then do
-            print "Saving the test case into the file..."
-            -- let waza = createTestCaseType testCase (currentStep:steps)
             writeTestCaseInFile testCaseUpdated
-            print "Saved!"
-
     else do
         createSteps (stepsQuantity + 1) testCaseUpdated
     return (())
@@ -143,8 +141,16 @@ createSteps stepsQuantity (TestCase name goals preConditions steps)  = do
 showTestCase :: [TestCase] -> IO()
 showTestCase [] = do
     return ()
-showTestCase (h:body) = do
-    print "WAza"
+showTestCase ((TestCase cod name goals preConditions status _):body) = do
+    putStr cod
+    putStr " | "
+    putStr name
+    putStr " | "
+    putStr goals
+    putStr " | "
+    putStr preConditions
+    putStr " | \n"
+    -- putStrLn (cod ++ " | " ++ name ++ " | " ++ goals ++ " | " + preConditions ++ " | " ++ status)
     putStrLn test_case_table_line
     showTestCase body
 
