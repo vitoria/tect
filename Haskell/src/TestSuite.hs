@@ -9,7 +9,6 @@ import Data.List
 import Control.Monad
 import Control.DeepSeq
 
-
 data Suite = Suite {
     suiteId :: Int,
     name :: String,
@@ -125,9 +124,12 @@ createSuite idInput nameInput descriptionInput projectIdInput = Suite {suiteId =
 getSuiteId :: Suite -> Int
 getSuiteId (Suite {suiteId = id}) = id
 
-generateSuiteId :: [Suite] -> Int
-generateSuiteId [] = 1
-generateSuiteId suites = (getSuiteId (last suites)) + 1
+getSuiteName :: Suite -> String
+getSuiteName (Suite {name = sName}) = sName
+
+generateNewSuiteId :: [Suite] -> Int
+generateNewSuiteId [] = 1
+generateNewSuiteId suites = (getSuiteId (last suites)) + 1
                                                                        
 createNewSuite :: Int -> IO()
 createNewSuite projId = do
@@ -137,7 +139,7 @@ createNewSuite projId = do
     nameInput <- getLine
     putStrLn "Informe a descricão da Suite: "
     descrInput <- getLine
-    let newSuite = createSuite (generateSuiteId suites) nameInput descrInput projId
+    let newSuite = createSuite (generateNewSuiteId suites) nameInput descrInput projId
     let newSuites = suites ++ (newSuite:[])
     writeSuites projId newSuites
     putStrLn "Suite criada com sucesso!"
@@ -150,8 +152,59 @@ showSuites :: Int -> IO()
 showSuites projId = do
     let suites = unsafePerformIO $ readSuites projId
     putStrLn suite_list_header
-    putStrLn "ID - Nome"
+    putStrLn "ID - Nome da Suite"
     putStrLn (suitesToStringShow suites)
+
+searchSuite :: Int -> IO()
+searchSuite projId = do
+    let suites = unsafePerformIO $ readSuites projId
+    putStrLn search_suite_header
+    putStrLn "Selecione o parâmetro de pesquisa:\n(1) ID\n(2) Nome da Suite\n"
+    searchParameter <- getLine
+
+    if isOptionValid searchParameter '1' '2'
+        then do
+            if (searchParameter !! 0) == '1'
+                then do
+                    putStrLn "Informe o ID da Suite:"
+                    suiteId <- getLine
+                    if isStringNumeric suiteId
+                        then do
+                            if isSuiteOnListId (read suiteId) suites
+                                then do
+                                    let foundSuite = searchSuiteId (read suiteId) suites
+                                    clearScreen
+                                    putStrLn search_suite_header
+                                    putStrLn("Suite encontrada:\n" ++ showSuite foundSuite)
+                                else do putStrLn "A suite com o ID informado não foi encontrada."
+                        else do putStrLn "ID da Suite inválido."
+                else do
+                    putStrLn "Informe o Nome da Suite:"
+                    suiteName <- getLine
+                    if isSuiteOnListName suiteName suites
+                        then do
+                            let foundSuite = searchSuiteName suiteName suites
+                            clearScreen
+                            putStrLn search_suite_header
+                            putStrLn("Suite encontrada:\n" ++ showSuite foundSuite)
+                        else do putStrLn "A suite com o nome informado não foi encontrada."
+        else do
+            putStrLn "Opção de seleção inválida!"
+
+showSuite :: Suite -> String
+showSuite (Suite suiteId name suiteDescription projectId) = "Suite ID " ++ show suiteId ++ "\nNome: " ++ name ++ "\nDescrição: " ++ suiteDescription ++ "\nID Projeto da Suite: " ++ show projectId ++ "\n"
+
+searchSuiteId :: Int -> [Suite] -> Suite
+searchSuiteId suiteId [] = (Suite {suiteId = -1, name = "NOT FOUND", suiteDescription = "NOT FOUND", projectId = -1})
+searchSuiteId suiteId (suite:suites)
+    | (getSuiteId suite) == suiteId = suite
+    | otherwise = searchSuiteId suiteId suites
+
+searchSuiteName :: String -> [Suite] -> Suite
+searchSuiteName suiteName [] = (Suite {suiteId = -1, name = "NOT FOUND", suiteDescription = "NOT FOUND", projectId = -1})
+searchSuiteName suiteName (suite:suites)
+    | (getSuiteName suite) == suiteName = suite
+    | otherwise = searchSuiteName suiteName suites
 
 deleteSuiteFromList :: Int -> [Suite] -> [Suite]
 deleteSuiteFromList suiteId [] = []
@@ -159,16 +212,22 @@ deleteSuiteFromList suiteId (suite:suites)
     | (getSuiteId suite) == suiteId = suites
     | otherwise = suite:(deleteSuiteFromList suiteId suites)
 
-isSuiteOnList :: Int -> [Suite] -> Bool
-isSuiteOnList suiteId [] = False
-isSuiteOnList suiteId (suite:suites)
+isSuiteOnListName :: String -> [Suite] -> Bool
+isSuiteOnListName suiteName [] = False
+isSuiteOnListName suiteName (suite:suites)
+    | (getSuiteName suite) == suiteName = True
+    | otherwise = isSuiteOnListName suiteName suites
+
+isSuiteOnListId :: Int -> [Suite] -> Bool
+isSuiteOnListId suiteId [] = False
+isSuiteOnListId suiteId (suite:suites)
     | (getSuiteId suite) == suiteId = True
-    | otherwise = isSuiteOnList suiteId suites
+    | otherwise = isSuiteOnListId suiteId suites
 
 deleteSuiteFromSystem :: Int -> Int -> IO()
 deleteSuiteFromSystem projId suiteId = do
     let suites = unsafePerformIO $ readSuites projId
-    if isSuiteOnList suiteId suites
+    if isSuiteOnListId suiteId suites
         then do
             let newSuites = deleteSuiteFromList projId suites
             writeSuites projId newSuites
@@ -188,7 +247,7 @@ chooseProcedure :: Int -> Char -> IO()
 chooseProcedure projId option
     | option == create_suite = do createNewSuite projId
     | option == list_suites = do showSuites projId
-    | option == search_suite = do print "SEARCH SUITE"
+    | option == search_suite = do searchSuite projId
     | option == edit_suite = do print "EDIT SUITE"
     | option == delete_suite = do deleteSuite projId
     | option == manage_test_cases = do print "MANAGE CASES"
@@ -222,4 +281,3 @@ suiteMenu projId = do
 main :: IO()
 main = do
     suiteMenu 1
-    

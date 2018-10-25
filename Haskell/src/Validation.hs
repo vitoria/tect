@@ -5,6 +5,12 @@ module Validation where
     isCharANumber :: Char -> Bool
     isCharANumber ch = ch `elem` ['0'..'9']
 
+    isStringNumeric :: String -> Bool
+    isStringNumeric [] = True
+    isStringNumeric (ch:str)
+        | isCharANumber ch = isStringNumeric str
+        | otherwise = False
+
     isCharInInterval :: Char -> Char -> Char -> Bool
     isCharInInterval ch intervalBegin intervalEnd = ch `elem` [intervalBegin..intervalEnd]
 
