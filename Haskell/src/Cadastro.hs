@@ -30,7 +30,7 @@ getUser = do
                 putStr (username_const)
                 u <- getLine
                 
-                if (verifyExistingUser u (unsafePerformIO readFileUsers)) --lista (aaa) utilizada como paremetro deve ser uma lista gerada a partir do arquivo com os usuários
+                if (verifyExistingUser u listUser) --lista (aaa) utilizada como paremetro deve ser uma lista gerada a partir do arquivo com os usuários
                     then do 
                         putStrLn (user_already_registered)
                         getUser
@@ -89,5 +89,6 @@ stringsToUser :: [String] -> [User]
 stringsToUser [] = []
 stringsToUser (x:(y:(z:xs))) = (User x y z) : stringsToUser xs
 
-getUser :: String -> [User] -> User
-getUser a _ = 
+listUser :: [User]
+listUser = unsafePerformIO readFileUsers
+

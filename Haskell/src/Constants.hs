@@ -111,6 +111,7 @@ module Constants where
         username_const = "Username: "
         password_const = "Senha: "
         confirmation_password = "Digite a senha novamente: "
+        user_not_registered = "Usuário inexistente!"
         suspension_points = "..."
         description = "Descrição: "
         new_password = "Senha nova: "
