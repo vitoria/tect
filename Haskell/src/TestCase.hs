@@ -8,7 +8,7 @@ data Step = Step {
 
 data TestCase = TestCase {
     name :: String,
-    objective :: String,
+    goals :: String,
     preConditions :: String,
     steps :: [Step]
 } deriving (Eq, Show, Read) 
@@ -21,6 +21,16 @@ createStep details expectedResult = Step {
     expectedResult = expectedResult
 }
 
+createTestCaseType :: String -> String -> String -> TestCase
+createTestCaseType name goals preConditions steps = TestCase {
+    name = name,
+    goals = goals,
+    preConditions = preConditions,
+    steps = steps
+}
+
+
+
 createTestCase :: IO()
 createTestCase = do
     putStrLn name_const
@@ -30,11 +40,11 @@ createTestCase = do
     putStrLn preconditions
     preConditions <- getLine
     putStrLn case_steps_reading_header
-    createSteps 0 []
+    createSteps (createTestCaseType name goals preConditions []) 0 []
     return ()
 
-createSteps :: Int -> [Step] -> IO()
-createSteps stepsQuantity steps = do
+createSteps :: TestCase -> Int -> [Step] -> IO()
+createSteps testCase stepsQuantity steps = do
     putStrLn ("Passo " ++ show (stepsQuantity + 1))
     putStrLn case_step_description
     caseDescription <- getLine
@@ -48,7 +58,7 @@ createSteps stepsQuantity steps = do
             print "Should save the test case in the database"
             print (currentStep:steps)
     else do
-        createSteps (stepsQuantity + 1) (currentStep:steps)
+        createSteps testCase (stepsQuantity + 1) (currentStep:steps)
     return (())
 
 isOptionValid :: Int -> Bool
