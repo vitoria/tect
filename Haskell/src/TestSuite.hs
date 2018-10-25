@@ -67,6 +67,10 @@ writeSuites projId suites = do
             createDirectory (data_folder_path ++ "/")
             createDirectory projectFolderPath
     
+    -- if unsafePerformIO $ doesFileExist filePath
+    --     then do removeFile filePath
+    --     else do putStrLn "Analisando integridade do arquivo..."
+
     rnf suitesToFile `seq` (writeFile filePath $ suitesToFile)
     -- handle <- openFile filePath WriteMode
     -- hPutStr handle suitesToFile
@@ -138,15 +142,55 @@ createNewSuite projId = do
     writeSuites projId newSuites
     putStrLn "Suite criada com sucesso!"
 
+suitesToStringShow :: [Suite] -> String
+suitesToStringShow [] = []
+suitesToStringShow ((Suite {suiteId = id, name = sName}):suites) = (" " ++ (show id) ++ " - " ++ sName ++ "\n") ++ (suitesToStringShow suites)
+
+showSuites :: Int -> IO()
+showSuites projId = do
+    let suites = unsafePerformIO $ readSuites projId
+    putStrLn suite_list_header
+    putStrLn "ID - Nome"
+    putStrLn (suitesToStringShow suites)
+
+deleteSuiteFromList :: Int -> [Suite] -> [Suite]
+deleteSuiteFromList suiteId [] = []
+deleteSuiteFromList suiteId (suite:suites)
+    | (getSuiteId suite) == suiteId = suites
+    | otherwise = suite:(deleteSuiteFromList suiteId suites)
+
+isSuiteOnList :: Int -> [Suite] -> Bool
+isSuiteOnList suiteId [] = False
+isSuiteOnList suiteId (suite:suites)
+    | (getSuiteId suite) == suiteId = True
+    | otherwise = isSuiteOnList suiteId suites
+
+deleteSuiteFromSystem :: Int -> Int -> IO()
+deleteSuiteFromSystem projId suiteId = do
+    let suites = unsafePerformIO $ readSuites projId
+    if isSuiteOnList suiteId suites
+        then do
+            let newSuites = deleteSuiteFromList projId suites
+            writeSuites projId newSuites
+            putStrLn "Suite excluída com sucesso."
+        else do
+            putStrLn "ID inválido, suite não cadastrada."
+
+deleteSuite :: Int -> IO()
+deleteSuite projId = do
+    putStrLn delete_suite_header
+    putStrLn "Informe o ID da Suite a ser deletada:"
+    idToDelete <- getLine
+    deleteSuiteFromSystem projId (read idToDelete)
+
 
 chooseProcedure :: Int -> Char -> IO()
 chooseProcedure projId option
     | option == create_suite = do createNewSuite projId
-    | option == list_suites = do
-        print "LIST SUITE"
+    | option == list_suites = do showSuites projId
     | option == search_suite = do print "SEARCH SUITE"
     | option == edit_suite = do print "EDIT SUITE"
-    | option == delete_suite = do print "DELETE SUITE"
+    | option == delete_suite = do deleteSuite projId
     | option == manage_test_cases = do print "MANAGE CASES"
     | option == go_back = do print "GO BACK"
     | otherwise = do print invalid_option
