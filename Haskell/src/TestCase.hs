@@ -117,8 +117,10 @@ createTestCase = do
     putStrLn case_steps_reading_header
     let cod = generatecod
     print cod
-    createSteps 0 (createTestCaseType cod name goals preConditions "Statusssd" [])
+    createSteps 0 (createTestCaseType cod name goals preConditions "Não executado" [])
     return ()
+
+    -- Não passou, Passou, Não executado, Erro de execução
 
 createSteps :: Int -> TestCase -> IO()
 createSteps stepsQuantity (TestCase cod name goals preConditions status steps)  = do
@@ -142,15 +144,15 @@ showTestCase :: [TestCase] -> IO()
 showTestCase [] = do
     return ()
 showTestCase ((TestCase cod name goals preConditions status _):body) = do
-    putStr cod
-    putStr " | "
-    putStr name
-    putStr " | "
-    putStr goals
-    putStr " | "
-    putStr preConditions
-    putStr " | \n"
-    -- putStrLn (cod ++ " | " ++ name ++ " | " ++ goals ++ " | " + preConditions ++ " | " ++ status)
+    -- putStr cod
+    -- putStr " | "
+    -- putStr name
+    -- putStr " | "
+    -- putStr goals
+    -- putStr " | "
+    -- putStr preConditions
+    -- putStr " | \n"
+    putStrLn (show (cod ++ " | " ++ name ++ " | " ++ status))
     putStrLn test_case_table_line
     showTestCase body
 
@@ -158,12 +160,13 @@ listTestCases :: IO()
 listTestCases = do
     clearScreen
     printHeaderWithSubtitle test_case_header
-    let testCases = unsafePerformIO readTestCasesFromFile
+    -- let testCases = unsafePerformIO readTestCasesFromFile
+    -- print testCases
     putStrLn ""
     putStrLn test_case_table_line
     putStrLn test_case_table_header
     putStrLn test_case_table_line
-    showTestCase testCases
+    -- showTestCase testCases
 
 isOptionValcod :: Int -> Bool
 isOptionValcod option = option >= 1 && option <= 6
@@ -187,7 +190,12 @@ menu = do
     showMenu
     option <- readOption
     if isOptionValcod option
-        then chooseProcedure option
+        then do
+            if option == 6 then return ()
+            else do 
+                chooseProcedure option
+                systemPause
+                menu
     else do
         systemPause
         menu
