@@ -2,8 +2,8 @@ import Constants
 import GeneralPrints
 
 data Step = Step {
-    description :: String,
-    result :: String
+    details :: String,
+    expectedResult :: String
 } deriving (Eq, Show, Read) 
 
 data TestCase = TestCase {
@@ -15,15 +15,12 @@ data TestCase = TestCase {
 
 -- module TestCase where
 
--- Nome:
--- Objetivo:
--- Pré-condições:
---  - Passos de execução do caso de testes -
---  - Passo 1
--- Descrição do passo: 
--- Resultado esperado para o passo:
--- Deseja inserir outro passo (S/N)?
-./
+createStep :: String -> String -> Step
+createStep details expectedResult = Step {
+    details = details,
+    expectedResult = expectedResult
+}
+
 createTestCase :: IO()
 createTestCase = do
     putStrLn name_const
@@ -32,7 +29,27 @@ createTestCase = do
     goals <- getLine
     putStrLn preconditions
     preConditions <- getLine
+    putStrLn case_steps_reading_header
+    createSteps 0 []
     return ()
+
+createSteps :: Int -> [Step] -> IO()
+createSteps stepsQuantity steps = do
+    putStrLn ("Passo " ++ show (stepsQuantity + 1))
+    putStrLn case_step_description
+    caseDescription <- getLine
+    putStrLn case_step_expected_result
+    caseExpectedResult <- getLine
+    let currentStep = createStep caseDescription caseExpectedResult
+    putStrLn case_step_continue_message
+    resp <- getLine
+    if resp == "N" || resp == "n"
+        then do
+            print "Should save the test case in the database"
+            print (currentStep:steps)
+    else do
+        createSteps (stepsQuantity + 1) (currentStep:steps)
+    return (())
 
 isOptionValid :: Int -> Bool
 isOptionValid option = option >= 1 && option <= 6
