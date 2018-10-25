@@ -7,6 +7,8 @@ import System.Directory
 import System.FilePath
 import Data.List
 import Control.Monad
+import Control.DeepSeq
+
 
 data Suite = Suite {
     suiteId :: Int,
@@ -27,7 +29,8 @@ stringListToSuiteList (sId:(name:(sDes:(pId:strList)))) = (createSuite (read sId
 
 suiteListToString :: [Suite] -> String
 suiteListToString [] = []
-stringListToSuite (suite:list) = (suiteToString suite) ++ (suiteListToString list)
+suiteListToString (suite:list) = (suiteToString suite) ++ (suiteListToString list)
+
 
 suiteListToStringList :: [Suite] -> [String]
 suiteListToStringList suiteList = lines (suiteListToString suiteList)
@@ -37,9 +40,11 @@ readSuites projId = do
     let filePath = data_folder_path ++ "/" ++ (show projId) ++ "/" ++ suites_file_path
     if unsafePerformIO $ doesFileExist filePath
         then do
-            handle <- openFile filePath ReadMode
-            fileContents <- hGetContents handle
-            hClose handle
+            -- handle <- openFile filePath ReadMode
+            -- fileContents <- hGetContents handle
+            -- hClose handle
+            -- let contentsList = lines fileContents
+            fileContents <- readFile filePath
             let contentsList = lines fileContents
             return (stringListToSuiteList contentsList)
         else do
@@ -62,9 +67,10 @@ writeSuites projId suites = do
             createDirectory (data_folder_path ++ "/")
             createDirectory projectFolderPath
     
-    handle <- openFile filePath WriteMode
-    hPutStr handle suitesToFile
-    hClose handle
+    rnf suitesToFile `seq` (writeFile filePath $ suitesToFile)
+    -- handle <- openFile filePath WriteMode
+    -- hPutStr handle suitesToFile
+    -- hClose handle
 
 writeSuite :: Suite -> Int -> IO()
 writeSuite suite projId = do
@@ -112,21 +118,30 @@ createSuite idInput nameInput descriptionInput projectIdInput = Suite {suiteId =
                                                                        suiteDescription = descriptionInput,
                                                                        projectId = projectIdInput}
 
+getSuiteId :: Suite -> Int
+getSuiteId (Suite {suiteId = id}) = id
+
+generateSuiteId :: [Suite] -> Int
+generateSuiteId [] = 1
+generateSuiteId suites = (getSuiteId (last suites)) + 1
+                                                                       
+createNewSuite :: Int -> IO()
+createNewSuite projId = do
+    let suites = unsafePerformIO $ readSuites projId
+    putStrLn create_suite_header
+    putStrLn "Informe o Nome da Suite: "
+    nameInput <- getLine
+    putStrLn "Informe a descricão da Suite: "
+    descrInput <- getLine
+    let newSuite = createSuite (generateSuiteId suites) nameInput descrInput projId
+    let newSuites = suites ++ (newSuite:[])
+    writeSuites projId newSuites
+    putStrLn "Suite criada com sucesso!"
+
+
 chooseProcedure :: Int -> Char -> IO()
 chooseProcedure projId option
-    | option == create_suite = do
-        putStrLn create_suite_header
-        putStrLn "Informe o ID da Suite: "
-        idInput <- getLine
-        putStrLn "Informe o Nome da Suite: "
-        nameInput <- getLine
-        putStrLn "Informe a descricão da Suite: "
-        descrInput <- getLine
-        let newSuite = createSuite (read idInput) nameInput descrInput projId
-        putStrLn(show newSuite)
-        putStrLn "Tentando escrever suite no arquivo..."
-        writeSuite newSuite projId
-
+    | option == create_suite = do createNewSuite projId
     | option == list_suites = do
         print "LIST SUITE"
     | option == search_suite = do print "SEARCH SUITE"
