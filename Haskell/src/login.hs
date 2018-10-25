@@ -4,28 +4,33 @@ import Data.List
 import System.IO
 import System.IO.Unsafe
 
-getUserPassword :: IO [String]
+getUserPassword :: IO  User
 getUserPassword = do
                     putStrLn (username_const)
                     u <- getLine
                     putStrLn (password_const)
                     p <- getLine
-                    return [u, p]
+                    let isLogged = existingUserLogin u p
+                    if (isLogged)
+                        then 
+                            return User {name = (getNameUser (searchUserByUsername u listUser)), username = u, password = p}
+                        else
+                            return Nothing
 
-existingUserLogin :: Maybe Bool
-existingUserLogin = do
+existingUserLogin :: String -> String -> Maybe Bool
+existingUserLogin u p = do
                         if (verifyExistingUser u listUser)
                             then 
                                 if (verifingPassword u p listUser)
                                     then
-                                        return True
+                                        return Just True
                                     else
-                                        return False
+                                        return Just False
                             else
-                                return False
-                        where
+                                return Just False
+                        {-where
                             u = (unsafePerformIO getUserPassword ) !! 0
-                            p = (unsafePerformIO getUserPassword ) !! 1
+                            p = (unsafePerformIO getUserPassword ) !! 1-}
 
 
 verifingPassword :: String -> String -> [User] -> Bool
@@ -47,3 +52,6 @@ searchUserByUsernameAux s (User _ u _) = if s == u then True else False
 msgIncorrectPassword :: IO ()
 msgIncorrectPassword = do
                         putStrLn (password_incorrect)
+
+getNameUser :: User -> String
+getNameUser (User name _ _) = name
