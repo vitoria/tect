@@ -16,6 +16,7 @@ loginUser = do
                 u <- getLine
                 putStr (password_const)
                 p <- getLine
+                let listUser = unsafePerformIO $ readFileUsers
                 if (verifyExistingUser u listUser)
                     then 
                         if (verifingPassword u p listUser)

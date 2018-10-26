@@ -7,20 +7,27 @@ import GeneralPrints
 import System.IO
 import System.IO.Unsafe
 
-running :: IO ()
-running  = if (listUserLogin == [])
+running :: String -> IO ()
+running mode = do
+    putStrLn "Pressione qualquer tecla para continuar..."
+    lixo <- getLine
+    let listUserLogin = unsafePerformIO $ readFileUsersLogin
+    if (mode == "1")
+        then
+            return ()
+    else 
+        if (listUserLogin == [])
             then do
-                putStrLn (show listUserLogin)
                 loginMenu
-                running
-            else do
-                putStrLn (show listUserLogin)
-                systemMenu (head listUserLogin)
-                running
+                running "0"
+        else do
+            systemMenu (head listUserLogin)
+            running "0"
 
 loginMenu :: IO ()
 loginMenu = do 
                 printHeaderWithSubtitle (login_menu)
+                putStrLn ("\n" ++ choose_option)
                 option <- getLine
                 if (option /= "1" && option /= "2" && option /= "3")
                     then do
@@ -30,7 +37,8 @@ loginMenu = do
                 else 
                     if (option == "3")
                         then 
-                            return ()
+                            running "1" 
+                            
                     else do
                         clearScreen
                         chooseOptionLogin option
@@ -47,23 +55,43 @@ readFileUsersLogin = do
                 let listlogged = logged
                 let linelogged = (lines listlogged)
                 return (stringsToUser linelogged)
-    
-listUserLogin :: [User]
-listUserLogin = unsafePerformIO readFileUsersLogin
 
 systemMenu :: User -> IO ()
-systemMenu (User _ u _) = do 
+systemMenu user = do 
     printHeaderWithSubtitle (main_menu)
+    putStrLn ("\n" ++ choose_option)
     option <- getLine
     if (option /= "1" && option /= "2" && option /= "3" && option /= "4" && option /= "5" && option /= "6" && option /= "7" && option /= "8")
         then do
             putStrLn invalid_option
             systemPause
-            loginMenu
+            systemMenu user
     else 
         if (option == "8")
             then 
-                return ()
+                running "1"
         else do
             clearScreen
-            chooseOptionLogin option
+            chooseOptionMenu user option
+
+chooseOptionMenu :: User -> String -> IO ()
+chooseOptionMenu user "1" = myProfile  user
+chooseOptionMenu user "2" = putStrLn ("Falta fazer")
+chooseOptionMenu user "3" = putStrLn ("Falta fazer")
+chooseOptionMenu user "4" = putStrLn ("Falta fazer")
+chooseOptionMenu user "5" = putStrLn ("Falta fazer")
+chooseOptionMenu user "6" = putStrLn ("Falta fazer")
+chooseOptionMenu user "7" = logoutUser
+
+logoutUser :: IO ()
+logoutUser = cleanFile logged_user_file_path
+
+myProfile :: User -> IO ()
+myProfile (User n u _) = do
+                printHeaderWithSubtitle (my_user_header)
+                putStrLn nome
+                putStrLn usuario
+                systemPause
+                where
+                    nome = (name_const ++  n)
+                    usuario = (username_const ++  u)
