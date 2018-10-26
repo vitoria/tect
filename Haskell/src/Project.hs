@@ -264,14 +264,14 @@ module Project where
         writeProjects newProjects
         print "Projeto excluido com sucesso"
     chooseOwnerProcedure loggedUser project 6 = do
-        --suiteMenu (getProjectId project)
+        suiteMenu (getProjectId project)
         showProjectMenu loggedUser project
     chooseOwnerProcedure loggedUser project 7 = do 
         print "Saindo do projeto..."
 
     chooseUserProcedure :: String -> Project -> Int -> IO()
     chooseUserProcedure loggedUser project 1 = do 
-        --suiteMenu (getProjectId project)
+        suiteMenu (getProjectId project)
         showProjectMenu loggedUser project
     chooseUserProcedure loggedUser project 2 = do print "Sair do projeto"
 
@@ -310,6 +310,19 @@ module Project where
                         systemPause
                         mainMenu loggedUser
 
+    isOwner :: String -> Project -> Bool
+    isOwner user project = do
+        if user == getProjectOwner project
+            then return True
+            else return False
+
+    isPermitedUser :: String -> [String] -> Bool
+    isPermitedUser _ [] = False
+    isPermitedUser user (x:xs) = do
+        if user == x
+            then return True
+            else isPermitedUser user xs
+
     isOptionValidProjectOwner :: Int -> Bool
     isOptionValidProjectOwner option = option >= 1 && option <= 7
 
@@ -328,8 +341,14 @@ module Project where
         putStrLn ("Digite o id do projeto a ser gereneciado:")
         id <- getLine
         let project = unsafePerformIO $ searchProject (read id)
-        showProjectMenu loggedUser project
-        print "Projeto editado"
+        -- showProjectMenu loggedUser project
+        -- print "Projeto editado"
+        let permitedUsers = getProjectUsers project
+        if (isOwner loggedUser project) || (isPermitedUser loggedUser permitedUsers)
+            then do 
+                showProjectMenu loggedUser project
+                print "Projeto editado"
+            else print "Usuario logado nao tem acesso ao projeto"
     chooseProcedure 6 = do
         let projects = unsafePerformIO $ readProjects
         statisticsMenu (generateProjectsToupleList projects)
@@ -344,7 +363,7 @@ module Project where
     generateProjectsToupleList :: [Project] -> [(Int, String)]
     generateProjectsToupleList [] = []
     generateProjectsToupleList (Project id name _ _ _ _ _ _:list) = (id, name):(generateProjectsToupleList list)
-
+            
     showUserMenu :: IO()
     showUserMenu = do 
         printHeaderWithSubtitle main_header
@@ -355,17 +374,4 @@ module Project where
 
     mainMenu :: String -> IO()
     mainMenu loggedUser = do
-        --falta ajeitar para armazenar o login do usuario
-        showUserMenu
-        putStrLn choose_option
-        input <- getLine
-        let option = read input :: Int
-        if isOptionValidUserMenu option
-            then do
-                chooseProcedure loggedUser option
-                systemPause
-                mainMenu loggedUser
-        else do
-            putStrLn invalid_option
-            systemPause
-            mainMenu loggedUser
+    
