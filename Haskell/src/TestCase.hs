@@ -4,9 +4,10 @@ import Data.List.Split
 
 import Control.Monad
 import Control.DeepSeq
-
-import System.IO
 import System.IO.Unsafe
+
+import Prelude hiding (readFile)
+import System.IO.Strict (readFile)
 
 data Step = Step {
     details :: String,
