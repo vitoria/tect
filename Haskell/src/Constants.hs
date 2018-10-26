@@ -129,3 +129,4 @@ module Constants where
         password_should_contains_min_characters = "A senha deve conter pelo menos 4 caracteres!"
         user_already_registered = "Usuário já cadastrado! Por favor, informe um usuário diferente."
         user_registered = "Usuário cadastrado com sucesso!"
+        success_login = "Login efetuado com sucesso!"

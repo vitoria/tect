@@ -5,7 +5,7 @@ import System.IO
 import System.IO.Unsafe
 import GeneralPrints
 
-loginUser :: IO User
+loginUser :: IO ()
 loginUser = do  
                 clearScreen
                 printHeaderWithSubtitle (login_header)
@@ -16,15 +16,13 @@ loginUser = do
                 if (verifyExistingUser u listUser)
                     then 
                         if (verifingPassword u p listUser)
-                            then
-                                --putStrLn ("Login efetuado")
-                                return User {name = (getNameUser (searchUserByUsername u listUser)), username = u, password = p}
+                            then do
+                                putStrLn (success_login)                                
+                                saveLoggedUser (User {name = (getNameUser (searchUserByUsername u listUser)), username = u, password = p})
                             else
-                                --putStrLn (password_incorrect)
-                                return User {name = "", username = "", password = password_incorrect}
+                                putStrLn (password_incorrect)
                     else
-                        --putStrLn (user_not_registered)
-                        return User {name = user_not_registered, username = "", password = ""}
+                        putStrLn (user_not_registered)
 
 
 verifingPassword :: String -> String -> [User] -> Bool
@@ -56,3 +54,13 @@ getNameUser (User name _ _) = name
 
 register :: IO ()
 register = registerNewUser
+
+saveLoggedUser :: User -> IO ()
+saveLoggedUser (User n u p) = do
+                            arq <- openFile logged_user_file_path WriteMode
+                            hPutStr arq n
+                            hPutStr arq "\n"
+                            hPutStr arq u
+                            hPutStr arq "\n"
+                            hPutStr arq p
+                            hPutStr arq "\n"
