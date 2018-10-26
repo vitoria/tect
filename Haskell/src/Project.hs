@@ -13,6 +13,7 @@ import Control.Exception
 loggedUser = "lucas"
 emptyUsers = "NONE"
 emptyRequests = "NONE"
+split_character = ','
 --
 
 data Project = Project {
@@ -21,14 +22,31 @@ data Project = Project {
     project_description :: String,
     owner :: String,
     numberOfUsers :: Int, 
-    users :: String,
+    users :: [String],
     numberOfRequests :: Int,
-    requests :: String
+    requests :: [String]
 } deriving (Eq, Show)
+
+split :: String -> Char -> [String]
+split [] delim = [""]
+split (c:cs) delim
+    | c == delim = "" : rest
+    | otherwise = (c : head rest) : tail rest
+    where
+        rest = split cs delim
+
+stringListToString :: [String] -> String
+stringListToString [] = ""
+stringListToString (x:xs)
+    | xs == [] = x
+    | otherwise = x ++ "," ++ (stringListToString xs)
+
+eliminateInitialEmptyString :: [String] -> [String]
+eliminateInitialEmptyString (x:xs) = xs
 
 stringListToProjectList :: [String] -> [Project]
 stringListToProjectList [] = []
-stringListToProjectList (pId:(name:(pDes:(owner:(nOfUsers:(users:(nOfRequests:(requests:strList)))))))) = (createProject (read pId) name pDes owner (read nOfUsers) users (read nOfRequests) requests):(stringListToProjectList strList)
+stringListToProjectList (pId:(name:(pDes:(owner:(nOfUsers:(users:(nOfRequests:(requests:strList)))))))) = (createProject (read pId) name pDes owner (read nOfUsers) (split users split_character) (read nOfRequests) (split requests split_character)):(stringListToProjectList strList)
 
 projectListToString :: [Project] -> String
 projectListToString [] = []
@@ -61,14 +79,14 @@ readProjects = do
             return []
 
 searchProjectId :: Int -> [Project] -> Project
-searchProjectId projectId [] = (Project {project_id = -1, name = "NOT FOUND", project_description = "NOT FOUND", owner = "NOT FOUND", numberOfUsers = -1, users = "NOT FOUND", numberOfRequests = -1, requests = "NOT FOUND"})
+searchProjectId projectId [] = (Project {project_id = -1, name = "NOT FOUND", project_description = "NOT FOUND", owner = "NOT FOUND", numberOfUsers = -1, users = [], numberOfRequests = -1, requests = []})
 searchProjectId projectId (project:projects)
     | getProjectId project == projectId = project
     | otherwise = searchProjectId projectId projects
             
 searchProject :: Int -> IO Project
 searchProject id = do
-    let projects = unsafePerformIO $ readProjects
+    let projects = unsafePerformIO $ readProjects 
     let project = searchProjectId id projects
     return Project {project_id = getProjectId project, name = getProjectName project, project_description = getProjectDescription project, owner = getProjectOwner project, numberOfUsers = getProjectNumOfUsers project, users = getProjectUsers project, numberOfRequests = getProjectNumOfReq project, requests = getProjectRequests project}
 
@@ -104,20 +122,20 @@ getProjectOwner (Project {owner = own}) = own
 getProjectNumOfUsers :: Project -> Int
 getProjectNumOfUsers (Project {numberOfUsers = numOfUsers}) = numOfUsers
 
-getProjectUsers :: Project -> String
+getProjectUsers :: Project -> [String]
 getProjectUsers (Project {users = usrs}) = usrs
 
 getProjectNumOfReq :: Project -> Int
 getProjectNumOfReq (Project {numberOfRequests = numOfReq}) = numOfReq
 
-getProjectRequests :: Project -> String
+getProjectRequests :: Project -> [String]
 getProjectRequests (Project {requests = req}) = req
 
 generateNewProjectId :: [Project] -> Int
 generateNewProjectId [] = 1
 generateNewProjectId projects = (getProjectId (last projects)) + 1
 
-createProject :: Int -> String -> String -> String -> Int -> String -> Int -> String -> Project
+createProject :: Int -> String -> String -> String -> Int -> [String] -> Int -> [String] -> Project
 createProject id nameInput descriptionInput loggedOwner nOfUsers usrs nOfRequests rqsts = Project {project_id = id, name = nameInput, project_description = descriptionInput, owner = loggedOwner, numberOfUsers = nOfUsers, users = usrs, numberOfRequests = nOfRequests, requests = rqsts}
         
 createNewProject :: IO()
@@ -127,7 +145,7 @@ createNewProject = do
     nameInput <- getLine
     putStrLn ("Informe a descrição do projeto: ")
     descriptionInput <- getLine
-    let newProject = createProject (generateNewProjectId projects) nameInput descriptionInput loggedUser 0 emptyUsers 0 emptyRequests
+    let newProject = createProject (generateNewProjectId projects) nameInput descriptionInput loggedUser 0 [] 0 []
     let newProjects = projects ++ (newProject:[])
     writeProjects newProjects
     putStrLn("Projeto criado com sucesso")
@@ -139,8 +157,10 @@ editProjects newProject (project:projects)
 
 askForPermissionProject :: Project -> IO()
 askForPermissionProject project = do
-    let projects = unsafePerformIO $ readProjects
-    let newProject = createProject (getProjectId project) (getProjectName project) (getProjectDescription project) (getProjectOwner project) (getProjectNumOfUsers project) (getProjectUsers project) ((getProjectNumOfReq project) + 1) loggedUser
+    let projects = unsafePerformIO $ readProjects 
+    let teste = getProjectRequests project
+    let newProject = createProject (getProjectId project) (getProjectName project) (getProjectDescription project) (getProjectOwner project) (getProjectNumOfUsers project) (getProjectUsers project) ((getProjectNumOfReq project) + 1) ((stringListToString (getProjectRequests project):[]) ++ (loggedUser:[]))
+    let projectsTest = getProjectRequests project
     let newProjects = editProjects newProject projects
     writeProjects newProjects
 
@@ -219,7 +239,7 @@ chooseOwnerProcedure project 4 = do
     verifyPermissionRequests project
     showProjectMenu project
 chooseOwnerProcedure project 5 = do
-    let projects = readProjects 
+    let projects = readProjects
     let newProjects = excludeProjectFromFile project (unsafePerformIO $ projects)
     writeProjects newProjects
     print "Projeto excluido com sucesso"
@@ -303,7 +323,7 @@ showUserMenu = do
     putStrLn main_menu
 
 projectToString :: Project -> String
-projectToString (Project project_id name project_description owner numberOfUsers users numberOfRequests requests) = (show project_id) ++ "\n" ++ name ++ "\n" ++ project_description ++ "\n" ++ owner ++ "\n" ++ (show numberOfUsers) ++ "\n" ++ users ++ "\n" ++ (show numberOfRequests) ++ "\n" ++ requests ++ "\n"    
+projectToString (Project project_id name project_description owner numberOfUsers users numberOfRequests requests) = (show project_id) ++ "\n" ++ name ++ "\n" ++ project_description ++ "\n" ++ owner ++ "\n" ++ (show numberOfUsers) ++ "\n" ++ stringListToString users ++ "\n" ++ (show numberOfRequests) ++ "\n" ++ stringListToString requests ++ "\n"    
 
 menu :: IO()
 menu = do
