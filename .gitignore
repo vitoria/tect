@@ -6,6 +6,7 @@
 *.ko
 *.obj
 *.elf
+*.hi
 
 # Linker output
 *.ilk
@@ -15,6 +16,7 @@
 # Precompiled Headers
 *.gch
 *.pch
+*.hi
 
 # Libraries
 *.lib
