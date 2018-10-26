@@ -1,6 +1,5 @@
 import Constants
 import GeneralPrints
-import System.IO
 import System.IO.Unsafe
 import System.Directory
 import System.FilePath
@@ -9,10 +8,12 @@ import Control.Monad
 import Control.DeepSeq
 import Control.Exception
 
+import Prelude hiding (readFile)
+import System.IO.Strict (readFile)
+
 --Aqui seria armazenado o login do usuário logado no momento no sistema
+-- loggedUser = "lucas"
 loggedUser = "lucas"
-emptyUsers = "NONE"
-emptyRequests = "NONE"
 split_character = ','
 --
 
@@ -27,14 +28,16 @@ data Project = Project {
     requests :: [String]
 } deriving (Eq, Show)
 
-split :: String -> Char -> [String]
-split [] delim = [""]
-split (c:cs) delim
-    | c == delim = "" : rest
-    | otherwise = (c : head rest) : tail rest
-    where
-        rest = split cs delim
+generateUnlinedString :: String -> Char -> String
+generateUnlinedString [] _ = []
+generateUnlinedString (ch:str) delim
+    | ch == delim = '\n':(generateUnlinedString str delim)
+    | otherwise = ch:(generateUnlinedString str delim)
 
+split :: String -> Char -> [String]
+split [] _ = []
+split str delim = lines (generateUnlinedString str delim)
+    
 stringListToString :: [String] -> String
 stringListToString [] = ""
 stringListToString (x:xs)
@@ -59,8 +62,8 @@ projectsToStringShow :: [Project] -> String
 projectsToStringShow [] = []
 projectsToStringShow ((Project {project_id = id, name = pName}):projects) = (" " ++ (show id) ++ " - " ++ pName ++ "\n") ++ (projectsToStringShow projects)
 
-showProjects :: IO()
-showProjects = do
+showProjects :: Int -> IO()
+showProjects numTrash = do
     let projects = unsafePerformIO $ readProjects
     putStrLn list_projects_header
     putStrLn "ID - Nome do Projeto"
@@ -151,6 +154,7 @@ createNewProject = do
     putStrLn("Projeto criado com sucesso")
 
 editProjects :: Project -> [Project] -> [Project]
+editProjects _ [] = []
 editProjects newProject (project:projects)
     | getProjectId newProject == getProjectId project  = (newProject:projects)
     | otherwise = (project:(editProjects newProject projects))
@@ -158,9 +162,9 @@ editProjects newProject (project:projects)
 askForPermissionProject :: Project -> IO()
 askForPermissionProject project = do
     let projects = unsafePerformIO $ readProjects 
-    let teste = getProjectRequests project
-    let newProject = createProject (getProjectId project) (getProjectName project) (getProjectDescription project) (getProjectOwner project) (getProjectNumOfUsers project) (getProjectUsers project) ((getProjectNumOfReq project) + 1) ((stringListToString (getProjectRequests project):[]) ++ (loggedUser:[]))
-    let projectsTest = getProjectRequests project
+    putStrLn (show project)
+    let newProject = createProject (getProjectId project) (getProjectName project) (getProjectDescription project) (getProjectOwner project) (getProjectNumOfUsers project) (getProjectUsers project) ((getProjectNumOfReq project) + 1) (((getProjectRequests project)) ++ (loggedUser:[]))
+    putStrLn (show newProject) 
     let newProjects = editProjects newProject projects
     writeProjects newProjects
 
@@ -304,7 +308,7 @@ chooseProcedure 1 = do
     print loggedUser
 chooseProcedure 2 = do createNewProject
 chooseProcedure 3 = do askForPermission
-chooseProcedure 4 = do showProjects
+chooseProcedure 4 = do showProjects 0
 chooseProcedure 5 = do 
     let projects = unsafePerformIO $ readProjects
     putStrLn ("Digite o id do projeto a ser gereneciado:")
