@@ -52,7 +52,7 @@ module Constants where
         go_back = '7'
 
         -- All from testCase
-        objective = "Objetivo: "
+        goal = "Objetivo: "
         preconditions = "Pré-condições: "
         case_not_executed = 0
         case_passed = 1
@@ -73,7 +73,7 @@ module Constants where
         test_case_menu_header = "#--------# MENU DE CASOS DE TESTE #--------#"
         generate_report_header = "#--------# MENU DE GERAR RELATÓRIO #-------#"
         test_case_manager_header = "#-------# GERENCIAR CASOS DE TESTE #-------#"
-        test_case_table_header = "- ID | Nome | Status -"
+        test_case_table_header = "-  ID  |          Nome         |        Status       -"
         test_case_table_line = "------------------------------------------------------"
         list_projects_table_header = "- ID | Nome | Dono -"
         choose_case = "Informe o nome ou ID do Caso de Teste: "
