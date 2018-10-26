@@ -18,6 +18,8 @@ module Constants where
         -- Menus
         my_user_menu = "(1) Ver perfil\n(2) Alterar senha\n(3) Voltar"
         login_menu = "(1) Efetuar login\n(2) Cadastrar novo usuário\n(3) Sair"
+        project_menu_owner = "#--------GERENCIAR PROJETO--------#\n(1) Ver informações do projeto\n(2) Editar nome do projeto\n(3) Editar descrição do projeto\n(4) Verificar pedidos de permissão\n(5) Excluir projeto\n(6) Gerenciar suites de teste\n(7) Sair do projeto"
+        project_menu_user = "#--------Menu Projeto Usuário com Acesso--------#\n(1) Gerenciar suites de teste\n(2) Sair do projeto"
         main_menu = "(1) Meu usuario\n(2) Criar Projeto\n(3) Pedir acesso a um projeto\n(4) Listar Projetos\n(5) Gerenciar Projeto\n(6) Gerar Relatórios\n(7) Logout\n(8) Sair"
         suite_Menu = "(1) Criar suite de teste\n(2) Listar suites de teste\n(3) Pesquisar suite de teste\n(4) Editar suite de teste\n(5) Apagar suite de teste\n(6) Gerenciar casos de teste\n(7) Voltar"
         test_Case_Menu = "(1) Criar caso de teste\n(2) Listar casos de teste\n(3) Pesquisar caso de teste\n(4) Editar caso de teste\n(5) Apagar caso de teste\n(6) Voltar"
