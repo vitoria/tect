@@ -2,6 +2,9 @@ import Constants
 import GeneralPrints
 import Data.List.Split
 
+import System.FilePath
+import System.Directory
+
 import Control.Monad
 import Control.DeepSeq
 import System.IO.Unsafe
@@ -74,8 +77,8 @@ deserializeTestCase str = do
     let cod = (splitedStr2!!0)
     let name = (splitedStr3!!0)
     let goals = (splitedStr4!!0)
-    let status = (splitedStr5!!0)
-    let preConditions = (splitedStr6!!0)
+    let preConditions = (splitedStr5!!0)
+    let status = (splitedStr6!!0)
 
     createTestCaseType cod name goals preConditions status (deserializeSteps (removeLastElement splitedStr7))
 
@@ -89,14 +92,29 @@ listAppend (h:body) test = (h:(listAppend body test))
 
 readTestCasesFromFile :: IO [TestCase]
 readTestCasesFromFile = do
-    content <- readFile "data/testCases.dat"
-    let testCasesStr = lines content
-    return (deserializeTestCases testCasesStr)
+    let filePath = "data/testCases.dat"
+    if unsafePerformIO $ doesFileExist filePath
+        then do
+            content <- readFile filePath
+            let testCasesStr = lines content
+            return (deserializeTestCases testCasesStr)
+        else do
+            return []   
 
 writeTestCaseInFile :: [TestCase] -> IO()
 writeTestCaseInFile testCases = do
-    rnf (show testCases) `seq` (writeFile "data/testCases.dat" $ (show testCases))
-    return ()
+    let filePath = "data/testCases.dat"
+    if not (unsafePerformIO $ doesDirectoryExist data_folder_path)
+        then do
+            createDirectory data_folder_path
+        else do
+            let a = 1
+    let testCasesToFileStr = testCaseListToString testCases
+    rnf testCasesToFileStr `seq` (writeFile filePath $ testCasesToFileStr)
+
+testCaseListToString :: [TestCase] -> String
+testCaseListToString [] = []
+testCaseListToString (testCase:list) = (show testCase) ++ "\n" ++ testCaseListToString list
 
 getcodFromTestCase :: TestCase -> Int
 getcodFromTestCase (TestCase cod _ _ _ _ _) = do
@@ -112,8 +130,12 @@ generatecod = do
         let newcod = show (getcodFromTestCase (testCases!!(size - 1)) + 1)
         newcod
 
-createTestCase :: IO()
-createTestCase = do
+getCod :: String -> String
+getCod "0" = generatecod
+getCod cod = cod
+
+createTestCase :: String -> IO()
+createTestCase currentCod = do
     putStrLn name_const
     name <- getLine
     putStrLn goal
@@ -121,11 +143,9 @@ createTestCase = do
     putStrLn preconditions
     preConditions <- getLine
     putStrLn case_steps_reading_header
-    let cod = generatecod
+    let cod = getCod currentCod
     createSteps 0 (createTestCaseType cod name goals "Nao executado" preConditions [])
     return ()
-
-    -- Não passou, Passou, Não executado, Erro de execução
 
 createSteps :: Int -> TestCase -> IO()
 createSteps stepsQuantity (TestCase cod name goals preConditions status steps)  = do
@@ -140,7 +160,7 @@ createSteps stepsQuantity (TestCase cod name goals preConditions status steps)  
     resp <- getLine
     if resp == "N" || resp == "n"
         then do
-            let testCases = listAppend (unsafePerformIO readTestCasesFromFile) testCaseUpdated
+            let testCases = listAppend (deleteCase (unsafePerformIO readTestCasesFromFile) cod) testCaseUpdated
             writeTestCaseInFile testCases
     else do
         createSteps (stepsQuantity + 1) testCaseUpdated
@@ -211,21 +231,141 @@ searchTestCase = do
         showTest (searchCase tests cod)
         return ()
     else do
-        putStrLn "Not found"
+        putStrLn "Caso de Testes nao encontrado"
         systemPause
         return ()
+
+deleteCase :: [TestCase] -> String -> [TestCase]
+deleteCase [] _ = []
+deleteCase ((TestCase cod a b c d e) : body) codDelete = do
+    if cod == codDelete then deleteCase body codDelete
+    else ((createTestCaseType cod a b c d e) : (deleteCase body codDelete))
+
+deleteTestCase :: IO()
+deleteTestCase = do
+    printHeaderWithSubtitle test_case_header
+    putStrLn "\nInforme o id do caso de teste: "
+    cod <- getLine
+    let tests = unsafePerformIO(readTestCasesFromFile)
+    let contains = containsTests tests cod
+    if contains then do
+        showTest (searchCase tests cod)
+        putStrLn "Tem certeza que deseja excluir esse caso de testes? (S/N)"
+        resp <- getLine
+        if resp == "S" || resp == "s" then do
+            writeTestCaseInFile (deleteCase tests cod)
+            putStrLn "\nCaso de testes exluido com sucesso!"
+            systemPause
+            return ()
+        else do
+            putStrLn "\nCaso de testes nao foi excluido!"
+            systemPause
+            return ()
+    else do
+        putStrLn "Caso de testes nao encontrado!"
+        systemPause
+        return ()
+    return ()
+
+getStatus :: Int -> String
+getStatus 1 = "Passou"
+getStatus 2 = "Nao passou"
+getStatus 3 = "Erro na execucao"
+
+changeStatus :: [TestCase] -> TestCase -> Int -> IO()
+changeStatus tests (TestCase cod name goals preConditions _ steps) idStatus = do
+    print preConditions
+    systemPause
+    let test = (createTestCaseType cod name goals preConditions (getStatus idStatus) steps)
+    print test
+    let testsUpdated = listAppend (deleteCase tests cod) test
+    print testsUpdated
+    systemPause
+    writeTestCaseInFile testsUpdated
+
+menuChangeStatus :: [TestCase] -> TestCase -> IO()
+menuChangeStatus tests (TestCase cod name goals status preConditions steps) = do
+    printHeaderWithSubtitle test_case_header
+    putStrLn ("- Editando Caso de Testes\n")
+    putStrLn "-- Estado atual"
+    showTest (createTestCaseType cod name goals status preConditions steps)
+
+    putStrLn "\n-- Alterar status do Caso de Testes"
+    putStrLn "(1) Passou"
+    putStrLn "(2) Nao passou"
+    putStrLn "(3) Erro na execucao"
+    putStrLn "(4) Voltar"
+
+    option <- readOption
+
+    if option < 1 || option > 4 then do
+        putStrLn "Opcao invalida!"
+        systemPause
+        menuChangeStatus tests (createTestCaseType cod name goals status preConditions steps)
+    else do
+        if option == 4 then do
+            return ()
+        else do
+            changeStatus tests (createTestCaseType cod name goals status preConditions steps) option
+
+    systemPause
+
+menuEditTest :: String -> [TestCase] -> IO()
+menuEditTest cod tests = do
+    printHeaderWithSubtitle test_case_header
+
+    putStrLn "(1) Editar Dados do Caso de Teste"
+    putStrLn "(2) Editar Status do Caso de Teste"
+    putStrLn "(3) Voltar"
+
+    option <- readOption
+
+    let test = searchCase tests cod
+
+    if option == 1 || option == 2 || option == 3 then do
+        if option == 1 then do
+            printHeaderWithSubtitle test_case_header
+            putStrLn ("- Editando Caso de Testes\n")
+            putStrLn "-- Estado atual"
+            showTest test
+            putStrLn "\n-- Estado novo"
+            createTestCase cod 
+        else do
+            if option == 2 then do
+                menuChangeStatus tests test
+            else do
+                return ()
+    else do
+        putStrLn "\nOpcao invalida!"
+        systemPause
+        menuEditTest cod tests
+
+showEditTestCaseMenu :: IO()
+showEditTestCaseMenu = do
+    printHeaderWithSubtitle test_case_header
+    putStrLn "Informe o id do Caso de Teste: "
+    cod <- getLine
+
+    let tests = unsafePerformIO(readTestCasesFromFile)
+    let contains = containsTests tests cod
+
+    if contains then do 
+        menuEditTest cod tests
+    else do
+        putStrLn "Caso de Testes nao foi encontrado"
+        systemPause
+    return ()
+
 
 isOptionValcod :: Int -> Bool
 isOptionValcod option = option >= 1 && option <= 6
 
 chooseProcedure :: Int -> IO()
-chooseProcedure 1 = do createTestCase
+chooseProcedure 1 = do createTestCase "0"
 chooseProcedure 2 = do listTestCases
 chooseProcedure 3 = do searchTestCase
-chooseProcedure 4 = do print "CREATE"
-chooseProcedure 5 = do print "CREATE"
-chooseProcedure 6 = do print "CREATE"
-chooseProcedure option = do print "NOT CREATE"
+chooseProcedure 4 = do showEditTestCaseMenu
+chooseProcedure 5 = do deleteTestCase
 
 showMenu :: IO()
 showMenu = do 
@@ -249,4 +389,3 @@ menu = do
 
 main = do
     menu
-    -- print (unsafePerformIO readTestCasesFromFile)
