@@ -40,7 +40,7 @@ createStep details expectedResult = Step {
 }
 
 createTestCaseType :: String -> String -> String -> String -> String -> [Step] -> TestCase
-createTestCaseType cod name goals preConditions status steps = TestCase {
+createTestCaseType cod name goals status preConditions steps = TestCase {
     cod = cod,
     name = name,
     goals = goals,
@@ -77,10 +77,10 @@ deserializeTestCase str = do
     let cod = (splitedStr2!!0)
     let name = (splitedStr3!!0)
     let goals = (splitedStr4!!0)
-    let preConditions = (splitedStr5!!0)
-    let status = (splitedStr6!!0)
+    let status = (splitedStr5!!0)
+    let preConditions = (splitedStr6!!0)
 
-    createTestCaseType cod name goals preConditions status (deserializeSteps (removeLastElement splitedStr7))
+    createTestCaseType cod name goals status preConditions (deserializeSteps (removeLastElement splitedStr7))
 
 deserializeTestCases :: [String] -> [TestCase]
 deserializeTestCases [] = []
@@ -108,7 +108,7 @@ writeTestCaseInFile testCases = do
         then do
             createDirectory data_folder_path
         else do
-            let a = 1
+            putStrLn "Salvando dados..."
     let testCasesToFileStr = testCaseListToString testCases
     rnf testCasesToFileStr `seq` (writeFile filePath $ testCasesToFileStr)
 
@@ -148,14 +148,14 @@ createTestCase currentCod = do
     return ()
 
 createSteps :: Int -> TestCase -> IO()
-createSteps stepsQuantity (TestCase cod name goals preConditions status steps)  = do
+createSteps stepsQuantity (TestCase cod name goals status preConditions steps)  = do
     putStrLn ("Passo " ++ show (stepsQuantity + 1))
     putStrLn case_step_description
     caseDescription <- getLine
     putStrLn case_step_expected_result
     caseExpectedResult <- getLine
     let currentStep = createStep caseDescription caseExpectedResult
-    let testCaseUpdated = createTestCaseType cod name goals preConditions status (currentStep:steps)
+    let testCaseUpdated = createTestCaseType cod name goals status preConditions (currentStep:steps)
     putStrLn case_step_continue_message
     resp <- getLine
     if resp == "N" || resp == "n"
@@ -169,7 +169,7 @@ createSteps stepsQuantity (TestCase cod name goals preConditions status steps)  
 showTestCase :: [TestCase] -> IO()
 showTestCase [] = do
     return ()
-showTestCase ((TestCase cod name goals preConditions status _):body) = do
+showTestCase ((TestCase cod name goals status preConditions _):body) = do
     putStrLn (cod ++ " | " ++ name ++ " | " ++ status)
     putStrLn test_case_table_line
     showTestCase body
@@ -273,10 +273,10 @@ getStatus 2 = "Nao passou"
 getStatus 3 = "Erro na execucao"
 
 changeStatus :: [TestCase] -> TestCase -> Int -> IO()
-changeStatus tests (TestCase cod name goals preConditions _ steps) idStatus = do
+changeStatus tests (TestCase cod name goals _ preConditions steps) idStatus = do
     print preConditions
     systemPause
-    let test = (createTestCaseType cod name goals preConditions (getStatus idStatus) steps)
+    let test = (createTestCaseType cod name goals (getStatus idStatus) preConditions steps)
     print test
     let testsUpdated = listAppend (deleteCase tests cod) test
     print testsUpdated
@@ -389,3 +389,25 @@ menu = do
 
 main = do
     menu
+    print calculateStatiscs
+
+-- Statistics
+getExecutedTests :: [TestCase] -> Float
+getExecutedTests [] = 0
+getExecutedTests ((TestCase _ _ _ status _ _): body) = do
+    if status == "Nao executado" then getExecutedTests body
+    else 1 + (getExecutedTests body)
+
+getPassedTests :: [TestCase] -> Float
+getPassedTests [] = 0
+getPassedTests ((TestCase _ _ _ status _ _): body) = do
+    if status == "Passou" then 1 + getPassedTests body
+    else getPassedTests body
+
+calculateStatiscs :: Float
+calculateStatiscs = do
+    let tests = unsafePerformIO readTestCasesFromFile
+    let executedTestsQuantity = getExecutedTests tests
+    let passedTestsQuantity = getPassedTests tests
+    if executedTestsQuantity == 0 then 0
+    else (passedTestsQuantity / executedTestsQuantity)
