@@ -13,6 +13,7 @@ module Project where
     import System.IO.Strict (readFile)
 
     import TestSuite
+    import Statistics
 
     --Aqui seria armazenado o login do usuário logado no momento no sistema
     -- loggedUser = "lucas"
@@ -319,11 +320,21 @@ module Project where
         let project = unsafePerformIO $ searchProject (read id)
         showProjectMenu project
         print "Projeto editado"
-    chooseProcedure 6 = do print "CREATE"
+    chooseProcedure 6 = do
+        let projects = unsafePerformIO $ readProjects
+        statisticsMenu (generateProjectsToupleList projects)
     chooseProcedure 7 = do print "CREATE"
     chooseProcedure 8 = do print "CREATE"
     chooseProcedure option = do print "NOT CREATE"
-            
+    
+    generateProjectsIDList :: [Project] -> [Int]
+    generateProjectsIDList [] = []
+    generateProjectsIDList (project:list) = (getProjectId project):(generateProjectsIDList list)
+    
+    generateProjectsToupleList :: [Project] -> [(Int, String)]
+    generateProjectsToupleList [] = []
+    generateProjectsToupleList (Project id name _ _ _ _ _ _:list) = (id, name):(generateProjectsToupleList list)
+
     showUserMenu :: IO()
     showUserMenu = do 
         printHeaderWithSubtitle main_header
