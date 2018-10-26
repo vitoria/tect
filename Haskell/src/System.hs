@@ -1,5 +1,5 @@
 module System where
-    
+    import Project
     import Login
     import Constants
     import Cadastro
@@ -26,8 +26,16 @@ module System where
                 then do
                     loginMenu
             else do
-                systemMenu (head listUserLogin)
+                let response = unsafePerformIO $ mainMenu (getUserName (head listUserLogin))
+                if response == True
+                    then do 
+                        running "0"
+                    else do 
+                        running "1"
     
+    getUserName :: User -> String
+    getUserName (User _ user _) = user
+
     loginMenu :: IO ()
     loginMenu = do 
                     printHeaderWithSubtitle (login_menu)
@@ -82,6 +90,7 @@ module System where
                 clearScreen
                 chooseOptionMenu user option
     
+    
     chooseOptionMenu :: User -> String -> IO ()
     chooseOptionMenu user "1" = myProfile  user
     chooseOptionMenu user "2" = putStrLn ("Falta fazer")
@@ -93,9 +102,6 @@ module System where
         logoutUser
         running "0"
     
-    logoutUser :: IO ()
-    logoutUser = cleanFile logged_user_file_path
-    
     myProfile :: User -> IO ()
     myProfile (User n u _) = do
                     printHeaderWithSubtitle (my_user_header)
@@ -106,7 +112,4 @@ module System where
                         nome = (name_const ++  n)
                         usuario = (username_const ++  u)
     
-    cleanFile :: String -> IO ()
-    cleanFile path = do
-        rnf "" `seq` (writeFile path $ "")
     

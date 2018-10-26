@@ -9,7 +9,7 @@ module Project where
     import Control.DeepSeq
     import Control.Exception
 
-    import System.IO
+    -- import System.IO
     import Prelude hiding (readFile)
     import System.IO.Strict (readFile)
 
@@ -69,6 +69,7 @@ module Project where
     showProjects :: Int -> IO()
     showProjects numTrash = do
         let projects = unsafePerformIO $ readProjects
+        clearScreen
         putStrLn list_projects_header
         putStrLn "ID - Nome do Projeto"
         putStrLn (projectsToStringShow projects)
@@ -182,7 +183,7 @@ module Project where
             else putStrLn("Projeto com id informado não está cadastrado.")
 
     isOptionValidUserMenu :: Int -> Bool
-    isOptionValidUserMenu option = option >= 1 && option <= 8
+    isOptionValidUserMenu option = option >= 1 && option <= 6
 
     viewProjectInformation :: Project -> IO()
     viewProjectInformation project = do
@@ -290,11 +291,13 @@ module Project where
                     then do
                         chooseOwnerProcedure loggedUser project option
                         systemPause
-                        mainMenu loggedUser
+                        let saida = unsafePerformIO $ mainMenu loggedUser
+                        putStrLn ""
                     else do
                         putStrLn invalid_option
                         systemPause
-                        mainMenu loggedUser
+                        let saida = unsafePerformIO $ mainMenu loggedUser
+                        putStrLn ""
             else do
                 putStrLn(project_menu_user)
                 putStrLn choose_option
@@ -304,23 +307,25 @@ module Project where
                     then do
                         chooseUserProcedure loggedUser project option
                         systemPause
-                        mainMenu loggedUser
+                        let saida = unsafePerformIO $ mainMenu loggedUser
+                        putStrLn ""
                     else do
                         putStrLn invalid_option
                         systemPause
-                        mainMenu loggedUser
+                        let saida = unsafePerformIO $ mainMenu loggedUser
+                        putStrLn ""
 
     isOwner :: String -> Project -> Bool
-    isOwner user project = do
+    isOwner user project =
         if user == getProjectOwner project
-            then return True
-            else return False
+            then True
+            else False
 
     isPermitedUser :: String -> [String] -> Bool
     isPermitedUser _ [] = False
-    isPermitedUser user (x:xs) = do
+    isPermitedUser user (x:xs) =
         if user == x
-            then return True
+            then True
             else isPermitedUser user xs
 
     isOptionValidProjectOwner :: Int -> Bool
@@ -347,14 +352,16 @@ module Project where
         if (isOwner loggedUser project) || (isPermitedUser loggedUser permitedUsers)
             then do 
                 showProjectMenu loggedUser project
-                print "Projeto editado"
+                -- print "Projeto editado"
             else print "Usuario logado nao tem acesso ao projeto"
-    chooseProcedure 6 = do
+    chooseProcedure loggedUser 6 = do
         let projects = unsafePerformIO $ readProjects
         statisticsMenu (generateProjectsToupleList projects)
-    chooseProcedure 7 = do print "CREATE"
-    chooseProcedure 8 = do print "CREATE"
-    chooseProcedure option = do print "NOT CREATE"
+    chooseProcedure loggedUser 7 = do logoutUser
+    chooseProcedure loggedUser 8 = do print "EXIT"
+    chooseProcedure loggedUser option = do 
+        print "Opção inválida."
+        systemPause
     
     generateProjectsIDList :: [Project] -> [Int]
     generateProjectsIDList [] = []
@@ -372,6 +379,37 @@ module Project where
     projectToString :: Project -> String
     projectToString (Project project_id name project_description owner numberOfUsers users numberOfRequests requests) = (show project_id) ++ "\n" ++ name ++ "\n" ++ project_description ++ "\n" ++ owner ++ "\n" ++ (show numberOfUsers) ++ "\n" ++ stringListToString users ++ "\n" ++ (show numberOfRequests) ++ "\n" ++ stringListToString requests ++ "\n"    
 
-    mainMenu :: String -> IO()
+    mainMenu :: String -> IO Bool
     mainMenu loggedUser = do
-    
+        --falta ajeitar para armazenar o login do usuario
+        showUserMenu
+        putStrLn choose_option
+        input <- getLine
+        let option = read input :: Int
+        if not (option == 7 || option == 8)
+            then do
+                if isOptionValidUserMenu option
+                    then do
+                        chooseProcedure loggedUser option
+                        systemPause
+                        mainMenu loggedUser
+                else do
+                    putStrLn invalid_option
+                    systemPause
+                    mainMenu loggedUser
+            else do
+                if option == 8
+                    then do
+                        systemPause
+                        return False
+                    else do
+                        logoutUser
+                        return True
+                
+        
+    logoutUser :: IO ()
+    logoutUser = cleanFile logged_user_file_path
+
+    cleanFile :: String -> IO ()
+    cleanFile path = do
+        rnf "" `seq` (writeFile path $ "")

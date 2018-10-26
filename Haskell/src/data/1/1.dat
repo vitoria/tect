@@ -1,4 +1,4 @@
 TestCase {cod = "1", name = "caso 1", goals = "obj", status = "Passou", preConditions = "pre", steps = [Step {details = "des", expectedResult = "res"}]}
 TestCase {cod = "2", name = "caso 2", goals = "obj", status = "Nao passou", preConditions = "pre", steps = [Step {details = "des", expectedResult = "res"}]}
-TestCase {cod = "4", name = "caso 5", goals = "obj", status = "Nao executado", preConditions = "pre", steps = [Step {details = "des", expectedResult = "res"}]}
 TestCase {cod = "3", name = "caso 4", goals = "obj", status = "Passou", preConditions = "pre", steps = [Step {details = "des", expectedResult = "res"}]}
+TestCase {cod = "4", name = "Novo caaso de tesge", goals = "obj", status = "Passou", preConditions = "pre", steps = [Step {details = "des2", expectedResult = "res2"},Step {details = "des1", expectedResult = "res"}]}
