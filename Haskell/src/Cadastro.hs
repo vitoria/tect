@@ -19,10 +19,10 @@ registerNewUser = do
                 clearScreen
                 printHeaderWithSubtitle (sign_up_header)
                 putStrLn ("")
-                putStr (name_const)
+                putStrLn (name_const)
                 n <- getLine
                 u <- getUser
-                putStr (password_const)
+                putStrLn (password_const)
                 p <- getLine
                 verifySenha <- getPassword p
                 putStrLn (user_registered)
@@ -31,7 +31,7 @@ registerNewUser = do
 
 getUser :: IO String
 getUser = do
-            putStr (username_const)
+            putStrLn (username_const)
             u <- getLine
             let listUser = unsafePerformIO $ readFileUsers
             if (verifyExistingUser u listUser) 
@@ -44,7 +44,7 @@ getUser = do
 
 getPassword :: String -> IO String
 getPassword x = do 
-                putStr (confirmation_password)
+                putStrLn (confirmation_password)
                 senha <- getLine
                 if senha == x 
                     then 

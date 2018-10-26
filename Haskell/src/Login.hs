@@ -12,9 +12,9 @@ loginUser :: IO ()
 loginUser = do  
                 clearScreen
                 printHeaderWithSubtitle (login_header)
-                putStr (username_const)
+                putStrLn (username_const)
                 u <- getLine
-                putStr (password_const)
+                putStrLn (password_const)
                 p <- getLine
                 let listUser = unsafePerformIO $ readFileUsers
                 if (verifyExistingUser u listUser)

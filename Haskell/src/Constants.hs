@@ -14,6 +14,7 @@ module Constants where
         suite_details =         "#-----------# DETALHES DA SUITE #----------#"
         manage_test_suite =     "#------------# GERENCIAR SUITE #-----------#"
         line =                  "--------------------------------------------"
+        statistics_header =     "#--------------# ESTATÍSTICAS #------------#"
         table_header =          "-     ID     | Nome da suite               -"
 
         -- Menus
@@ -24,6 +25,7 @@ module Constants where
         main_menu = "(1) Meu usuario\n(2) Criar Projeto\n(3) Pedir acesso a um projeto\n(4) Listar Projetos\n(5) Gerenciar Projeto\n(6) Gerar Relatórios\n(7) Logout\n(8) Sair"
         suite_menu = "(1) Criar suite de teste\n(2) Listar suites de teste\n(3) Pesquisar suite de teste\n(4) Editar suite de teste\n(5) Apagar suite de teste\n(6) Gerenciar casos de teste\n(7) Voltar"
         test_Case_Menu = "(1) Criar caso de teste\n(2) Listar casos de teste\n(3) Pesquisar caso de teste\n(4) Editar caso de teste\n(5) Apagar caso de teste\n(6) Voltar"
+        statistics_menu = "(1) Visualizar estatísticas de projeto\n(2) Visualizar estatísticas de suite de testes de um projeto\n(3) Voltar"
 
         -- Main menu options
         my_User = '1'
