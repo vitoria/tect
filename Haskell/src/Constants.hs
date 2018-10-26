@@ -51,7 +51,7 @@ module Constants where
     edit_suite_header =     "#--------------# EDITE SUITE #-------------#"
     search_suite_header =   "#------------# PESQUISAR SUITE #-----------#"
     suite_details =         "#-----------# DETALHES DA SUITE #----------#"
-    table_header =          "-     ID     | Nome da suite               -"
+    table_header =          "- ID |           Nome da suite             -"
 
 
     -- All from testCase

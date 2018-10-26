@@ -81,6 +81,7 @@ generateNewSuiteId suites = (getSuiteId (last suites)) + 1
 createNewSuite :: Int -> IO()
 createNewSuite projId = do
     let suites = unsafePerformIO $ readSuites projId
+    putStrLn header
     putStrLn create_suite_header
     putStrLn "Informe o Nome da Suite: "
     nameInput <- getLine
@@ -93,24 +94,29 @@ createNewSuite projId = do
 
 suitesToStringShow :: [Suite] -> String
 suitesToStringShow [] = []
-suitesToStringShow ((Suite {suiteId = id, name = sName}):suites) = (" " ++ (show id) ++ " - " ++ sName ++ "\n") ++ (suitesToStringShow suites)
+suitesToStringShow ((Suite {suiteId = id, name = sName}):suites) = ("  " ++ (show id) ++ "  | " ++ sName ++ "\n") ++ line ++ "\n" ++ (suitesToStringShow suites)
 
 showSuites :: Int -> IO()
 showSuites projId = do
     let suites = unsafePerformIO $ readSuites projId
+    putStrLn header
     putStrLn suite_list_header
-    putStrLn "ID - Nome da Suite"
+    putStrLn line
+    putStrLn table_header
+    putStrLn line
     putStrLn (suitesToStringShow suites)
 
 searchSuite :: Int -> IO()
 searchSuite projId = do
     let suites = unsafePerformIO $ readSuites projId
+    putStrLn header
     putStrLn search_suite_header
     putStrLn "Selecione o parâmetro de pesquisa:\n(1) ID\n(2) Nome da Suite\n"
     searchParameter <- getLine
 
     if isOptionValid searchParameter '1' '2'
         then do
+            putStrLn header
             if (searchParameter !! 0) == '1'
                 then do
                     putStrLn "Informe o ID da Suite:"
@@ -156,6 +162,7 @@ searchSuiteName suiteName (suite:suites)
 editSuite :: Int -> IO()
 editSuite projId = do
     let suites = unsafePerformIO $ readSuites projId
+    putStrLn header
     putStrLn edit_suite_header
     putStrLn "Informe o ID da Suite:"
     suiteId <- getLine
@@ -219,6 +226,7 @@ deleteSuiteFromSystem projId suiteId = do
 
 deleteSuite :: Int -> IO()
 deleteSuite projId = do
+    putStrLn header
     putStrLn delete_suite_header
     putStrLn "Informe o ID da Suite a ser deletada:"
     idToDelete <- getLine
