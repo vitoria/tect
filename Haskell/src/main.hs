@@ -1,2 +1,5 @@
+import TestSuite
+
+main :: IO()
 main = do
-    print "Hello World"
+    suiteMenu 1

@@ -87,9 +87,9 @@ module TestCase where
     listAppend [] test = [test]
     listAppend (h:body) test = (h:(listAppend body test))
 
-    readTestCasesFromFile :: IO [TestCase]
-    readTestCasesFromFile = do
-        let filePath = "data/testCases.dat"
+    readTestCasesFromFile :: Int -> Int -> IO [TestCase]
+    readTestCasesFromFile projectId suiteId = do
+        let filePath = "data/" ++ show projectId ++ "/" ++ show suiteId ++ ".dat"
         if unsafePerformIO $ doesFileExist filePath
             then do
                 content <- readFile filePath
@@ -98,14 +98,21 @@ module TestCase where
             else do
                 return []   
 
-    writeTestCaseInFile :: [TestCase] -> IO()
-    writeTestCaseInFile testCases = do
-        let filePath = "data/testCases.dat"
+    writeTestCaseInFile :: [TestCase] -> Int -> Int -> IO()
+    writeTestCaseInFile testCases projectId suiteId = do
+        let filePath = "data/" ++ show projectId ++ "/" ++ show suiteId ++ ".dat"
+            fileFolder = "data/" ++ show projectId ++ "/"
         if not (unsafePerformIO $ doesDirectoryExist data_folder_path)
             then do
                 createDirectory data_folder_path
+                createDirectory fileFolder
             else do
-                putStrLn "Salvando dados..."
+                if not (unsafePerformIO $ doesDirectoryExist fileFolder)
+                    then do
+                        createDirectory fileFolder
+                    else do
+                        putStrLn "Salvando dados..."
+
         let testCasesToFileStr = testCaseListToString testCases
         rnf testCasesToFileStr `seq` (writeFile filePath $ testCasesToFileStr)
 
@@ -118,21 +125,21 @@ module TestCase where
         let codInt = read cod :: Int
         codInt
 
-    generatecod :: String
-    generatecod = do
-        let testCases = unsafePerformIO readTestCasesFromFile
+    generatecod :: Int -> Int -> String
+    generatecod projectId suiteId = do
+        let testCases = unsafePerformIO $ readTestCasesFromFile projectId suiteId
         let size = length testCases
         if size == 0 then "1"
         else do
             let newcod = show (getcodFromTestCase (testCases!!(size - 1)) + 1)
             newcod
 
-    getCod :: String -> String
-    getCod "0" = generatecod
-    getCod cod = cod
+    getCod :: String -> Int -> Int -> String
+    getCod "0" projectId suiteId = generatecod projectId suiteId
+    getCod cod projectId suiteId = cod
 
-    createTestCase :: String -> IO()
-    createTestCase currentCod = do
+    createTestCase :: String -> Int -> Int -> IO()
+    createTestCase currentCod projectId suiteId = do
         putStrLn name_const
         name <- getLine
         putStrLn goal
@@ -140,12 +147,12 @@ module TestCase where
         putStrLn preconditions
         preConditions <- getLine
         putStrLn case_steps_reading_header
-        let cod = getCod currentCod
-        createSteps 0 (createTestCaseType cod name goals "Nao executado" preConditions [])
+        let cod = getCod currentCod projectId suiteId
+        createSteps 0 (createTestCaseType cod name goals "Nao executado" preConditions []) projectId suiteId
         return ()
 
-    createSteps :: Int -> TestCase -> IO()
-    createSteps stepsQuantity (TestCase cod name goals status preConditions steps)  = do
+    createSteps :: Int -> TestCase -> Int -> Int -> IO()
+    createSteps stepsQuantity (TestCase cod name goals status preConditions steps) projectId suiteId  = do
         putStrLn ("Passo " ++ show (stepsQuantity + 1))
         putStrLn case_step_description
         caseDescription <- getLine
@@ -157,10 +164,10 @@ module TestCase where
         resp <- getLine
         if resp == "N" || resp == "n"
             then do
-                let testCases = listAppend (deleteCase (unsafePerformIO readTestCasesFromFile) cod) testCaseUpdated
-                writeTestCaseInFile testCases
+                let testCases = listAppend (deleteCase (unsafePerformIO $ readTestCasesFromFile projectId suiteId) cod) testCaseUpdated
+                writeTestCaseInFile testCases projectId suiteId
         else do
-            createSteps (stepsQuantity + 1) testCaseUpdated
+            createSteps (stepsQuantity + 1) testCaseUpdated projectId suiteId
         return (())
 
     showTestCase :: [TestCase] -> IO()
@@ -190,11 +197,11 @@ module TestCase where
 
         showSteps steps 0
 
-    listTestCases :: IO()
-    listTestCases = do
+    listTestCases :: Int -> Int -> IO()
+    listTestCases projectId suiteId = do
+        let testCases = unsafePerformIO $ readTestCasesFromFile projectId suiteId
         clearScreen
         printHeaderWithSubtitle test_case_header
-        let testCases = unsafePerformIO readTestCasesFromFile
         -- print testCases
         putStrLn ""
         putStrLn test_case_table_line
@@ -217,11 +224,11 @@ module TestCase where
             let result = containsTests body codSearch
             result
 
-    searchTestCase :: IO()
-    searchTestCase = do
+    searchTestCase :: Int -> Int -> IO()
+    searchTestCase projectId suiteId = do
         putStrLn "Informe o id do caso de teste: "
         cod <- getLine
-        let tests = unsafePerformIO(readTestCasesFromFile)
+        let tests = unsafePerformIO(readTestCasesFromFile projectId suiteId)
         let contains = containsTests tests cod
         if contains then do
             printHeaderWithSubtitle test_case_header
@@ -238,19 +245,20 @@ module TestCase where
         if cod == codDelete then deleteCase body codDelete
         else ((createTestCaseType cod a b c d e) : (deleteCase body codDelete))
 
-    deleteTestCase :: IO()
-    deleteTestCase = do
+    deleteTestCase :: Int -> Int -> IO()
+    deleteTestCase projectId suiteId = do
+        let tests = unsafePerformIO $ readTestCasesFromFile projectId suiteId
         printHeaderWithSubtitle test_case_header
         putStrLn "\nInforme o id do caso de teste: "
         cod <- getLine
-        let tests = unsafePerformIO(readTestCasesFromFile)
+        
         let contains = containsTests tests cod
         if contains then do
             showTest (searchCase tests cod)
             putStrLn "Tem certeza que deseja excluir esse caso de testes? (S/N)"
             resp <- getLine
             if resp == "S" || resp == "s" then do
-                writeTestCaseInFile (deleteCase tests cod)
+                writeTestCaseInFile (deleteCase tests cod) projectId suiteId
                 putStrLn "\nCaso de testes exluido com sucesso!"
                 systemPause
                 return ()
@@ -269,8 +277,8 @@ module TestCase where
     getStatus 2 = "Nao passou"
     getStatus 3 = "Erro na execucao"
 
-    changeStatus :: [TestCase] -> TestCase -> Int -> IO()
-    changeStatus tests (TestCase cod name goals _ preConditions steps) idStatus = do
+    changeStatus :: [TestCase] -> TestCase -> Int -> Int -> Int -> IO()
+    changeStatus tests (TestCase cod name goals _ preConditions steps) idStatus projectId suiteId = do
         print preConditions
         systemPause
         let test = (createTestCaseType cod name goals (getStatus idStatus) preConditions steps)
@@ -278,10 +286,10 @@ module TestCase where
         let testsUpdated = listAppend (deleteCase tests cod) test
         print testsUpdated
         systemPause
-        writeTestCaseInFile testsUpdated
+        writeTestCaseInFile testsUpdated projectId suiteId
 
-    menuChangeStatus :: [TestCase] -> TestCase -> IO()
-    menuChangeStatus tests (TestCase cod name goals status preConditions steps) = do
+    menuChangeStatus :: [TestCase] -> TestCase -> Int -> Int -> IO()
+    menuChangeStatus tests (TestCase cod name goals status preConditions steps) projectId suiteId = do
         printHeaderWithSubtitle test_case_header
         putStrLn ("- Editando Caso de Testes\n")
         putStrLn "-- Estado atual"
@@ -298,17 +306,17 @@ module TestCase where
         if option < 1 || option > 4 then do
             putStrLn "Opcao invalida!"
             systemPause
-            menuChangeStatus tests (createTestCaseType cod name goals status preConditions steps)
+            menuChangeStatus tests (createTestCaseType cod name goals status preConditions steps) projectId suiteId
         else do
             if option == 4 then do
                 return ()
             else do
-                changeStatus tests (createTestCaseType cod name goals status preConditions steps) option
+                changeStatus tests (createTestCaseType cod name goals status preConditions steps) option projectId suiteId
 
         systemPause
 
-    menuEditTest :: String -> [TestCase] -> IO()
-    menuEditTest cod tests = do
+    menuEditTest :: String -> [TestCase] -> Int -> Int -> IO()
+    menuEditTest cod tests projectId suiteId = do
         printHeaderWithSubtitle test_case_header
 
         putStrLn "(1) Editar Dados do Caso de Teste"
@@ -326,28 +334,28 @@ module TestCase where
                 putStrLn "-- Estado atual"
                 showTest test
                 putStrLn "\n-- Estado novo"
-                createTestCase cod 
+                createTestCase cod projectId suiteId
             else do
                 if option == 2 then do
-                    menuChangeStatus tests test
+                    menuChangeStatus tests test projectId suiteId
                 else do
                     return ()
         else do
             putStrLn "\nOpcao invalida!"
             systemPause
-            menuEditTest cod tests
+            menuEditTest cod tests projectId suiteId
 
-    showEditTestCaseMenu :: IO()
-    showEditTestCaseMenu = do
+    showEditTestCaseMenu :: Int -> Int -> IO()
+    showEditTestCaseMenu projectId suiteId = do
+        let tests = unsafePerformIO(readTestCasesFromFile projectId suiteId)
         printHeaderWithSubtitle test_case_header
         putStrLn "Informe o id do Caso de Teste: "
         cod <- getLine
 
-        let tests = unsafePerformIO(readTestCasesFromFile)
         let contains = containsTests tests cod
 
         if contains then do 
-            menuEditTest cod tests
+            menuEditTest cod tests projectId suiteId
         else do
             putStrLn "Caso de Testes nao foi encontrado"
             systemPause
@@ -357,32 +365,32 @@ module TestCase where
     isOptionValcod :: Int -> Bool
     isOptionValcod option = option >= 1 && option <= 6
 
-    chooseProcedure :: Int -> IO()
-    chooseProcedure 1 = do createTestCase "0"
-    chooseProcedure 2 = do listTestCases
-    chooseProcedure 3 = do searchTestCase
-    chooseProcedure 4 = do showEditTestCaseMenu
-    chooseProcedure 5 = do deleteTestCase
+    chooseProcedure :: Int -> Int -> Int -> IO()
+    chooseProcedure 1 projectId suiteId = do createTestCase "0" projectId suiteId
+    chooseProcedure 2 projectId suiteId = do listTestCases projectId suiteId
+    chooseProcedure 3 projectId suiteId = do searchTestCase projectId suiteId
+    chooseProcedure 4 projectId suiteId = do showEditTestCaseMenu projectId suiteId
+    chooseProcedure 5 projectId suiteId = do deleteTestCase projectId suiteId
 
     showMenu :: IO()
     showMenu = do 
         printHeaderWithSubtitle test_case_header
         putStrLn test_Case_Menu
 
-    menu :: IO()
-    menu = do
+    caseMenu :: Int -> Int -> IO()
+    caseMenu projectId suiteId = do
         showMenu
         option <- readOption
         if isOptionValcod option
             then do
                 if option == 6 then return ()
                 else do 
-                    chooseProcedure option
+                    chooseProcedure option projectId suiteId
                     systemPause
-                    menu
+                    caseMenu projectId suiteId
         else do
             systemPause
-            menu
+            caseMenu projectId suiteId
 
     -- Statistics
     getExecutedTests :: [TestCase] -> Float
@@ -397,10 +405,10 @@ module TestCase where
         if status == "Passou" then 1 + getPassedTests body
         else getPassedTests body
 
-    calculateStatiscs :: Float
-    calculateStatiscs = do
-        let tests = unsafePerformIO readTestCasesFromFile
+    calculateStatiscs :: Int -> Int -> Float
+    calculateStatiscs projectId suiteId = do
+        let tests = unsafePerformIO $ readTestCasesFromFile projectId suiteId
         let executedTestsQuantity = getExecutedTests tests
         let passedTestsQuantity = getPassedTests tests
         if executedTestsQuantity == 0 then 0
-        else (passedTestsQuantity / executedTestsQuantity)
+        else ((passedTestsQuantity / executedTestsQuantity) * 100.0)

@@ -12,6 +12,7 @@ module Constants where
         edit_suite_header =     "#--------------# EDITE SUITE #-------------#"
         search_suite_header =   "#------------# PESQUISAR SUITE #-----------#"
         suite_details =         "#-----------# DETALHES DA SUITE #----------#"
+        manage_test_suite =     "#------------# GERENCIAR SUITE #-----------#"
         line =                  "--------------------------------------------"
         table_header =          "-     ID     | Nome da suite               -"
 
@@ -19,7 +20,7 @@ module Constants where
         my_user_menu = "(1) Ver perfil\n(2) Alterar senha\n(3) Voltar"
         login_menu = "(1) Efetuar login\n(2) Cadastrar novo usuário\n(3) Sair"
         main_menu = "(1) Meu usuario\n(2) Criar Projeto\n(3) Pedir acesso a um projeto\n(4) Listar Projetos\n(5) Gerenciar Projeto\n(6) Gerar Relatórios\n(7) Logout\n(8) Sair"
-        suite_Menu = "(1) Criar suite de teste\n(2) Listar suites de teste\n(3) Pesquisar suite de teste\n(4) Editar suite de teste\n(5) Apagar suite de teste\n(6) Gerenciar casos de teste\n(7) Voltar"
+        suite_menu = "(1) Criar suite de teste\n(2) Listar suites de teste\n(3) Pesquisar suite de teste\n(4) Editar suite de teste\n(5) Apagar suite de teste\n(6) Gerenciar casos de teste\n(7) Voltar"
         test_Case_Menu = "(1) Criar caso de teste\n(2) Listar casos de teste\n(3) Pesquisar caso de teste\n(4) Editar caso de teste\n(5) Apagar caso de teste\n(6) Voltar"
 
         -- Main menu options
