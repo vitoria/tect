@@ -1,5 +1,5 @@
-import TestSuite
+import Project
 
 main :: IO()
 main = do
-    suiteMenu 1
+    mainMenu
