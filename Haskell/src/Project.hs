@@ -17,7 +17,6 @@ module Project where
 
     --Aqui seria armazenado o login do usuário logado no momento no sistema
     -- loggedUser = "lucas"
-    loggedUser = "lucas"
     split_character = ','
     --
 
@@ -145,8 +144,8 @@ module Project where
     createProject :: Int -> String -> String -> String -> Int -> [String] -> Int -> [String] -> Project
     createProject id nameInput descriptionInput loggedOwner nOfUsers usrs nOfRequests rqsts = Project {project_id = id, name = nameInput, project_description = descriptionInput, owner = loggedOwner, numberOfUsers = nOfUsers, users = usrs, numberOfRequests = nOfRequests, requests = rqsts}
             
-    createNewProject :: IO()
-    createNewProject = do
+    createNewProject :: String -> IO()
+    createNewProject loggedUser = do
         let projects = unsafePerformIO $ readProjects
         putStrLn ("Informe o nome do projeto: ")
         nameInput <- getLine
@@ -163,23 +162,21 @@ module Project where
         | getProjectId newProject == getProjectId project  = (newProject:projects)
         | otherwise = (project:(editProjects newProject projects))
 
-    askForPermissionProject :: Project -> IO()
-    askForPermissionProject project = do
+    askForPermissionProject :: String -> Project -> IO()
+    askForPermissionProject loggedUser project = do
         let projects = unsafePerformIO $ readProjects 
-        putStrLn (show project)
         let newProject = createProject (getProjectId project) (getProjectName project) (getProjectDescription project) (getProjectOwner project) (getProjectNumOfUsers project) (getProjectUsers project) ((getProjectNumOfReq project) + 1) (((getProjectRequests project)) ++ (loggedUser:[]))
-        putStrLn (show newProject) 
         let newProjects = editProjects newProject projects
         writeProjects newProjects
 
-    askForPermission :: IO()
-    askForPermission = do 
+    askForPermission :: String -> IO()
+    askForPermission loggedUser = do 
         putStrLn("Informe o id do projeto que deseja ter permissão:")
         id <- getLine
         let project = unsafePerformIO $ searchProject (read id)
         if getProjectId project > 0
             then do
-                askForPermissionProject project 
+                askForPermissionProject project loggedUser
                 putStrLn("Pedido de permissão realizado com sucesso")
             else putStrLn("Projeto com id informado não está cadastrado.")
 
@@ -214,26 +211,37 @@ module Project where
         writeProjects newProjects
         return ""
 
-    verifyPermissionRequests :: Project -> IO()
-    verifyPermissionRequests project = do
-        putStrLn "Pedido de acesso ao projeto do usuário "
-        putStrLn "Deseja conceder acesso a esse usuário: S/N"
+    saveUsers :: String -> Project -> IO()
+    saveUsers user project= do
+        let newProject = Project {project_id = getProjectId project, name = getProjectName project, project_description = getProjectDescription project, owner = getProjectOwner project, numberOfUsers = (getProjectNumOfUsers project) + 1, users = getProjectUsers project ++ (user::[]), numberOfRequests = getProjectNumOfReq project, requests = getProjectRequests project}
+        let projects = unsafePerformIO $ readProjects
+        let newProjects = editProjects newProject projects
+        writeProjects newProjects
+
+    grantPermission :: String -> Project -> IO()
+    grantPermission user project = do
+        putStrLn ("Pedido de acesso ao projeto do usuário" ++ user)
+        putStrLn "Deseja conceder acesso a esse usuário? S/N"
         option <- getLine
         if option == "S"
             then do
-                --updateProjectUsers getProjectRequests project
-                print "Acesso concedido"
+                updateUsers user project
             else do
-                putStrLn "Acesso não concedido"
-                systemPause
+                putStrLn "Acesso negado"
+
+    verifyPermissionRequests :: [String] -> Project -> IO()
+    verifyPermissionRequests [] _ = print "Nenhum pedido de acesso a esse projeto"
+    verifyPermissionRequests (x:xs) project = do
+        grantPermission x project
+        verifyPermissionRequests xs project 
 
     excludeProjectFromFile :: Project -> [Project] -> [Project]
     excludeProjectFromFile deleteProject (project:projects)
         | getProjectId project == getProjectId deleteProject = [] ++ projects
         | otherwise = (project:[]) ++ excludeProjectFromFile deleteProject projects
 
-    chooseOwnerProcedure :: Project -> Int -> IO()
-    chooseOwnerProcedure project 1 = do 
+    chooseOwnerProcedure :: String -> Project -> Int -> IO()
+    chooseOwnerProcedure loggedUser project 1 = do 
         viewProjectInformation project
         systemPause
         showProjectMenu project
@@ -243,8 +251,9 @@ module Project where
     chooseOwnerProcedure project 3 = do 
         editProjectDescription project
         showProjectMenu project
-    chooseOwnerProcedure project 4 = do 
-        verifyPermissionRequests project
+    chooseOwnerProcedure project 4 = do
+        let requests = getProjectRequests project 
+        verifyPermissionRequests requests project
         showProjectMenu project
     chooseOwnerProcedure project 5 = do
         let projects = readProjects
@@ -257,18 +266,16 @@ module Project where
     chooseOwnerProcedure project 7 = do 
         print "Saindo do projeto..."
 
-    chooseUserProcedure :: Project -> Int -> IO()
-    chooseUserProcedure project 1 = do 
+    chooseUserProcedure :: String -> Project -> Int -> IO()
+    chooseUserProcedure loggedUser project 1 = do 
         suiteMenu (getProjectId project)
         showProjectMenu project
     chooseUserProcedure project 2 = do print "Sair do projeto"
 
 
-    showProjectMenu :: Project -> IO()
-    showProjectMenu project = do
+    showProjectMenu :: String -> Project -> IO()
+    showProjectMenu loggedUser project = do
         let projectOwner = getProjectOwner project
-        print projectOwner
-        print loggedUser
         printHeaderWithSubtitle main_header
         if loggedUser == projectOwner
             then do
@@ -278,7 +285,7 @@ module Project where
                 let option = read input :: Int
                 if(isOptionValidProjectOwner option)
                     then do
-                        chooseOwnerProcedure project option
+                        chooseOwnerProcedure loggedUser project option
                         systemPause
                         mainMenu
                     else do
@@ -292,7 +299,7 @@ module Project where
                 let option = read input :: Int
                 if(isOptionValidProjectUser option)
                     then do
-                        chooseUserProcedure project option
+                        chooseUserProcedure loggedUser project option
                         systemPause
                         mainMenu
                     else do
@@ -306,19 +313,19 @@ module Project where
     isOptionValidProjectUser :: Int -> Bool
     isOptionValidProjectUser option = option >= 1 && option <= 2
 
-    chooseProcedure :: Int -> IO()
-    chooseProcedure 1 = do 
+    chooseProcedure :: String -> Int -> IO()
+    chooseProcedure loggedUser 1 = do 
         print "Usuario logado: "
         print loggedUser
-    chooseProcedure 2 = do createNewProject
-    chooseProcedure 3 = do askForPermission
-    chooseProcedure 4 = do showProjects 0
-    chooseProcedure 5 = do 
+    chooseProcedure loggedUser 2 = do createNewProject loggedUser
+    chooseProcedure loggedUser 3 = do askForPermission loggedUser
+    chooseProcedure loggedUser 4 = do showProjects 0
+    chooseProcedure loggedUser 5 = do 
         let projects = unsafePerformIO $ readProjects
         putStrLn ("Digite o id do projeto a ser gereneciado:")
         id <- getLine
         let project = unsafePerformIO $ searchProject (read id)
-        showProjectMenu project
+        showProjectMenu project loggedUser
         print "Projeto editado"
     chooseProcedure 6 = do
         let projects = unsafePerformIO $ readProjects
@@ -343,18 +350,19 @@ module Project where
     projectToString :: Project -> String
     projectToString (Project project_id name project_description owner numberOfUsers users numberOfRequests requests) = (show project_id) ++ "\n" ++ name ++ "\n" ++ project_description ++ "\n" ++ owner ++ "\n" ++ (show numberOfUsers) ++ "\n" ++ stringListToString users ++ "\n" ++ (show numberOfRequests) ++ "\n" ++ stringListToString requests ++ "\n"    
 
-    mainMenu :: IO()
-    mainMenu = do
+    mainMenu :: String -> IO()
+    mainMenu loggedUser = do
+        --falta ajeitar para armazenar o login do usuario
         showUserMenu
         putStrLn choose_option
         input <- getLine
         let option = read input :: Int
         if isOptionValidUserMenu option
             then do
-                chooseProcedure option
+                chooseProcedure loggedUser option
                 systemPause
-                mainMenu
+                mainMenu loggedUser
         else do
             putStrLn invalid_option
             systemPause
-            mainMenu
+            mainMenu loggedUser
