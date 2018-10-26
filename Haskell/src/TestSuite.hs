@@ -116,6 +116,7 @@ searchSuite projId = do
 
     if isOptionValid searchParameter '1' '2'
         then do
+            clearScreen
             putStrLn header
             if (searchParameter !! 0) == '1'
                 then do
@@ -145,7 +146,8 @@ searchSuite projId = do
             putStrLn "Opção de seleção inválida!"
 
 showSuite :: Suite -> String
-showSuite (Suite suiteId name suiteDescription projectId) = "Suite ID " ++ show suiteId ++ "\nNome: " ++ name ++ "\nDescrição: " ++ suiteDescription ++ "\nID Projeto da Suite: " ++ show projectId ++ "\n"
+showSuite (Suite suiteId name suiteDescription projectId) =
+    "Suite ID " ++ show suiteId ++ "\nNome: " ++ name ++ "\nDescrição: " ++ suiteDescription ++ "\nID Projeto da Suite: " ++ show projectId ++ "\nTestes que passaram: " ++ "0.0" ++ "%\n"
 
 searchSuiteId :: Int -> [Suite] -> Suite
 searchSuiteId suiteId [] = (Suite {suiteId = -1, name = "NOT FOUND", suiteDescription = "NOT FOUND", projectId = -1})
