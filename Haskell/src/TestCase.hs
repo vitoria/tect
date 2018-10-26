@@ -203,7 +203,6 @@ module TestCase where
         clearScreen
         printHeaderWithSubtitle test_case_header
         -- print testCases
-        putStrLn ""
         putStrLn test_case_table_line
         putStrLn test_case_table_header
         putStrLn test_case_table_line
@@ -279,13 +278,9 @@ module TestCase where
 
     changeStatus :: [TestCase] -> TestCase -> Int -> Int -> Int -> IO()
     changeStatus tests (TestCase cod name goals _ preConditions steps) idStatus projectId suiteId = do
-        print preConditions
-        systemPause
         let test = (createTestCaseType cod name goals (getStatus idStatus) preConditions steps)
         print test
         let testsUpdated = listAppend (deleteCase tests cod) test
-        print testsUpdated
-        systemPause
         writeTestCaseInFile testsUpdated projectId suiteId
 
     menuChangeStatus :: [TestCase] -> TestCase -> Int -> Int -> IO()
