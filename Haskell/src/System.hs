@@ -8,11 +8,13 @@ import System.IO
 import System.IO.Unsafe
 
 running :: IO ()
-running  = if ((length listUserLogin) /= 0)
+running  = if (listUserLogin == [])
             then do
+                putStrLn (show listUserLogin)
                 loginMenu
                 running
             else do
+                putStrLn (show listUserLogin)
                 systemMenu (head listUserLogin)
                 running
 
@@ -39,11 +41,12 @@ chooseOptionLogin "2" = registerNewUser
 
 readFileUsersLogin :: IO [User]
 readFileUsersLogin = do
-                content <- readFile logged_user_file_path
+                line <- getLine
+                logged <- readFile logged_user_file_path
     
-                let listUser = content
-                let lineUser = (lines listUser)
-                return (stringsToUser lineUser)
+                let listlogged = logged
+                let linelogged = (lines listlogged)
+                return (stringsToUser linelogged)
     
 listUserLogin :: [User]
 listUserLogin = unsafePerformIO readFileUsersLogin

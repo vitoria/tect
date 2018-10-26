@@ -82,8 +82,9 @@ cleanFile a = do
 
 readFileUsers :: IO [User]
 readFileUsers = do
+            line <- getLine
             content <- readFile users_file_path
-
+            --line <- getLine
             let listUser = content
             let lineUser = (lines listUser)
             return (stringsToUser lineUser)
