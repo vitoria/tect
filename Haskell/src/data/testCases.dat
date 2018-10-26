@@ -1,2 +1,5 @@
 TestCase {cod = "1", name = "Teste 1", goals = "This is the goal", status = "Erro na execucao", preConditions = "preConditions", steps = [Step {details = "This is a step description", expectedResult = "This is a step expected result"}]}
-TestCase {cod = "2", name = "Teste 2", goals = "Sem objetivo", status = "Nao executado", preConditions = "Sem pre condicao", steps = [Step {details = "desc step 3", expectedResult = "result step 3"},Step {details = "desc step 2", expectedResult = "result step 2"},Step {details = "desc step 1", expectedResult = "result step 1"}]}
+TestCase {cod = "2", name = "Teste 2", goals = "Sem objetivo", status = "Nao executado", preConditions = "Sem pre condicao", steps = [Step {details = "desc step 3", expectedResult = "result step 3"}]}
+TestCase {cod = "3", name = "Teste 5", goals = "ef", status = "Nao executado", preConditions = "dfg", steps = [Step {details = "dfg", expectedResult = "dfg"}]}
+TestCase {cod = "4", name = "Teste 6", goals = "ws", status = "Nao executado", preConditions = "gdfg", steps = [Step {details = "dgf", expectedResult = "dfg"}]}
+TestCase {cod = "5", name = "Teste 10", goals = "sfdf", status = "Nao executado", preConditions = "sdfsdf", steps = [Step {details = "sdadasd", expectedResult = "asdasdsad"},Step {details = "sasdasd", expectedResult = "asdads"},Step {details = "sdfsdf", expectedResult = "sdfsdf"}]}

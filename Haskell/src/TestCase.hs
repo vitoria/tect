@@ -51,13 +51,9 @@ createTestCaseType cod name goals status preConditions steps = TestCase {
 
 deserializeStep :: String -> Step
 deserializeStep str = do
-    let splitedStr = splitOn "Step {details = \"" str
-    let splitedStr2 = splitOn "\", expectedResult = \"" (splitedStr!!1)
-    let splitedStr3 = splitOn "\"}" (splitedStr2!!1)
-
-    let details = (splitedStr2!!0)
-    let expectedResult = (splitedStr3!!0)
-
+    let splitedStr = splitOn "\", expectedResult = \"" str
+    let details = splitedStr!!0
+    let expectedResult = splitedStr!!1
     createStep details expectedResult
 
 deserializeSteps :: [String] -> [Step]
@@ -71,8 +67,9 @@ deserializeTestCase str = do
     let splitedStr3 = splitOn "\", goals = \"" (splitedStr2!!1)
     let splitedStr4 = splitOn "\", status = \"" (splitedStr3!!1)
     let splitedStr5 = splitOn "\", preConditions = \"" (splitedStr4!!1)
-    let splitedStr6 = splitOn "\", steps = [" (splitedStr5!!1)
-    let splitedStr7 = splitOn "]}" (splitedStr6!!1)
+    let splitedStr6 = (splitOn "\", steps = [Step {details = \"" (splitedStr5!!1))
+    let splitedStr7 = removeLastElement (splitOn "\"}]}" (splitedStr6!!1))
+    let splitedStr8 = splitOn "\"},Step {details = \"" ((splitedStr7)!!0)
     
     let cod = (splitedStr2!!0)
     let name = (splitedStr3!!0)
@@ -80,7 +77,7 @@ deserializeTestCase str = do
     let status = (splitedStr5!!0)
     let preConditions = (splitedStr6!!0)
 
-    createTestCaseType cod name goals status preConditions (deserializeSteps (removeLastElement splitedStr7))
+    createTestCaseType cod name goals status preConditions (deserializeSteps splitedStr8)
 
 deserializeTestCases :: [String] -> [TestCase]
 deserializeTestCases [] = []
