@@ -78,17 +78,6 @@ saveUser (User n u p)= do
     hFlush arq
     hClose arq
 
-cleanFile :: String -> IO ()
-cleanFile path = do
-  
-    let cleanUp = ""
-    writeFile path $ cleanUp
-                {-arq <- openFile a WriteMode
-                hPutStr arq ""
-                hFlush arq
-                hClose arq-}
-
-
 readFileUsers :: IO [User]
 readFileUsers = do
     if not (unsafePerformIO $ doesDirectoryExist data_folder_path)

@@ -4,8 +4,14 @@ import Login
 import Constants
 import Cadastro
 import GeneralPrints
-import System.IO
 import System.IO.Unsafe
+
+import Control.Monad
+import Control.DeepSeq
+import System.IO.Unsafe
+
+import Prelude hiding (readFile)
+import System.IO.Strict (readFile)
 
 running :: String -> IO ()
 running mode = do
@@ -95,3 +101,7 @@ myProfile (User n u _) = do
                 where
                     nome = (name_const ++  n)
                     usuario = (username_const ++  u)
+
+cleanFile :: String -> IO ()
+cleanFile path = do
+    rnf "" `seq` (writeFile path $ "")
