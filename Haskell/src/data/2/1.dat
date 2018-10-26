@@ -1,0 +1,2 @@
+TestCase {cod = "1", name = "caso 1", goals = "obj", status = "Passou", preConditions = "pre", steps = [Step {details = "des", expectedResult = "res"},Step {details = "des", expectedResult = "res"}]}
+TestCase {cod = "2", name = "caso 2", goals = "obj", status = "Nao passou", preConditions = "pre", steps = [Step {details = "des", expectedResult = "res"}]}
