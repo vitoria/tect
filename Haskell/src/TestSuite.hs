@@ -1,13 +1,14 @@
 import Constants
 import GeneralPrints
 import Validation
-import System.IO
 import System.IO.Unsafe
 import System.Directory
 import System.FilePath
 import Data.List
 import Control.Monad
 import Control.DeepSeq
+import Prelude hiding (readFile)
+import System.IO.Strict (readFile)
 
 data Suite = Suite {
     suiteId :: Int,
