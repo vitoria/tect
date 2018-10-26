@@ -1,4 +1,1 @@
-TestCase {cod = "1", name = "Waza", goals = "Waza", status = "Waza", preConditions = "N\227o executado", steps = [Step {details = "Waza", expectedResult = "Waza"}]}
-TestCase {cod = "2", name = "dsfsdf", goals = "sdfsdfsdf", status = "sdfsdfsdfsdf", preConditions = "N\227o executado", steps = [Step {details = "dfdfsdf", expectedResult = "sdfsdfsdf"}]}
-TestCase {cod = "3", name = "affsd", goals = "sfsdfsdf", status = "sdfsdfsdf", preConditions = "N\227o executado", steps = [Step {details = "fsdfsd", expectedResult = "sdfsdfds"}]}
-TestCase {cod = "4", name = "sdfsdf", goals = "sdfsdfsdf", status = "sdfsdfsdfsdf", preConditions = "N\227o executado", steps = [Step {details = "dfsdf", expectedResult = "sdfsdfsdf"}]}
+[TestCase {cod = "1", name = "sfsfsd", goals = "sdfsdfsdf", status = "sdfsdfsdfsdf", preConditions = "Nao executado", steps = [Step {details = "sdfsdfsdf", expectedResult = "sdfsdfsdfsdf"}]},TestCase {cod = "2", name = "asdasd", goals = "asdasdasda", status = "Nao executado", preConditions = "asdadasd", steps = [Step {details = "sdasdasdasdasdasd", expectedResult = "asdasdasdasdasdasdasd"}]}]

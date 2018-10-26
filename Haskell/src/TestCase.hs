@@ -2,6 +2,9 @@ import Constants
 import GeneralPrints
 import Data.List.Split
 
+import Control.Monad
+import Control.DeepSeq
+
 import System.IO
 import System.IO.Unsafe
 
@@ -62,22 +65,26 @@ deserializeTestCase str = do
     let splitedStr = splitOn "TestCase {cod = \"" str
     let splitedStr2 = splitOn "\", name = \"" (splitedStr!!1)
     let splitedStr3 = splitOn "\", goals = \"" (splitedStr2!!1)
-    let splitedStr4 = splitOn "\", preConditions = \"" (splitedStr3!!1)
-    let splitedStr5 = splitOn "\", status = \"" (splitedStr4!!1)
+    let splitedStr4 = splitOn "\", status = \"" (splitedStr3!!1)
+    let splitedStr5 = splitOn "\", preConditions = \"" (splitedStr4!!1)
     let splitedStr6 = splitOn "\", steps = [" (splitedStr5!!1)
     let splitedStr7 = splitOn "]}" (splitedStr6!!1)
     
     let cod = (splitedStr2!!0)
     let name = (splitedStr3!!0)
     let goals = (splitedStr4!!0)
-    let preConditions = (splitedStr5!!0)
-    let status = (splitedStr6!!0)
+    let status = (splitedStr5!!0)
+    let preConditions = (splitedStr6!!0)
 
-    createTestCaseType cod name goals preConditions status (deserializeSteps (removeLastElement splitedStr5))
+    createTestCaseType cod name goals preConditions status (deserializeSteps (removeLastElement splitedStr7))
 
 deserializeTestCases :: [String] -> [TestCase]
 deserializeTestCases [] = []
 deserializeTestCases (current:body) = ((deserializeTestCase current):(deserializeTestCases body))
+
+listAppend :: [TestCase] -> TestCase -> [TestCase]
+listAppend [] test = [test]
+listAppend (h:body) test = (h:(listAppend body test))
 
 readTestCasesFromFile :: IO [TestCase]
 readTestCasesFromFile = do
@@ -85,12 +92,10 @@ readTestCasesFromFile = do
     let testCasesStr = lines content
     return (deserializeTestCases testCasesStr)
 
-writeTestCaseInFile :: TestCase -> IO()
-writeTestCaseInFile testCase = do
-    file <- openFile "data/testCases.dat" AppendMode
-    hPrint file testCase
-    hFlush file
-    hClose file 
+writeTestCaseInFile :: [TestCase] -> IO()
+writeTestCaseInFile testCases = do
+    rnf (show testCases) `seq` (writeFile "data/testCases.dat" $ (show testCases))
+    return ()
 
 getcodFromTestCase :: TestCase -> Int
 getcodFromTestCase (TestCase cod _ _ _ _ _) = do
@@ -116,8 +121,7 @@ createTestCase = do
     preConditions <- getLine
     putStrLn case_steps_reading_header
     let cod = generatecod
-    print cod
-    createSteps 0 (createTestCaseType cod name goals preConditions "Não executado" [])
+    createSteps 0 (createTestCaseType cod name goals "Nao executado" preConditions [])
     return ()
 
     -- Não passou, Passou, Não executado, Erro de execução
@@ -135,7 +139,8 @@ createSteps stepsQuantity (TestCase cod name goals preConditions status steps)  
     resp <- getLine
     if resp == "N" || resp == "n"
         then do
-            writeTestCaseInFile testCaseUpdated
+            let testCases = listAppend (unsafePerformIO readTestCasesFromFile) testCaseUpdated
+            writeTestCaseInFile testCases
     else do
         createSteps (stepsQuantity + 1) testCaseUpdated
     return (())
@@ -144,29 +149,70 @@ showTestCase :: [TestCase] -> IO()
 showTestCase [] = do
     return ()
 showTestCase ((TestCase cod name goals preConditions status _):body) = do
-    -- putStr cod
-    -- putStr " | "
-    -- putStr name
-    -- putStr " | "
-    -- putStr goals
-    -- putStr " | "
-    -- putStr preConditions
-    -- putStr " | \n"
-    putStrLn (show (cod ++ " | " ++ name ++ " | " ++ status))
+    putStrLn (cod ++ " | " ++ name ++ " | " ++ status)
     putStrLn test_case_table_line
     showTestCase body
+
+showSteps :: [Step] -> Int -> IO()
+showSteps [] _ = do
+    return ()
+showSteps ((Step details expectedResult):body) num = do
+    putStrLn ("\n   - Passo " ++ (show (num + 1)))
+    putStrLn ("Detalhes: " ++ details)
+    putStrLn ("Resultado esperado: " ++ expectedResult)
+    showSteps body (num + 1)
+
+showTest :: TestCase -> IO()
+showTest (TestCase cod name goals status preConditions steps) = do
+    putStrLn ("Id: " ++ cod)
+    putStrLn ("Nome: " ++ name)
+    putStrLn ("Objetivos: " ++ goals)
+    putStrLn ("Pre-condicoes: " ++ preConditions)
+    putStrLn ("Status: " ++ status)
+
+    showSteps steps 0
 
 listTestCases :: IO()
 listTestCases = do
     clearScreen
     printHeaderWithSubtitle test_case_header
-    -- let testCases = unsafePerformIO readTestCasesFromFile
+    let testCases = unsafePerformIO readTestCasesFromFile
     -- print testCases
     putStrLn ""
     putStrLn test_case_table_line
     putStrLn test_case_table_header
     putStrLn test_case_table_line
-    -- showTestCase testCases
+    showTestCase testCases
+
+searchCase :: [TestCase] -> String -> TestCase
+searchCase ((TestCase cod name goals status preConditions steps):body) codSearch = do
+    if cod == codSearch then do
+        createTestCaseType cod name goals status preConditions steps
+    else searchCase body codSearch
+
+containsTests :: [TestCase] -> String -> Bool
+containsTests [] _ = False
+containsTests ((TestCase cod _ _ _ _ _):body) codSearch = do
+    if cod == codSearch then do
+        True
+    else do
+        let result = containsTests body codSearch
+        result
+
+searchTestCase :: IO()
+searchTestCase = do
+    putStrLn "Informe o id do caso de teste: "
+    cod <- getLine
+    let tests = unsafePerformIO(readTestCasesFromFile)
+    let contains = containsTests tests cod
+    if contains then do
+        printHeaderWithSubtitle test_case_header
+        showTest (searchCase tests cod)
+        return ()
+    else do
+        putStrLn "Not found"
+        systemPause
+        return ()
 
 isOptionValcod :: Int -> Bool
 isOptionValcod option = option >= 1 && option <= 6
@@ -174,7 +220,7 @@ isOptionValcod option = option >= 1 && option <= 6
 chooseProcedure :: Int -> IO()
 chooseProcedure 1 = do createTestCase
 chooseProcedure 2 = do listTestCases
-chooseProcedure 3 = do print "CREATE"
+chooseProcedure 3 = do searchTestCase
 chooseProcedure 4 = do print "CREATE"
 chooseProcedure 5 = do print "CREATE"
 chooseProcedure 6 = do print "CREATE"
@@ -202,3 +248,4 @@ menu = do
 
 main = do
     menu
+    -- print (unsafePerformIO readTestCasesFromFile)
