@@ -1,7 +1,12 @@
+module Cadastro where
+
 import Constants
 import System.IO
 import System.IO.Unsafe
 import Data.List
+import GeneralPrints
+import System.Directory
+import System.FilePath
 
 data User = User {
     name :: String,
@@ -11,8 +16,8 @@ data User = User {
 
 registerNewUser :: IO ()
 registerNewUser = do
-                putStrLn (header)
-                putStrLn (sign_up_header)
+                clearScreen
+                printHeaderWithSubtitle (sign_up_header)
                 putStrLn ("")
                 putStr (name_const)
                 n <- getLine
@@ -20,20 +25,21 @@ registerNewUser = do
                 putStr (password_const)
                 p <- getLine
                 verifySenha <- getPassword p
-                putStrLn ("Usuário cadastrado com sucesso!")
+                putStrLn (user_registered)
                 saveUser User {name = n, username = u, password = p}
+                systemPause
 
 getUser :: IO String
-getUser = do 
-                putStr (username_const)
-                u <- getLine
-                
-                if (verifyExistingUser u (unsafePerformIO readFileUsers)) --lista (aaa) utilizada como paremetro deve ser uma lista gerada a partir do arquivo com os usuários
-                    then do 
-                        putStrLn (user_already_registered)
-                        getUser
-                    else 
-                        return u
+getUser = do
+            putStr (username_const)
+            u <- getLine
+            let listUser = unsafePerformIO $ readFileUsers
+            if (verifyExistingUser u listUser) 
+                then do 
+                putStrLn (user_already_registered)
+                getUser
+            else 
+                return u
 
 
 getPassword :: String -> IO String
@@ -57,33 +63,37 @@ verifyExistingUserAux u (User _ a _) = if u == a then True else False
 
 saveUser :: User -> IO ()
 saveUser (User n u p)= do
-                arq <- openFile users_file_path AppendMode
-                hPutStr arq n
-                hPutStr arq "\n"
-                hPutStr arq u
-                hPutStr arq "\n"
-                hPutStr arq p
-                hPutStr arq "\n"
-                hFlush arq
-                hClose arq
-
-cleanFile :: String -> IO ()
-cleanFile a = do
-                arq <- openFile a WriteMode
-                hPutStr arq ""
-                hFlush arq
-                hClose arq
-
+    if not (unsafePerformIO $ doesDirectoryExist data_folder_path)
+        then do
+            createDirectory data_folder_path
+        else do 
+            putStrLn "Salvando dados..."
+    arq <- openFile users_file_path AppendMode
+    hPutStr arq n
+    hPutStr arq "\n"
+    hPutStr arq u
+    hPutStr arq "\n"
+    hPutStr arq p
+    hPutStr arq "\n"
+    hFlush arq
+    hClose arq
 
 readFileUsers :: IO [User]
 readFileUsers = do
+    if not (unsafePerformIO $ doesDirectoryExist data_folder_path)
+        then do
+            createDirectory data_folder_path
+            readFileUsers
+        else do 
             content <- readFile users_file_path
             let listUser = content
             let lineUser = (lines listUser)
-            --return (lineUser)
             return (stringsToUser lineUser)
 
 
 stringsToUser :: [String] -> [User]
 stringsToUser [] = []
 stringsToUser (x:(y:(z:xs))) = (User x y z) : stringsToUser xs
+
+
+
