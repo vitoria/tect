@@ -1,5 +1,7 @@
-import Project
+import Constants
+import Cadastro
+import System
 
-main :: IO()
+main :: IO ()
 main = do
-    mainMenu
+        running "0"

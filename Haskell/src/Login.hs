@@ -1,9 +1,12 @@
+module Login where
+
 import Constants
 import Cadastro
 import Data.List
-import System.IO
 import System.IO.Unsafe
 import GeneralPrints
+import System.IO
+
 
 loginUser :: IO ()
 loginUser = do  
@@ -52,9 +55,6 @@ msgIncorrectPassword = do
 getNameUser :: User -> String
 getNameUser (User name _ _) = name
 
-register :: IO ()
-register = registerNewUser
-
 saveLoggedUser :: User -> IO ()
 saveLoggedUser (User n u p) = do
                             arq <- openFile logged_user_file_path WriteMode
@@ -64,3 +64,6 @@ saveLoggedUser (User n u p) = do
                             hPutStr arq "\n"
                             hPutStr arq p
                             hPutStr arq "\n"
+                            hFlush arq
+                            hClose arq
+

@@ -5,6 +5,8 @@ import System.IO
 import System.IO.Unsafe
 import Data.List
 import GeneralPrints
+import System.Directory
+import System.FilePath
 
 data User = User {
     name :: String,
@@ -25,6 +27,7 @@ registerNewUser = do
                 verifySenha <- getPassword p
                 putStrLn (user_registered)
                 saveUser User {name = n, username = u, password = p}
+                systemPause
 
 getUser :: IO String
 getUser = do 
@@ -77,10 +80,10 @@ cleanFile a = do
                 hFlush arq
                 hClose arq
 
-
 readFileUsers :: IO [User]
 readFileUsers = do
             content <- readFile users_file_path
+
             let listUser = content
             let lineUser = (lines listUser)
             return (stringsToUser lineUser)
