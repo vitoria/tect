@@ -20,11 +20,3 @@ cabal install split
 ```shell
 cabal install Strict
 ```
-
-- Then, you'll have to import these modules:
-
-```shell
-import Prelude hiding (readFile)
-import System.IO.Strict (readFile)
-```
-

@@ -9,12 +9,14 @@ module GeneralPrints where
 
     printHeaderWithSubtitle :: String -> IO()
     printHeaderWithSubtitle subtitle = do
+        clearScreen
         printHeader
         putStrLn subtitle
+        putStrLn ""
 
     systemPause :: IO()
     systemPause = do
-        putStrLn pause_msg
+        putStrLn ("\n" ++ pause_msg)
         line <- getLine
         clearScreen
 
@@ -22,3 +24,9 @@ module GeneralPrints where
     clearScreen = do
         _ <- system "clear"
         return ()
+
+    readOption :: IO Int
+    readOption = do
+        putStrLn ("\n" ++ choose_option)
+        line <- getLine
+        return (read line :: Int)
