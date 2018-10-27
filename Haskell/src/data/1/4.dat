@@ -1,2 +1,0 @@
-TestCase {cod = "2", name = "nom2", goals = "obj", status = "Nao passou", preConditions = "pre", steps = [Step {details = "des", expectedResult = "res"}]}
-TestCase {cod = "1", name = "Teste Maluco", goals = "Testar a maluquice das pessoas", status = "Passou", preConditions = "Estar doido", steps = [Step {details = "E so testar", expectedResult = "saber se e doido ou nao"}]}

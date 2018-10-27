@@ -1,1 +1,0 @@
-TestCase {cod = "1", name = "caso 1", goals = "obj", status = "Nao executado", preConditions = "pre", steps = [Step {details = "des", expectedResult = "res"}]}
