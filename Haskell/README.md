@@ -1,6 +1,8 @@
-### How to run
+## How to run
 
-- To run this program, you should install the the following modules by following the commands below.
+### Dependencies
+
+Before running this program, you need to install these modules by following the commands below.
 
 - Installing `cabal`
 
@@ -19,4 +21,13 @@ cabal install split
 
 ```shell
 cabal install Strict
+```
+
+### Run
+
+If you already had installed the dependencies, you can run the program by following these commands.
+
+```shell
+ghc Main
+./Main
 ```
