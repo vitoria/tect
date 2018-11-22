@@ -1,3 +1,6 @@
+:- module(constants, [suite_menu/1]).
+
+
 /*Header*/
 header("#-----------------# TecT #-----------------#").
 main_header("#-------------# MENU PRINCIPAL #-----------#").
