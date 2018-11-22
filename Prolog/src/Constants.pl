@@ -1,4 +1,4 @@
-:- module(constants, [suite_menu/1]).
+:- module(constants, []).
 
 
 /*Header*/
