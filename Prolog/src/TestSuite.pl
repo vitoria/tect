@@ -19,6 +19,11 @@ suite(3, nome3, desc3, 2).
 suite(4, nome4, desc4, 2).
 suite(5, nome5, desc5, 2).
 
+factToList(Projeto, X):- findall(I, suite(I, _, _, Projeto), X).
+
+
+verify(Projeto):- factToList(Projeto, X),
+                    writeln(X).
 
 createSuite(ID, Nome, Descricao, Projeto):- 
                     writeln("Id:"),    
