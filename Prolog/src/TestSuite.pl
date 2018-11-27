@@ -32,13 +32,14 @@ createSuite(ID, Nome, Descricao, Projeto):-
                     read(Nome), 
                     writeln("Descrição: "),
                     read(Descricao), 
-                    asserta(suite(ID, Nome, Descricao, Projeto)).
+                    assertz(suite(ID, Nome, Descricao, Projeto)),
+                    suiteMenu(Projeto).
 
 showSuiteMenu:- 
                     constants:suite_menu(X),
                     writeln(X).
 
-listSuite(Projeto):- tty_clear,
+listSuiteAux(Projeto):- tty_clear,
                     constants:header(H),
                     writeln(H),
                     constants:suite_list_header(L),
@@ -50,6 +51,13 @@ listSuite(Projeto):- tty_clear,
                     suite(Id, Nome, _, Projeto), 
                     write("      "), write(Id), write(" - "), 
                     write("     "), writeln(Nome), fail.
+
+listSuite(Projeto):- listSuiteAux(Projeto);
+                    writeln("Pressione enter para continuar..."),
+                    get_char(X).
+                    %suiteMenu(Projeto)
+                    
+                    
 
 searchSuite(Projeto):- tty_clear,
                     constants:header(H),
@@ -103,8 +111,30 @@ editSuite(Projeto):-  tty_clear,
                     writeln("Informe a nova descricão da Suite: "),
                     read(NewDescricao),
                     retract(suite(Id, Nome, Descricao, Projeto)),
-                    asserta(suite(Id, NewNome, NewDescricao, Projeto)),
+                    assertz(suite(Id, NewNome, NewDescricao, Projeto)),
                     writeln("Suite editada com sucesso.").
+                
+deleteSuite(Projeto):- tty_clear,
+                    constants:header(H),
+                    writeln(H),
+                    constants:delete_suite_header(L),
+                    writeln(L),
+                    writeln("Informe o ID da Suite a ser deletada:"),
+                    read(Id),
+                    retract(suite(Id, _, _, Projeto)).
+
+caseTestMenu(Projeto):- tty_clear,
+                    constants:header(H),
+                    writeln(H),
+                    constants:manage_test_suite(L),
+                    writeln(L),
+                    writeln("Informe o ID da suite a ser gerenciada:"),
+                    read(SuiteId),
+                    write("O id da suite a ser chamada é: "), write(SuiteId),
+                    write(" e o id do projeto é "), writeln(Projeto),
+                    writeln("CHAMAR O MÉTODO AQUI DO MENU DO CASO DE TESTE").
+
+goBack():- writeln("Retornar para o menu anterior").
 
 choose_action(Option, Projeto):-
                     (Option =:= 1 -> (createSuite(_, _, _, Projeto)));
