@@ -19,6 +19,10 @@ line("--------------------------------------------").
 statistics_header("#--------------# ESTATÍSTICAS #------------#").
 table_header("-     ID     | Nome da suite               -").
 
+create_project_header("#--------# CRIAR PROJETO DE TESTES #-------#").
+list_project_header("#-------# LISTAR PROJETOS DE TESTES #------#").
+list_project_table_header("ID  -  Nome  -  Dono").
+
 /* Menus*/
 my_user_menu("(1) Ver perfil\n(2) Alterar senha\n(3) Voltar").
 login_menu("(1) Efetuar login\n(2) Cadastrar novo usuário\n(3) Sair").

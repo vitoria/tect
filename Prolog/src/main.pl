@@ -1,3 +1,4 @@
 :- initialization(main).
+:- use_module("MainSystem").
 
-main :- writeln("Hello world").
+main :- mainSystem:systemMenu("Mateus").
