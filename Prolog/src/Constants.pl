@@ -21,6 +21,8 @@ table_header("-     ID     | Nome da suite               -").
 
 create_project_header("#--------# CRIAR PROJETO DE TESTES #-------#").
 list_project_header("#-------# LISTAR PROJETOS DE TESTES #------#").
+request_access_header("#------# SOLICITAR ACESSO À PROJETO #------#").
+manage_project_header("#-----------# GERENCIAR PROJETO #----------#").
 list_project_table_header("ID  -  Nome  -  Dono").
 
 /* Menus*/
