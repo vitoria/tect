@@ -1,6 +1,6 @@
 :- module(authentication, [authenticationMenu/0]).
 
-:- use_module("Constants").
+:- use_module(constants).
 
 chooseProceedure(1):- writeln("Login").
 chooseProceedure(2):- writeln("Cadastro").

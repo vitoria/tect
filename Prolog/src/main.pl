@@ -1,5 +1,5 @@
 :- initialization(main).
 
-:- use_module(authentication, [authenticationMenu]).
+:- use_module(authentication).
 
 main :- authentication:authenticationMenu.
