@@ -1,4 +1,4 @@
-:- module(autentication, [autenticationMenu/0]).
+:- module(authentication, [authenticationMenu/0]).
 
 :- use_module("Constants").
 
@@ -9,9 +9,9 @@ chooseProceedure(_):-
     constants:invalid_option(Msg),
     writeln(Msg),
     systemPause,
-    autenticationMenu.
+    authenticationMenu.
 
-showAutenticationMenu():-
+showAuthenticationMenu():-
     constants:header(Header),
     constants:login_menu(Menu),
     writeln(Header),
@@ -32,9 +32,9 @@ systemPause() :-
     writeln(Msg),
     read_line_to_string(user_input, _).
 
-autenticationMenu():-
+authenticationMenu():-
     tty_clear,
-    showAutenticationMenu,
+    showAuthenticationMenu,
     readOption(Option),
     chooseProceedure(Option).
     
