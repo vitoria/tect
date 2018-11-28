@@ -52,10 +52,10 @@ listSuiteAux(Projeto):- tty_clear,
                     write("      "), write(Id), write(" - "), 
                     write("     "), writeln(Nome), fail.
 
-listSuite(Projeto):- listSuiteAux(Projeto);
+listSuite(Projeto):- (listSuiteAux(Projeto); true),
                     writeln("Pressione enter para continuar..."),
-                    get_char(X).
-                    %suiteMenu(Projeto)
+                    read_line_to_string(user_input, _),
+                    suiteMenu(Projeto).
                     
                     
 
