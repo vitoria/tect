@@ -3,7 +3,6 @@
 :- use_module("Constants").
 :- use_module("Project").
 
-
 readNumber(Number):- read_line_to_codes(user_input, Codes), string_to_atom(Codes, Atom), atom_number(Atom, Number).
 
 createProject(LoggedUser):-

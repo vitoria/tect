@@ -1,13 +1,9 @@
 :- module(project, [projectMenu/2]).
 
 :- use_module("Constants").
-:- use_module("MainSystem").
 
 % Project(id, name, description, owner)
-:- dynamic project/4.
-:- dynamic projectUsers/2.
-:- dynamic requests/2.
-:- dynamic nextProjectId/1.
+:- dynamic project/4, projectUser/2, request/2, nextProjectId/1.
 
 nextProjectId(1).
 
@@ -16,6 +12,10 @@ readNumber(Number):- read_line_to_codes(user_input, Codes), string_to_atom(Codes
 
 createDirectory(Directory):- exists_directory(Directory) -> true; make_directory(Directory).
 
+saveAllProjectData():-
+    saveProjectsToFile,
+    saveProjectUsers,
+    saveRequests.
 
 saveProjectsToFile():-
     createDirectory('data'),
@@ -24,37 +24,82 @@ saveProjectsToFile():-
     writeln(Stream, Id), writeln(Stream, Name), writeln(Stream, Desc), writeln(Stream, Owner))),
     close(Stream).
 
+saveProjectUsers():-
+    createDirectory('data'),
+    open('data/project_users.dat', write, Stream),   
+    forall(projectUser(Id, User),(
+    writeln(Stream, Id), writeln(Stream, User))),
+    close(Stream).
+
+saveRequests():-
+    createDirectory('data'),
+    open('data/requests.dat', write, Stream),   
+    forall(request(Id, User),(
+    writeln(Stream, Id), writeln(Stream, User))),
+    close(Stream).
+
+loadAllProjectData():-
+    readProjectsFromFile,
+    readProjectUsersFromFile,
+    readRequestsFromFile.
+
 readProjectsFromFile():-
     exists_file('data/projects.dat') ->(
     open('data/projects.dat', read, Stream),
     % generateInputList(Stream, StringList),
-    readProject(Stream, StringList),
+    readProject(Stream),
     close(Stream),
     nextProjectId(MaxId),
     NewMaxId is MaxId + 1,
     defineNextProjectId(NewMaxId));
     true.
 
-defineNextProjectId(NewId):-
-    nextProjectId(Id),
-    (NewId > Id,
-    retract(nextProjectId(_)),
-    assertz(nextProjectId(NewId))) ; true.
+readProjectUsersFromFile():-
+    exists_file('data/project_users.dat') ->(
+    open('data/project_users.dat', read, Stream),
+    readProjectUser(Stream),
+    close(Stream));
+    true.
 
-readProject(Stream, []) :- at_end_of_stream(Stream).
-readProject(Stream, [NumberId|List]):-
+readRequestsFromFile():-
+    exists_file('data/requests.dat') ->(
+    open('data/requests.dat', read, Stream),
+    readRequest(Stream),
+    close(Stream));
+    true.
+
+readProject(Stream) :- at_end_of_stream(Stream).
+readProject(Stream):-
     readLine(Stream, Id),
     readLine(Stream, Name),
     readLine(Stream, Desc),
     readLine(Stream, Owner),
     string_to_atom(Id, AtomId),
     atom_number(AtomId, NumberId),
-    % atom_chars(AtomOwner, Owner),
     string_to_atom(StringOwner, Owner),
     assertz(project(NumberId, Name, Desc, StringOwner)),
     defineNextProjectId(NumberId),
-    readProject(Stream, List).
+    readProject(Stream).
 
+readProjectUser(Stream) :- at_end_of_stream(Stream).
+readProjectUser(Stream):-
+    readLine(Stream, Id),
+    readLine(Stream, User),
+    string_to_atom(Id, AtomId),
+    atom_number(AtomId, NumberId),
+    string_to_atom(StringUser, User),
+    assertz(projectUser(NumberId, StringUser)),
+    readProjectUser(Stream).
+
+readRequest(Stream):- at_end_of_stream(Stream).
+readRequest(Stream):-
+    readLine(Stream, Id),
+    readLine(Stream, User),
+    string_to_atom(Id, AtomId),
+    atom_number(AtomId, NumberId),
+    string_to_atom(StringUser, User),
+    assertz(request(NumberId, StringUser)),
+    readRequest(Stream).
 
 readLine(Stream, Line):-
     get0(Stream,Char),
@@ -67,6 +112,12 @@ checkCharAndReadRest(end_of_file,[],_) :- !.
 checkCharAndReadRest(Char,[Char|Chars],Stream) :-
     get0(Stream,NextChar),
     checkCharAndReadRest(NextChar,Chars,Stream).
+
+defineNextProjectId(NewId):-
+    nextProjectId(Id),
+    (NewId > Id,
+    retract(nextProjectId(_)),
+    assertz(nextProjectId(NewId))) ; true.
 
 createProject(LoggedUser):-
     constants:header(Header),
@@ -81,8 +132,8 @@ createProject(LoggedUser):-
     assertz(project(Id, Name, Description, LoggedUser)),
     NewId is Id + 1,
     defineNextProjectId(NewId),
-    saveProjectsToFile,
-    writeln("Projeto criado com sucesso!").
+    writeln("Projeto criado com sucesso!"),
+    saveAllProjectData.
 
 listProject():-
     constants:header(Header),
@@ -96,7 +147,10 @@ listProject():-
     write(Name), write("  -  "), 
     writeln(Owner), fail; true.
 
-requestAccess(ProjectId, User):- project(ProjectId, _, _, Owner), User == Owner -> writeln("Você é o dono deste projeto!"); assertz(requests(ProjectId, User)).
+requestAccess(ProjectId, User):- project(ProjectId, _, _, Owner), User == Owner -> writeln("Você é o dono deste projeto!");(
+    ((projectUser(ProjectId, User), writeln("Você já possui permissão de acesso à este projeto!"));
+    (request(ProjectId, User), writeln("Você já solicitou acesso à este projeto, aguarde a avaliação."));
+    assertz(request(ProjectId, User)), writeln("Acesso solicitado com sucesso."), saveAllProjectData)).
 
 printProjectOwnerMenu():-
     tty_clear,
@@ -142,7 +196,8 @@ editProjectName(Id):-
     read_line_to_string(user_input, NewName),
     retract(project(Id, Name, Desc, Owner)),
     assertz(project(Id, NewName, Desc, Owner)),
-    writeln("Projeto editado com sucesso!").
+    writeln("Projeto editado com sucesso!"),
+    saveAllProjectData.
 
 editProjectDesc(Id):-
     tty_clear,
@@ -157,7 +212,21 @@ editProjectDesc(Id):-
     read_line_to_string(user_input, NewDesc),
     retract(project(Id, Name, Desc, Owner)),
     assertz(project(Id, Name, NewDesc, Owner)),
-    writeln("Projeto editado com sucesso!").
+    writeln("Projeto editado com sucesso!"),
+    saveAllProjectData.
+
+verifyPermissions(Id):-
+    (request(Id, _),
+    foreach(request(Id, User), ((projectUser(Id, User), writeln("O usuário já possui permissão no projeto."));(
+        write("Deseja dar permissão de acesso a "),
+        write(User),
+        writeln(" ao projeto atual? (S/N)"),
+        read_line_to_string(user_input, Response),
+        (Response == "S"; Response == "s") -> (
+            assertz(projectUser(Id, User)),
+            write("Solicitação de "), write(User), writeln(" aprovada."), saveAllProjectData
+            ); write("Solicitação de "), write(User), writeln(" negada.")
+        )))); writeln("Não existem solicitações para o projeto.").
 
 removeProject(Id):-
     tty_clear,
@@ -169,16 +238,16 @@ removeProject(Id):-
     read_line_to_string(user_input, Response),
     (Response == "S"; Response == "s") -> (
         retract(project(Id, _, _, _)),
-        (retract(projectUsers(Id, _)); true),
-        (retract(requests(Id, _)); true),
-        writeln("Projeto removido com sucesso!")
+        (retract(projectUser(Id, _)); true),
+        (retract(request(Id, _)); true),
+        writeln("Projeto removido com sucesso!"), saveAllProjectData
         ); writeln("Projeto não removido.").
 
 selectOptionOwner(Option, Id):-
     (Option == 1 -> projectInfo(Id);
     Option == 2 -> editProjectName(Id);
     Option == 3 -> editProjectDesc(Id);
-    Option == 4 -> writeln("VERIFICAR PERMISSÕES");
+    Option == 4 -> verifyPermissions(Id);
     Option == 5 -> removeProject(Id);
     Option == 6 -> writeln("GERENCIAR SUITES");
     writeln("Opção inválida!")), (Option == 5;
@@ -202,6 +271,7 @@ userProjectMenu(Id):-
     Option \== 2, selectOptionUser(Option, Id), userProjectMenu(Id).
 
 projectMenu(LoggedUser, Id):-
-    project(Id, _, _, LoggedUser) -> ownerProjectMenu(Id); projectUsers(Id, LoggedUser), userProjectMenu(Id); true.
+    (project(Id, _, _, LoggedUser), ownerProjectMenu(Id)); (projectUser(Id, LoggedUser), userProjectMenu(Id));
+    (accessPermission(LoggedUser, Id), writeln("Você não possui permissão para acessar este projeto.")).
 
-
+accessPermission(LoggedUser, Id):- project(Id, _, _, LoggedUser), projectUser(Id, LoggedUser).
