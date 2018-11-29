@@ -8,8 +8,7 @@ readNumber(Number):- read_line_to_codes(user_input, Codes), string_to_atom(Codes
 
 createProject(LoggedUser):-
     tty_clear,
-    project:createProject(LoggedUser),
-    writeln("Projeto criado com sucesso!").
+    project:createProject(LoggedUser).
 
 listProject():-
     tty_clear,

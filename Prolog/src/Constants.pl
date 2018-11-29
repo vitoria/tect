@@ -2,6 +2,7 @@
 
 
 /*Header*/
+
 header("#-----------------# TecT #-----------------#").
 main_header("#-------------# MENU PRINCIPAL #-----------#").
 my_user_header("#--------------# MEU USUARIO #-------------#").
@@ -23,7 +24,9 @@ create_project_header("#--------# CRIAR PROJETO DE TESTES #-------#").
 list_project_header("#-------# LISTAR PROJETOS DE TESTES #------#").
 request_access_header("#------# SOLICITAR ACESSO À PROJETO #------#").
 manage_project_header("#-----------# GERENCIAR PROJETO #----------#").
-list_project_table_header("ID  -  Nome  -  Dono").
+edit_project_header("#-------------# EDITAR PROJETO #-----------#").
+project_detais_header("#------------# DETALHES PROJETO #----------#").
+remove_project_header("#------------# REMOVER PROJETO #-----------#").
 
 /* Menus*/
 my_user_menu("(1) Ver perfil\n(2) Alterar senha\n(3) Voltar").
