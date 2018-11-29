@@ -2,8 +2,16 @@
 
 :- use_module(constants).
 :- use_module(register).
+:- use_module(login).
 
-chooseProceedure(1):- writeln("Login").
+handleAfterLogin(true, UserName) :-
+    tty_clear,
+    write(UserName),
+    writeln(", seja bem-vindo(a)!"),
+    systemPause.
+handleAfterLogin(false, _) :- authenticationMenu.
+
+chooseProceedure(1):- login:login(Logged, UserName), handleAfterLogin(Logged, UserName).
 chooseProceedure(2):- register:register, authenticationMenu.
 chooseProceedure(3):- halt.
 chooseProceedure(_):-
@@ -14,8 +22,10 @@ chooseProceedure(_):-
 
 showAuthenticationMenu():-
     constants:header(Header),
+    constants:authentication_header(AuthenticationHeader),
     constants:login_menu(Menu),
     writeln(Header),
+    writeln(AuthenticationHeader),
     writeln(Menu).
     
 readOption(Option):-

@@ -6,6 +6,7 @@ header("#-----------------# TecT #-----------------#").
 main_header("#-------------# MENU PRINCIPAL #-----------#").
 my_user_header("#--------------# MEU USUARIO #-------------#").
 login_header("#------------# LOGIN DE USUARIO #----------#").
+authentication_header("#-------------# AUTENTICAÇÃO #-------------#\n").
 sign_up_header("#----------# CADASTRO DE USUARIO #---------#").
 create_suite_header("#----------# CRIAR SUITE DE TEST #---------#").
 suite_menu_header("#------------# SUITE TEST MENU #-----------#").
@@ -124,7 +125,7 @@ password_incorrect("Senha incorreta!").
 suite_not_found("Suite nao encontrada").
 suite_edited("Suite editada com sucesso!").
 creation_success("Criado com sucesso! o/").
-choose_option("Informe a opção desejada: ").
+choose_option("\nInforme a opção desejada: ").
 repeat_new_password("Repita a senha nova: ").
 suite_deleted("Suite deletada com sucesso!").
 passwords_not_match("As senhas não conferem!").
