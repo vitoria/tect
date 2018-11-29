@@ -134,3 +134,4 @@ password_should_contains_min_characters("A senha deve conter pelo menos 4 caract
 user_already_registered("Usuário já cadastrado! Por favor, informe um usuário diferente.").
 user_registered("Usuário cadastrado com sucesso!").
 success_login("Login efetuado com sucesso!").
+string_not_empty(" não pode ser vazio.").

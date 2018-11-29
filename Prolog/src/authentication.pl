@@ -1,9 +1,10 @@
 :- module(authentication, [authenticationMenu/0]).
 
 :- use_module(constants).
+:- use_module(register).
 
 chooseProceedure(1):- writeln("Login").
-chooseProceedure(2):- writeln("Cadastro").
+chooseProceedure(2):- register:register, authenticationMenu.
 chooseProceedure(3):- halt.
 chooseProceedure(_):-
     constants:invalid_option(Msg),
