@@ -9,6 +9,8 @@ isOptionValidSuit("4").
 isOptionValidSuit("5").
 isOptionValidSuit("6").
 isOptionValidSuit("7").
+searchSuiteOption(1).
+searchSuiteOption(2).
 
 /*Suite (id, nome, descrição, idProjeto)  */
 :- dynamic(suite/4).
@@ -26,10 +28,6 @@ readInt(Number) :-
 
 factToList(Projeto, X):- findall(I, suite(I, _, _, Projeto), X).
 
-
-verify(Projeto):- factToList(Projeto, X),
-                    writeln(X).
-
 headerCreate:- 
                     tty_clear,
                     constants:header(H),
@@ -38,16 +36,22 @@ headerCreate:-
                     writeln(C),
                     writeln(" ").
 
-
-createSuite(ID, Nome, Descricao, Projeto):- 
-                    headerCreate,
+verifyId(Projeto, Id):-
                     writeln("Id:"),    
-                    readInt(ID), 
+                    readInt(ReadId),
+                    ((suite(ReadId, _, _, Projeto), 
+                    writeln("Id já cadastrado, por favor informe outro."),
+                    verifyId(Projeto, Id));
+                    Id = ReadId).
+
+createSuite(Id, Nome, Descricao, Projeto):- 
+                    headerCreate,
+                    verifyId(Projeto, Id), 
                     writeln("Nome: "),
                     read_line_to_string(user_input,Nome), 
                     writeln("Descrição: "),
                     read_line_to_string(user_input, Descricao), 
-                    assertz(suite(ID, Nome, Descricao, Projeto)),
+                    assertz(suite(Id, Nome, Descricao, Projeto)),
                     suiteMenu(Projeto).
 
 showSuiteMenu:- tty_clear,
@@ -82,8 +86,6 @@ listSuite(Projeto):- (listSuiteAux(Projeto); true),
                     read_line_to_string(user_input, _),
                     suiteMenu(Projeto).
                     
-                    
-
 searchSuite(Projeto):- tty_clear,
                     constants:header(H),
                     writeln(H),
@@ -91,8 +93,14 @@ searchSuite(Projeto):- tty_clear,
                     writeln(X),
                     writeln("Selecione o parâmetro de pesquisa:\n(1) ID\n(2) Nome da Suite\n"),
                     readInt(Option),
+                    (searchSuiteOption(Option),
                     ((Option =:= 1 -> (searchSuiteId(Projeto)));
-                    (Option =:= 2 -> (searchSuiteNome(Projeto)))).
+                    (Option =:= 2 -> (searchSuiteNome(Projeto)))));
+                    (constants:invalid_option(X),
+                    writeln(X),
+                    writeln("Pressione enter para voltar para o Menu de Suite..."),
+                    read_line_to_string(user_input, _),
+                    suiteMenu(Projeto)).
 
 showSuite(Id, Nome, Descricao, Projeto):-
                     tty_clear,
@@ -111,7 +119,7 @@ searchSuiteId(Projeto):-
                     readInt(Id),
                     ((suite(Id, Nome, Descricao, Projeto),
                     showSuite(Id, Nome, Descricao, Projeto), !);
-                    tty_clear,
+                    writeln(" "),
                     writeln("A suite com o ID informado não foi encontrada.")),
                     writeln(" "),
                     writeln("Pressione enter para continuar..."),
@@ -123,7 +131,7 @@ searchSuiteNome(Projeto):-
                     read_line_to_string(user_input, Nome),
                     ((suite(Id, Nome, Descricao, Projeto),
                     showSuite(Id, Nome, Descricao, Projeto), !);
-                    tty_clear,
+                    writeln(" "), 
                     writeln("A suite com o nome informado não foi encontrada.")),
                     writeln(" "),
                     writeln("Pressione enter para continuar..."),
@@ -136,20 +144,25 @@ editSuite(Projeto):-  tty_clear,
                     constants:suite_list_header(L),
                     writeln(L),
                     writeln("Informe o ID da Suite:"),
-                    read(Id),
-                    suite(Id, Nome, Descricao, Projeto),
+                    readInt(Id),
+                    ((suite(Id, Nome, Descricao, Projeto),
                     tty_clear,
                     constants:edit_suite_header(X),
                     writeln(X),
                     writeln("Dados atuais da Suite:"), showSuite(Id, Nome, Descricao, Projeto),
                     writeln(" "),
                     writeln("Informe o novo Nome da Suite: "),
-                    read(NewNome),
+                    read_line_to_string(user_input, NewNome),
                     writeln("Informe a nova descricão da Suite: "),
-                    read(NewDescricao),
+                    read_line_to_string(user_input, NewDescricao),
                     retract(suite(Id, Nome, Descricao, Projeto)),
                     assertz(suite(Id, NewNome, NewDescricao, Projeto)),
-                    writeln("Suite editada com sucesso.").
+                    writeln("Suite editada com sucesso."));
+                    (writeln("A suite com o id informado não foi encontrada."))),
+                    writeln(" "),
+                    writeln("Pressione enter para continuar..."),
+                    read_line_to_string(user_input, _),
+                    suiteMenu(Projeto).
                 
 deleteSuite(Projeto):- tty_clear,
                     constants:header(H),
@@ -157,8 +170,15 @@ deleteSuite(Projeto):- tty_clear,
                     constants:delete_suite_header(L),
                     writeln(L),
                     writeln("Informe o ID da Suite a ser deletada:"),
-                    read(Id),
-                    retract(suite(Id, _, _, Projeto)).
+                    readInt(Id),
+                    ((retract(suite(Id, _, _, Projeto)),
+                    writeln("Suite deletada com sucesso."),
+                    writeln(" "));
+                    (writeln("Suite não encontrada."),
+                    writeln(" "))),
+                    writeln("Pressione enter para continuar..."),
+                    read_line_to_string(user_input, _),
+                    suiteMenu(Projeto).
 
 caseTestMenu(Projeto):- tty_clear,
                     constants:header(H),
@@ -166,7 +186,8 @@ caseTestMenu(Projeto):- tty_clear,
                     constants:manage_test_suite(L),
                     writeln(L),
                     writeln("Informe o ID da suite a ser gerenciada:"),
-                    read(SuiteId),
+                    readInt(SuiteId),
+                    writeln(" "),
                     write("O id da suite a ser chamada é: "), write(SuiteId),
                     write(" e o id do projeto é "), writeln(Projeto),
                     writeln("CHAMAR O MÉTODO AQUI DO MENU DO CASO DE TESTE").
@@ -187,6 +208,16 @@ suiteMenu(Projeto):-
                     showSuiteMenu,
                     writeln("Informe a opção desejada: "),
                     read_line_to_string(user_input, Option),
-                    isOptionValidSuit(Option),
-                    choose_action(Option, Projeto).
+                    (isOptionValidSuit(Option),
+                    choose_action(Option, Projeto));
+                    (tty_clear,
+                    constants:header(H),
+                    writeln(H),
+                    constants:invalid_option(X),
+                    writeln(" "),
+                    writeln(X),
+                    writeln(" "),
+                    writeln("Pressione enter para voltar para o Menu de Suite..."),
+                    read_line_to_string(user_input, _),
+                    suiteMenu(Projeto)).
 
