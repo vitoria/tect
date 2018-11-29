@@ -15,12 +15,6 @@ searchSuiteOption(2).
 /*Suite (id, nome, descrição, idProjeto)  */
 :- dynamic(suite/4).
 
-suite(1, "nome1", "desc1", 1).
-suite(2, "nome2", "desc2", 1).
-suite(3, "nome3", "desc3", 2).
-suite(4, "nome4", "desc4", 2).
-suite(5, "nome5", "desc5", 2).
-
 readInt(Number) :-
                     read_line_to_codes(user_input, Codes),
                     string_to_atom(Codes, Atom),
@@ -52,6 +46,11 @@ createSuite(Id, Nome, Descricao, Projeto):-
                     writeln("Descrição: "),
                     read_line_to_string(user_input, Descricao), 
                     assertz(suite(Id, Nome, Descricao, Projeto)),
+                    saveTestSuite,
+                    writeln("Suite criada com sucesso"),
+                    writeln(" "),
+                    writeln("Pressione enter para continuar..."),
+                    read_line_to_string(user_input, _),
                     suiteMenu(Projeto).
 
 showSuiteMenu:- tty_clear,
@@ -157,6 +156,7 @@ editSuite(Projeto):-  tty_clear,
                     read_line_to_string(user_input, NewDescricao),
                     retract(suite(Id, Nome, Descricao, Projeto)),
                     assertz(suite(Id, NewNome, NewDescricao, Projeto)),
+                    saveTestSuite,
                     writeln("Suite editada com sucesso."));
                     (writeln("A suite com o id informado não foi encontrada."))),
                     writeln(" "),
@@ -173,6 +173,7 @@ deleteSuite(Projeto):- tty_clear,
                     readInt(Id),
                     ((retract(suite(Id, _, _, Projeto)),
                     writeln("Suite deletada com sucesso."),
+                    saveTestSuite,
                     writeln(" "));
                     (writeln("Suite não encontrada."),
                     writeln(" "))),
@@ -206,6 +207,7 @@ choose_action(Option, Projeto):-
 
 suiteMenu(Projeto):-
                     showSuiteMenu,
+                    readSuiteFromFile,
                     writeln("Informe a opção desejada: "),
                     read_line_to_string(user_input, Option),
                     (isOptionValidSuit(Option),
@@ -221,3 +223,40 @@ suiteMenu(Projeto):-
                     read_line_to_string(user_input, _),
                     suiteMenu(Projeto)).
 
+createDirectory(Directory):- exists_directory(Directory) -> true; make_directory(Directory).
+
+saveTestSuite():- createDirectory('data'),
+                    open('data/test_suite.dat', write, Stream),
+                    forall(suite(Id, Nome, Descricao, Projeto), 
+                    (writeln(Stream, Id),writeln(Stream, Nome),writeln(Stream, Descricao),writeln(Stream, Projeto))),
+                    close(Stream).
+
+readSuiteFromFile():-
+                    exists_file('data/test_suite.dat') ->(
+                    open('data/test_suite.dat', read, Stream),
+                    readSuite(Stream),
+                    close(Stream));
+                    true.
+
+readSuite(Stream):- at_end_of_stream(Stream).
+readSuite(Stream):- readLine(Stream, Id),
+                    readLine(Strem, Nome),
+                    readLine(Strem, Descricao),
+                    readLine(Strem, Projeto),
+                    string_to_atom(Id, AtomId),
+                    atom_number(AtomId, NumberId),
+                    string_to_atom(Projeto, AtomProjeto),
+                    atom_number(AtomProjeto, NumberProjeto),
+                    assertz(suite(NumberId, Nome, Descricao, NumberProjeto)),
+                    readSuite(Stream).
+readLine(Stream, Line):-
+                    get0(Stream,Char),
+                    checkCharAndReadRest(Char,Chars,Stream),
+                    atom_chars(Line,Chars).
+                
+checkCharAndReadRest(10,[],_) :- !.  % Return
+checkCharAndReadRest(-1,[],_) :- !.  % End of Stream
+checkCharAndReadRest(end_of_file,[],_) :- !.
+checkCharAndReadRest(Char,[Char|Chars],Stream) :-
+                    get0(Stream,NextChar),
+                    checkCharAndReadRest(NextChar,Chars,Stream).
