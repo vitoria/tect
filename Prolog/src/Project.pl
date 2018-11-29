@@ -29,27 +29,11 @@ readProjectsFromFile():-
     open('data/projects.dat', read, Stream),
     % generateInputList(Stream, StringList),
     readProject(Stream, StringList),
-    close(Stream));
+    close(Stream),
+    nextProjectId(MaxId),
+    NewMaxId is MaxId + 1,
+    defineNextProjectId(NewMaxId));
     true.
-
-generateInputList(-1, []).
-generateInputList(end_of_file, []).
-generateInputList(Stream, [Line|List]):-
-    read_line_to_string(Stream, Line), 
-    at_end_of_stream(Stream) -> true;
-    generateInputList(Stream, List).
-
-printList([]).
-printList([H|List]):-
-    writeln(H),
-    printList(List).
-
-assertProjects([Id, Name, Desc, Owner|StringList]):-
-    assertz(project(Id, Name, Desc, Owner)),
-    defineNextProjectId(Id),
-    assertProjects(StringList).
-assertProjects([]).
-assertProjects([_|[]]).
 
 defineNextProjectId(NewId):-
     nextProjectId(Id),
@@ -58,12 +42,17 @@ defineNextProjectId(NewId):-
     assertz(nextProjectId(NewId))) ; true.
 
 readProject(Stream, []) :- at_end_of_stream(Stream).
-readProject(Stream, [Id|[Name|[Desc|[Owner|List]]]]):-
+readProject(Stream, [NumberId|List]):-
     readLine(Stream, Id),
     readLine(Stream, Name),
     readLine(Stream, Desc),
     readLine(Stream, Owner),
-    assertz(project(Id, Name, Desc, Owner)),
+    string_to_atom(Id, AtomId),
+    atom_number(AtomId, NumberId),
+    % atom_chars(AtomOwner, Owner),
+    string_to_atom(StringOwner, Owner),
+    assertz(project(NumberId, Name, Desc, StringOwner)),
+    defineNextProjectId(NumberId),
     readProject(Stream, List).
 
 
@@ -104,7 +93,7 @@ listProject():-
     writeln(ListProjectsTableHeader),
     project(Id, Name, _, Owner),
     write(Id), write("  -  "),
-    write(Name), write("  -  "),
+    write(Name), write("  -  "), 
     writeln(Owner), fail; true.
 
 requestAccess(ProjectId, User):- project(ProjectId, _, _, Owner), User == Owner -> writeln("Você é o dono deste projeto!"); assertz(requests(ProjectId, User)).
