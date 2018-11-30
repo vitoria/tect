@@ -1,4 +1,4 @@
-:- module(testSuite, [suiteMenu/1]).
+:- module(testSuite, []).
 
 :- use_module("Constants").
 
@@ -46,8 +46,8 @@ createSuite(Id, Nome, Descricao, Projeto):-
                     writeln("Descrição: "),
                     read_line_to_string(user_input, Descricao), 
                     assertz(suite(Id, Nome, Descricao, Projeto)),
-                    saveTestSuite,
                     writeln("Suite criada com sucesso"),
+                    saveTestSuite,
                     writeln(" "),
                     writeln("Pressione enter para continuar..."),
                     read_line_to_string(user_input, _),
@@ -156,6 +156,7 @@ editSuite(Projeto):-  tty_clear,
                     read_line_to_string(user_input, NewDescricao),
                     retract(suite(Id, Nome, Descricao, Projeto)),
                     assertz(suite(Id, NewNome, NewDescricao, Projeto)),
+                    saveTestSuite,
                     writeln("Suite editada com sucesso."));
                     (writeln("A suite com o id informado não foi encontrada."))),
                     writeln(" "),
@@ -171,6 +172,7 @@ deleteSuite(Projeto):- tty_clear,
                     writeln("Informe o ID da Suite a ser deletada:"),
                     readInt(Id),
                     ((retract(suite(Id, _, _, Projeto)),
+                    saveTestSuite,
                     writeln("Suite deletada com sucesso."),
                     writeln(" "));
                     (writeln("Suite não encontrada."),
@@ -203,9 +205,13 @@ choose_action(Option, Projeto):-
                     (Option =:= "7" -> (goBack)).
     
 
+mainSuiteMenu(Projeto):-
+                    readSuiteFromFile,
+                    suiteMenu(Projeto).
+
+
 suiteMenu(Projeto):-
                     showSuiteMenu,
-                    readSuiteFromFile,
                     writeln("Informe a opção desejada: "),
                     read_line_to_string(user_input, Option),
                     (isOptionValidSuit(Option),
