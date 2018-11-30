@@ -1,5 +1,6 @@
 :- module(mainSystem, [systemMenu/1]).
 
+:- use_module(authentication).
 :- use_module(constants).
 :- use_module(project).
 :- use_module(utils).
@@ -50,7 +51,7 @@ option(3, LoggedUser):- requestAccess(LoggedUser).
 option(4, _):- listProject().
 option(5, LoggedUser):- manageProject(LoggedUser).
 option(6, LoggedUser):- write("MEU USUARIO: "), writeln(LoggedUser), writeln("GERAR RELATORIOS").
-option(7, LoggedUser):- write("MEU USUARIO: "), writeln(LoggedUser), writeln("LOGOUT").
+option(7, _):- authentication:authenticationMenu.
 option(8, _):- halt.
 option(_,_):- writeln("Opção inválida!").
 
