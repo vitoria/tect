@@ -40,10 +40,10 @@ handleAfterLogin(true, UserName) :-
     writeln(" Should go to the main menu").
 handleAfterLogin(false, _) :- authenticationMenu.
 
-chooseProceedure(1):- login:login(Logged, UserName), handleAfterLogin(Logged, UserName).
-chooseProceedure(2):- register:register, authenticationMenu.
-chooseProceedure(3):- halt.
-chooseProceedure(_):-
+chooseProcedure(1):- login:login(Logged, UserName), handleAfterLogin(Logged, UserName).
+chooseProcedure(2):- register:register, authenticationMenu.
+chooseProcedure(3):- halt.
+chooseProcedure(_):-
     constants:invalid_option(Msg),
     utils:showPausedMsg(Msg),
     authenticationMenu.
@@ -57,7 +57,7 @@ showAuthenticationMenu():-
 authenticationMenu():-
     showAuthenticationMenu,
     utils:readOption(Option),
-    chooseProceedure(Option).
+    chooseProcedure(Option).
 
 initialization() :- loadUsers, authenticationMenu.
     

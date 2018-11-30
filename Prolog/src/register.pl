@@ -30,7 +30,7 @@ createUser(_, _, _, _) :-
     writeln(Msg),
     utils:systemPause.
 
-proceedure() :-
+procedure() :-
     constants:name_const(NameMsg),
     constants:username_const(UsernameMsg),
     constants:password_const(PasswordMsg),
@@ -48,4 +48,4 @@ proceedure() :-
 register() :-
     constants:sign_up_header(RegisterHeader),
     utils:printHeaderAndSubtitle(RegisterHeader),
-    proceedure. 
+    procedure. 
