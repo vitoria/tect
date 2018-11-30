@@ -48,11 +48,11 @@ selectOption(Option, LoggedUser):-
     Option == 5 -> writeln("GERENCIAR PROJETO"), manageProject(LoggedUser);
     Option == 6 -> writeln("GERAR RELATORIOS");
     Option == 7 -> writeln("LOGOUT");
-    writeln("Opção inválida!")),
+    writeln("Opção inválida!")), project:saveAllProjectData,
     writeln("Pressione qualquer tecla para continuar..."),
     get_char(_).
 
 systemMenu(LoggedUser):-
     printSystemMenu,
     readNumber(Option),
-    Option \== 8 -> selectOption(Option, LoggedUser), systemMenu(LoggedUser); writeln("Encerrando programa...").
+    Option =\= 8 -> selectOption(Option, LoggedUser), systemMenu(LoggedUser); writeln("Encerrando programa...").

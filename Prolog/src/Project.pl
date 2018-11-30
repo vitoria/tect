@@ -46,7 +46,6 @@ loadAllProjectData():-
 readProjectsFromFile():-
     exists_file('data/projects.dat') ->(
     open('data/projects.dat', read, Stream),
-    % generateInputList(Stream, StringList),
     readProject(Stream),
     close(Stream),
     nextProjectId(MaxId),
@@ -76,8 +75,10 @@ readProject(Stream):-
     readLine(Stream, Owner),
     string_to_atom(Id, AtomId),
     atom_number(AtomId, NumberId),
+    string_to_atom(StringName, Name),
+    string_to_atom(StringDesc, Desc),
     string_to_atom(StringOwner, Owner),
-    assertz(project(NumberId, Name, Desc, StringOwner)),
+    assertz(project(NumberId, StringName, StringDesc, StringOwner)),
     defineNextProjectId(NumberId),
     readProject(Stream).
 
@@ -132,8 +133,7 @@ createProject(LoggedUser):-
     assertz(project(Id, Name, Description, LoggedUser)),
     NewId is Id + 1,
     defineNextProjectId(NewId),
-    writeln("Projeto criado com sucesso!"),
-    saveAllProjectData.
+    writeln("Projeto criado com sucesso!").
 
 listProject():-
     constants:header(Header),
@@ -150,7 +150,7 @@ listProject():-
 requestAccess(ProjectId, User):- project(ProjectId, _, _, Owner), User == Owner -> writeln("Você é o dono deste projeto!");(
     ((projectUser(ProjectId, User), writeln("Você já possui permissão de acesso à este projeto!"));
     (request(ProjectId, User), writeln("Você já solicitou acesso à este projeto, aguarde a avaliação."));
-    assertz(request(ProjectId, User)), writeln("Acesso solicitado com sucesso."), saveAllProjectData)).
+    assertz(request(ProjectId, User)), writeln("Acesso solicitado com sucesso."))).
 
 printProjectOwnerMenu():-
     tty_clear,
@@ -196,8 +196,7 @@ editProjectName(Id):-
     read_line_to_string(user_input, NewName),
     retract(project(Id, Name, Desc, Owner)),
     assertz(project(Id, NewName, Desc, Owner)),
-    writeln("Projeto editado com sucesso!"),
-    saveAllProjectData.
+    writeln("Projeto editado com sucesso!").
 
 editProjectDesc(Id):-
     tty_clear,
@@ -212,8 +211,7 @@ editProjectDesc(Id):-
     read_line_to_string(user_input, NewDesc),
     retract(project(Id, Name, Desc, Owner)),
     assertz(project(Id, Name, NewDesc, Owner)),
-    writeln("Projeto editado com sucesso!"),
-    saveAllProjectData.
+    writeln("Projeto editado com sucesso!").
 
 verifyPermissions(Id):-
     (request(Id, _),
@@ -223,8 +221,8 @@ verifyPermissions(Id):-
         writeln(" ao projeto atual? (S/N)"),
         read_line_to_string(user_input, Response),
         (Response == "S"; Response == "s") -> (
-            assertz(projectUser(Id, User)),
-            write("Solicitação de "), write(User), writeln(" aprovada."), saveAllProjectData
+            assertz(projectUser(Id, User)), retract(request(Id, User)),
+            write("Solicitação de "), write(User), writeln(" aprovada.")
             ); write("Solicitação de "), write(User), writeln(" negada.")
         )))); writeln("Não existem solicitações para o projeto.").
 
@@ -240,7 +238,7 @@ removeProject(Id):-
         retract(project(Id, _, _, _)),
         (retract(projectUser(Id, _)); true),
         (retract(request(Id, _)); true),
-        writeln("Projeto removido com sucesso!"), saveAllProjectData
+        writeln("Projeto removido com sucesso!")
         ); writeln("Projeto não removido.").
 
 selectOptionOwner(Option, Id):-
@@ -250,7 +248,7 @@ selectOptionOwner(Option, Id):-
     Option == 4 -> verifyPermissions(Id);
     Option == 5 -> removeProject(Id);
     Option == 6 -> writeln("GERENCIAR SUITES");
-    writeln("Opção inválida!")), (Option == 5;
+    writeln("Opção inválida!")), saveAllProjectData, (Option == 5; Option == 7;
     writeln("Pressione qualquer tecla para continuar..."),
     get_char(_)).
 
@@ -263,15 +261,15 @@ selectOptionUser(Option, Id):-
 ownerProjectMenu(Id):-
     printProjectOwnerMenu,
     readNumber(Option),
-    Option \== 7, selectOptionOwner(Option, Id), (Option == 5; ownerProjectMenu(Id)).
+    ((Option =\= 7, selectOptionOwner(Option, Id), (Option == 5; ownerProjectMenu(Id))); true).
 
 userProjectMenu(Id):-
     printProjectUserMenu,
     readNumber(Option),
-    Option \== 2, selectOptionUser(Option, Id), userProjectMenu(Id).
+    ((Option =\= 2, selectOptionUser(Option, Id), userProjectMenu(Id)); true).
 
 projectMenu(LoggedUser, Id):-
     (project(Id, _, _, LoggedUser), ownerProjectMenu(Id)); (projectUser(Id, LoggedUser), userProjectMenu(Id));
-    (accessPermission(LoggedUser, Id), writeln("Você não possui permissão para acessar este projeto.")).
+    (accessPermission(LoggedUser, Id); writeln("Você não possui permissão para acessar este projeto.")).
 
 accessPermission(LoggedUser, Id):- project(Id, _, _, LoggedUser), projectUser(Id, LoggedUser).
