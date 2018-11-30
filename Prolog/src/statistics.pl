@@ -35,11 +35,12 @@ getProjectResume([]).
 getProjectResume([[Id, Name]|ProjectsTouple]):- 
                 getSuitesList(Id, Suites),    
                 calculateMediumStatisticsProject(Id,Suites, Media),
-                write(Id), write(" - "), write(Name), write(" - "), writeln(Media),
+                write(Id), write(" - "), write(Name), write(" - "), write(Media), writeln("%"),
                 getProjectResume(ProjectsTouple).
 
 getProjectsStatistics(ProjectsTouple) :-
-    constants:statistics_header(X), write(X),nl,
+    constants:statistics_header(X),
+    utils:printHeaderAndSubtitle(X),
     write(" ID - NOME DO PROJETO - MÉDIA DAS ESTATÍSTICAS DO PROJETO"),nl,
     getProjectResume(ProjectsTouple).
 

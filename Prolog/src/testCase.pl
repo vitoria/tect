@@ -125,7 +125,8 @@ createTestCase(ProjectId, SuiteId):-
     utils:printHeaderAndSubtitle(CaseHeader),
     getNumberOfTestCases(NumberOfCases),
     NewNumberOfCases is NumberOfCases + 1,
-    createCase(ProjectId, SuiteId, NewNumberOfCases).
+    createCase(ProjectId, SuiteId, NewNumberOfCases),
+    saveAllTestCasesData.
 
 getNumberOfTestCases(Count) :- 
     aggregate_all(count, testCase(_, _, _, _, _, _, _), Count).
@@ -210,7 +211,8 @@ overwriteCase(ProjectId, SuiteId, CaseId):-
     createCase(ProjectId, SuiteId, CaseId).
 
 menuEditCase(ProjectId, SuiteId, CaseId) :-
-    writeln(CaseHeader),
+    constants:test_case_header(CaseHeader),
+    utils:printHeaderAndSubtitle(CaseHeader),
     writeln('(1) Editar Dados do Caso de Teste'),
     writeln('(2) Editar Status do Caso de Teste'),
     writeln('(3) Voltar'),
@@ -232,7 +234,7 @@ menuEditCase(ProjectId, SuiteId, CaseId) :-
 
 menuChangeStatus(ProjectId, SuiteId, CaseId) :-
     constants:test_case_header(CaseHeader),
-    writeln(CaseHeader),
+    printHeaderAndSubtitle(CaseHeader),
     writeln('- Editando Caso de Testes'),
     writeln('Estado atual'),
     testCase(ProjectId, SuiteId, CaseId, Name, Goal, OldStatus, Preconditions),
