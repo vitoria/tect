@@ -4,7 +4,7 @@
 /*Header*/
 
 header("#-----------------# TecT #-----------------#").
-main_header("#-------------# MENU PRINCIPAL #-----------#").
+main_header("#-------------# MENU PRINCIPAL #-----------#\n").
 my_user_header("#--------------# MEU USUARIO #-------------#").
 login_header("#------------# LOGIN DE USUARIO #----------#").
 authentication_header("#-------------# AUTENTICAÇÃO #-------------#\n").
