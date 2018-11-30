@@ -1,10 +1,10 @@
-:- initialization(main).
+:- module(authentication, [authenticationMenu/0]).
 
-:- use_module("util").
-:- use_module("testSuite").
-:- use_module("constants").
-:- use_module("project").
-
+:- use_module(util).
+:- use_module(testSuite).
+:- use_module(constants).
+:- use_module(project).
+:- use_module(testCase).
 
 isOptionValidStst("1").
 isOptionValidStat("2").
@@ -42,8 +42,8 @@ getProjectsStatistics([ProjectsTouple]) :-
 
 
 
-getProjectIdList(X):- findall(I, testSuite:suite(I, _, _, _), X). 
-getProjectIdToupleList(X):- findall([I,J], testSuite:suite(I, J, _, _), X). 
+getProjectIdList(X):- findall(I, project:project(I, _, _, _), X). 
+getProjectIdToupleList(X):- findall([I,J], project:project(I, J, _, _), X). 
 
 chooseStatisticsAction(Option) :-
     getProjectIdList(Result),
