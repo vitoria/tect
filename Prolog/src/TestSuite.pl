@@ -46,7 +46,6 @@ createSuite(Id, Nome, Descricao, Projeto):-
                     writeln("Descrição: "),
                     read_line_to_string(user_input, Descricao), 
                     assertz(suite(Id, Nome, Descricao, Projeto)),
-                    saveTestSuite,
                     writeln("Suite criada com sucesso"),
                     writeln(" "),
                     writeln("Pressione enter para continuar..."),
@@ -156,7 +155,6 @@ editSuite(Projeto):-  tty_clear,
                     read_line_to_string(user_input, NewDescricao),
                     retract(suite(Id, Nome, Descricao, Projeto)),
                     assertz(suite(Id, NewNome, NewDescricao, Projeto)),
-                    saveTestSuite,
                     writeln("Suite editada com sucesso."));
                     (writeln("A suite com o id informado não foi encontrada."))),
                     writeln(" "),
@@ -173,7 +171,6 @@ deleteSuite(Projeto):- tty_clear,
                     readInt(Id),
                     ((retract(suite(Id, _, _, Projeto)),
                     writeln("Suite deletada com sucesso."),
-                    saveTestSuite,
                     writeln(" "));
                     (writeln("Suite não encontrada."),
                     writeln(" "))),
@@ -196,13 +193,14 @@ caseTestMenu(Projeto):- tty_clear,
 goBack():- writeln("Retornar para o menu anterior").
 
 choose_action(Option, Projeto):-
-                    (Option =:= "1" -> (createSuite(_, _, _, Projeto)));
+                    ((Option =:= "1" -> (createSuite(_, _, _, Projeto)));
                     (Option =:= "2" -> (listSuite(Projeto)));
                     (Option =:= "3" -> (searchSuite(Projeto)));
                     (Option =:= "4" -> (editSuite(Projeto)));
                     (Option =:= "5" -> (deleteSuite(Projeto)));
                     (Option =:= "6" -> (caseTestMenu(Projeto)));
-                    (Option =:= "7" -> (goBack)).
+                    (Option =:= "7" -> (goBack)),
+                    saveTestSuite).
     
 
 suiteMenu(Projeto):-
@@ -226,20 +224,23 @@ suiteMenu(Projeto):-
 createDirectory(Directory):- exists_directory(Directory) -> true; make_directory(Directory).
 
 saveTestSuite():- createDirectory('data'),
-                    open('data/test_suite.dat', write, Stream),
+                    open('data/test_suite.dat', write, InStream),
                     forall(suite(Id, Nome, Descricao, Projeto), 
-                    (writeln(Stream, Id),writeln(Stream, Nome),writeln(Stream, Descricao),writeln(Stream, Projeto))),
-                    close(Stream).
+                    (writeln(InStream, Id),
+                    writeln(InStream, Nome),
+                    writeln(InStream, Descricao),
+                    writeln(InStream, Projeto))),
+                    close(InStream).
 
 readSuiteFromFile():-
                     exists_file('data/test_suite.dat') ->(
-                    open('data/test_suite.dat', read, Stream),
-                    readSuite(Stream),
-                    close(Stream));
+                    open('data/test_suite.dat', read, InStream),
+                    readSuite(InStream),
+                    close(InStream));
                     true.
 
-readSuite(Stream):- at_end_of_stream(Stream).
-readSuite(Stream):- readLine(Stream, Id),
+readSuite(InStream):- at_end_of_stream(InStream).
+readSuite(InStream):- readLine(InStream, Id),
                     readLine(Strem, Nome),
                     readLine(Strem, Descricao),
                     readLine(Strem, Projeto),
@@ -248,15 +249,20 @@ readSuite(Stream):- readLine(Stream, Id),
                     string_to_atom(Projeto, AtomProjeto),
                     atom_number(AtomProjeto, NumberProjeto),
                     assertz(suite(NumberId, Nome, Descricao, NumberProjeto)),
-                    readSuite(Stream).
-readLine(Stream, Line):-
-                    get0(Stream,Char),
-                    checkCharAndReadRest(Char,Chars,Stream),
-                    atom_chars(Line,Chars).
+                    readSuite(InStream).
+
+readLine(InStream, Line):-
+                    writeln("Antes do getO"),
+                    get0(InStream,Char),
+                    writeln(Char),
+                    writeln("Depois do getO"),
+                    checkCharAndReadRest(Char,Chars,InStream),
+                    atom_chars(Line,Chars),
+                    writeln("Terminou a execução").
                 
 checkCharAndReadRest(10,[],_) :- !.  % Return
 checkCharAndReadRest(-1,[],_) :- !.  % End of Stream
 checkCharAndReadRest(end_of_file,[],_) :- !.
-checkCharAndReadRest(Char,[Char|Chars],Stream) :-
-                    get0(Stream,NextChar),
-                    checkCharAndReadRest(NextChar,Chars,Stream).
+checkCharAndReadRest(Char,[Char|Chars],InStream) :-
+                    get0(InStream,NextChar),
+                    checkCharAndReadRest(NextChar,Chars,InStream).
