@@ -9,7 +9,6 @@ nextProjectId(1).
 
 readNumber(Number):- read_line_to_codes(user_input, Codes), string_to_atom(Codes, Atom), atom_number(Atom, Number).
 
-
 createDirectory(Directory):- exists_directory(Directory) -> true; make_directory(Directory).
 
 saveAllProjectData():-
@@ -76,7 +75,7 @@ readRequestsFromFile():-
     close(Stream));
     true.
 
-readProject(Stream) :- at_end_of_stream(Stream).
+readProject(Stream):- at_end_of_stream(Stream).
 readProject(Stream):-
     readLine(Stream, Id),
     readLine(Stream, Name),
@@ -250,22 +249,25 @@ removeProject(Id):-
         writeln("Projeto removido com sucesso!")
         ); writeln("Projeto não removido.").
 
-selectOptionOwner(Option, Id):-
-    (Option == 1 -> projectInfo(Id);
-    Option == 2 -> editProjectName(Id);
-    Option == 3 -> editProjectDesc(Id);
-    Option == 4 -> verifyPermissions(Id);
-    Option == 5 -> removeProject(Id);
-    Option == 6 -> writeln("GERENCIAR SUITES");
-    writeln("Opção inválida!")), saveAllProjectData, (Option == 5; Option == 7;
+selectOptionOwner(Option, Id):- optionOwner(Option, Id),
+    saveAllProjectData, (Option == 5; Option == 7;
     writeln("Pressione qualquer tecla para continuar..."),
     get_char(_)).
 
-selectOptionUser(Option, Id):-
-    (Option == 1 -> writeln("GERENCIAR SUITES");
-    writeln("Opção inválida!")),
+optionOwner(1, Id):- projectInfo(Id).
+optionOwner(2, Id):- editProjectName(Id).
+optionOwner(3, Id):- editProjectDesc(Id).
+optionOwner(4, Id):- verifyPermissions(Id).
+optionOwner(5, Id):- removeProject(Id).
+optionOwner(6, Id):- writeln("GERENCIAR SUITES").
+optionOwner(_, _):- writeln("Opção inválida!").
+
+selectOptionUser(1, Id):- optionUser(Option, Id),
     writeln("Pressione qualquer tecla para continuar..."),
     get_char(_).
+
+optionUser(1, Id):- writeln("GERENCIAR SUITES").
+optionUser(_, _):- writeln("Opção inválida!").    
 
 ownerProjectMenu(Id):-
     printProjectOwnerMenu,

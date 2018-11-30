@@ -40,17 +40,18 @@ printSystemMenu():-
     constants:main_menu(MainMenu),
     writeln(MainMenu).
 
-selectOption(Option, LoggedUser):-
-    (Option == 1 -> writeln("MEU USUARIO");
-    Option == 2 -> writeln("CRIAR PROJETO"), createProject(LoggedUser);
-    Option == 3 -> writeln("PEDIR ACESSO"), requestAccess(LoggedUser);
-    Option == 4 -> writeln("LISTAR PROJETOS"), listProject();
-    Option == 5 -> writeln("GERENCIAR PROJETO"), manageProject(LoggedUser);
-    Option == 6 -> writeln("GERAR RELATORIOS");
-    Option == 7 -> writeln("LOGOUT");
-    writeln("Opção inválida!")), project:saveAllProjectData,
-    writeln("Pressione qualquer tecla para continuar..."),
+selectOption(Option, LoggedUser):- option(Option, LoggedUser),
+    project:saveAllProjectData, writeln("Pressione qualquer tecla para continuar..."),
     get_char(_).
+
+option(1, LoggedUser):- writeln("MEU USUARIO").
+option(2, LoggedUser):- createProject(LoggedUser).
+option(3, LoggedUser):- requestAccess(LoggedUser).
+option(4, _):- listProject().
+option(5, LoggedUser):- manageProject(LoggedUser).
+option(6, LoggedUser):- writeln("GERAR RELATORIOS").
+option(7, LoggedUser):- writeln("LOGOUT").
+option(_,_):- writeln("Opção inválida!").
 
 systemMenu(LoggedUser):-
     printSystemMenu,
