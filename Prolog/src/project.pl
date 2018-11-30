@@ -6,10 +6,8 @@
 :- use_module(testSuite).
 
 createProject(LoggedUser):-
-    constants:header(Header),
-    writeln(Header),
     constants:create_project_header(CreateProjectHeader),
-    writeln(CreateProjectHeader),
+    utils:printHeaderAndSubtitle(CreateProjectHeader),
     model:projectModel:nextProjectId(Id),
     writeln("Nome do projeto:"),
     read_line_to_string(user_input, Name),
@@ -21,16 +19,12 @@ createProject(LoggedUser):-
     writeln("Projeto criado com sucesso!").
 
 listProject():-
-    constants:header(Header),
-    writeln(Header),
     constants:list_project_header(ListProjectHeader),
-    writeln(ListProjectHeader),
-    constants:list_projects_table_header(ListProjectsTableHeader),
-    writeln(ListProjectsTableHeader),
+    utils:printHeaderAndSubtitle(ListProjectHeader),
+    writef('%2l | %25l | %15l\n' , ["ID", "Nome", "Dono"]),
     model:projectModel:project(Id, Name, _, Owner),
-    write(Id), write("  -  "),
-    write(Name), write("  -  "), 
-    writeln(Owner), fail; true.
+    writef('%3c | %25l | %15l\n', [Id, Name, Owner]),
+    fail; true.
 
 requestAccess(ProjectId, User):-
     model:projectModel:project(ProjectId, _, _, Owner),
@@ -40,24 +34,20 @@ requestAccess(ProjectId, User):-
     assertz(model:projectModel:request(ProjectId, User)), writeln("Acesso solicitado com sucesso."))).
 
 printProjectOwnerMenu():-
-    constants:project_menu_owner_header(ProjectMenuOwnerHeader),
-    utils:printHeaderAndSubtitle(ProjectMenuOwnerHeader),
+    constants:project_menu_header(ProjectMenuHeader),
+    utils:printHeaderAndSubtitle(ProjectMenuHeader),
     constants:project_menu_owner(ProjectMenuOwner),
     writeln(ProjectMenuOwner).
 
 printProjectUserMenu():-
-    tty_clear,
-    constants:header(Header),
-    writeln(Header),
+    constants:project_menu_header(ProjectMenuHeader),
+    utils:printHeaderAndSubtitle(ProjectMenuHeader),
     constants:project_menu_user(ProjectMenuUser),
     writeln(ProjectMenuUser).
 
 projectInfo(Id):-
-    tty_clear,
-    constants:header(Header),
-    writeln(Header),
     constants:project_detais_header(ProjectDetailsHeader),
-    writeln(ProjectDetailsHeader),
+    utils:printHeaderAndSubtitle(ProjectDetailsHeader),
     model:projectModel:project(Id, Name, Desc, Owner),
     write("ID: "),
     writeln(Id),
@@ -67,14 +57,10 @@ projectInfo(Id):-
     writeln(Desc),
     write("Proprietário: "),
     writeln(Owner).
-    
 
 editProjectName(Id):-
-    tty_clear,
-    constants:header(Header),
-    writeln(Header),
     constants:edit_project_header(EditProjectHeader),
-    writeln(EditProjectHeader),
+    utils:printHeaderAndSubtitle(EditProjectHeader),
     model:projectModel:project(Id, Name, Desc, Owner),
     write("Nome anterior: "),
     writeln(Name),
@@ -85,11 +71,8 @@ editProjectName(Id):-
     writeln("Projeto editado com sucesso!").
 
 editProjectDesc(Id):-
-    tty_clear,
-    constants:header(Header),
-    writeln(Header),
     constants:edit_project_header(EditProjectHeader),
-    writeln(EditProjectHeader),
+    utils:printHeaderAndSubtitle(EditProjectHeader),
     model:projectModel:project(Id, Name, Desc, Owner),
     write("Descrição anterior: "),
     writeln(Desc),
@@ -100,6 +83,8 @@ editProjectDesc(Id):-
     writeln("Projeto editado com sucesso!").
 
 verifyPermissions(Id):-
+    constants:project_permissions_header(PermissionsHeader),
+    utils:printHeaderAndSubtitle(PermissionsHeader),
     (model:projectModel:request(Id, _),
     foreach(model:projectModel:request(Id, User), ((model:projectModel:projectUser(Id, User), writeln("O usuário já possui permissão no projeto."));(
         write("Deseja dar permissão de acesso a "),
@@ -109,15 +94,12 @@ verifyPermissions(Id):-
         (Response == "S"; Response == "s") -> (
             assertz(model:projectModel:projectUser(Id, User)), retract(model:projectModel:request(Id, User)),
             write("Solicitação de "), write(User), writeln(" aprovada.")
-            ); write("Solicitação de "), write(User), writeln(" negada.")
+            ); write("Solicitação de "), write(User), writeln(" negada."), retract(model:projectModel:request(Id, User))
         )))); writeln("Não existem solicitações para o projeto.").
 
 removeProject(Id):-
-    tty_clear,
-    constants:header(Header),
-    writeln(Header),
     constants:remove_project_header(RemoveProjectHeader),
-    writeln(RemoveProjectHeader),
+    utils:printHeaderAndSubtitle(RemoveProjectHeader),
     writeln("Realmente deseja remover o projeto atual? (S/N)"),
     read_line_to_string(user_input, Response),
     (Response == "S"; Response == "s") -> (
@@ -129,8 +111,7 @@ removeProject(Id):-
 
 selectOptionOwner(Option, Id):- optionOwner(Option, Id),
     model:projectModel:saveAllProjectData, (Option == 5; Option == 7;
-    writeln("Pressione qualquer tecla para continuar..."),
-    get_char(_)).
+    utils:systemPause).
 
 optionOwner(1, Id):- projectInfo(Id).
 optionOwner(2, Id):- editProjectName(Id).
@@ -141,8 +122,7 @@ optionOwner(6, Id):- testSuite:suiteMenu(Id).
 optionOwner(_, _):- writeln("Opção inválida!").
 
 selectOptionUser(1, Id):- optionUser(Option, Id), writeln(Option),
-    writeln("Pressione qualquer tecla para continuar..."),
-    get_char(_).
+    utils:systemPause.
 
 optionUser(1, Id):- writeln(Id), writeln("GERENCIAR SUITES").
 optionUser(_, _):- writeln("Opção inválida!").    
