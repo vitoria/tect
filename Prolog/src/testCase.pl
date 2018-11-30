@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 :- module(testCases, [suiteMenu/2]).
+=======
+:- module(testCase, [testCaseMenu/2]).
+>>>>>>> master
 
 :- use_module(constants).
 :- use_module(utils).
@@ -8,6 +12,7 @@ step(stepId, caseId, details, expectedResult).
 :- dynamic testCase/7.
 :- dynamic step/4.
 
+<<<<<<< HEAD
 :-initialization(main).
 
 main:-
@@ -18,6 +23,8 @@ main:-
     readNumber(SuiteId),
     suiteMenu(ProjectId, SuiteId).
 
+=======
+>>>>>>> master
 nextCaseId(1).
 
 readNumber(Number):- read_line_to_codes(user_input, Codes), string_to_atom(Codes, Atom), atom_number(Atom, Number).
@@ -113,14 +120,22 @@ printSuiteMenu():-
     constants: test_Case_Menu(TestMenu),
     writeln(TestMenu).
 
+<<<<<<< HEAD
 suiteMenu(ProjectId, SuiteId) :-
     printSuiteMenu,
     readNumber(Option),
     selectOptionTestCase(Option, ProjectId, SuiteId).
+=======
+testCaseMenu(ProjectId, SuiteId) :-
+    printSuiteMenu,
+    readNumber(Option),
+    (Option =\= 6, selectOptionTestCase(Option, ProjectId, SuiteId), testCaseMenu(ProjectId, SuiteId)); true.
+>>>>>>> master
 
 selectOptionTestCase(Option, ProjectId, SuiteId):-
     constants:test_case_header(CaseHeader),
     ((Option == 1 -> createTestCase(ProjectId, SuiteId);
+<<<<<<< HEAD
     Option == 2 -> writeln(CaseHeader), listTestCases(ProjectId, SuiteId, 1);
     Option == 3 -> searchTestCase(ProjectId, SuiteId);
     Option == 4 -> editTestCase(ProjectId, SuiteId);
@@ -130,6 +145,15 @@ selectOptionTestCase(Option, ProjectId, SuiteId):-
     writeln('Pressione qualquer tecla para continuar...'),
     get_char(_)),
     suiteMenu(ProjectId, SuiteId).
+=======
+    Option == 2 -> listTestCases(ProjectId, SuiteId);
+    Option == 3 -> searchTestCase(ProjectId, SuiteId);
+    Option == 4 -> editTestCase(ProjectId, SuiteId);
+    Option == 5 -> deleteTestCase(ProjectId, SuiteId);
+    writeln('Opcao invalida!')),
+    writeln('Pressione qualquer tecla para continuar...'),
+    get_char(_)).
+>>>>>>> master
 
 createTestCase(ProjectId, SuiteId):-
     constants:create_case_header(CaseHeader),
@@ -178,76 +202,63 @@ continueSteps(ProjectId, SuiteId, CaseId, StepId) :-
     get_char(_),
     suiteMenu(ProjectId, SuiteId)).
 
-listTestCases(ProjectId, SuiteId, CurrentCase) :-
+<<<<<<< HEAD
+=======
+listTestCases(ProjectId, SuiteId):-
     constants:test_case_header(CaseHeader),
     utils:printHeaderAndSubtitle(CaseHeader),
-    getNumberOfTestCases(NumberOfCases),
-    NewNumberOfCases is NumberOfCases + 1,
-    ((CurrentCase < NewNumberOfCases) ->
-        listCase(ProjectId, SuiteId, CurrentCase),
-        NewCurrentCase is CurrentCase + 1,
-        listTestCases(ProjectId, SuiteId, NewCurrentCase));
-    writeln('Pressione qualquer tecla para continuar...'),
-    get_char(_),
-    suiteMenu(ProjectId, SuiteId).
-
-listCase(ProjectId, SuiteId, CurrentCase) :-
-    testCase(ProjectId, SuiteId, CurrentCase, Name, Goals, Status, Preconditions),
-    write('Id: '),
-    write(CurrentCase), nl,
-    write('Nome: '),
-    write(Name), nl,
-    write('Objetivos: '),
-    write(Goals), nl,
-    write('Pre-condicoes: '),
-    write(Preconditions), nl,
-    write('Status: '),
-    write(Status), nl.
+    constants:test_case_table_header(TableHeader),
+    writeln(TableHeader),
+    testCase(ProjectId, SuiteId, CaseId, Name, _, Status, _),
+    write(CaseId), write("  -  "),
+    write(Name), write("  -  "), 
+    writeln(Status), fail; true.
+/*
+>>>>>>> master
+<<<<<<< HEAD
+=======
+    */
+>>>>>>> master
 
 searchTestCase(ProjectId, SuiteId) :-
     constants:search_case_header(Search),
     utils:printHeaderAndSubtitle(Search),
     writeln('Informe o id do Caso de Teste: '),
     readNumber(CaseId),
-    ((validCaseId(CaseId) ->
-        listCase(ProjectId, SuiteId, CaseId),
-        writeln('Passos:'),
-        listSteps(1, CaseId));
-    (write('Id nao cadastrado para casos de teste.'), nl)),
-    writeln('Pressione qualquer tecla para continuar...'),
-    get_char(_),
-    suiteMenu(ProjectId, SuiteId).
+<<<<<<< HEAD
+=======
+    testCase(ProjectId, SuiteId, CaseId, Name, Goal, Status, Preconditions) ->(
+        write('Nome: '), writeln(Name),
+        write('Objetivo: '), writeln(Goal),
+        write('Status: '), writeln(Status),
+        write('Pré-Condições: '), writeln(Preconditions), listSteps(ProjectId, CaseId, SuiteId));
+    writeln('Id nao cadastrado para casos de teste.').
+
+>>>>>>> master
 
 getNumberOfSteps(Count):-
     aggregate_all(count, step(_,_,_,_), Count).
 
-listSteps(StepId, CaseId):-
-    getNumberOfSteps(StepsCount),
-    NewStepsCount is StepsCount + 1,
-    ((NewStepsCount > StepId) ->
-    step(StepId, CaseId, Details, ExpectedResult),
-    write('Passo '), writeln(StepId),
-    write('Descricao: '), writeln(Details),
-    write('Resultado esperado: '), writeln(ExpectedResult),
-    NextStepId is StepId + 1,
-    listSteps(NextStepId, CaseId));
-    write('').
+<<<<<<< HEAD
 
-validCaseId(Id) :-
-    getNumberOfTestCases(NumberOfCases),
-    NewNumberOfCases is NumberOfCases + 1,
-    Id < NewNumberOfCases.
-
+=======
+listSteps(ProjectId, CaseId, SuiteId):-
+    step(StepId, CaseId, Details, ExpectedResult) ->   
+        write('Passo '), writeln(StepId),
+        write('Descricao: '), writeln(Details),
+        write('Resultado esperado: '), writeln(ExpectedResult), fail; true.
+    
+>>>>>>> master
 editTestCase(ProjectId, SuiteId) :-
     constants:edit_case_header(CaseHeader),
     utils:printHeaderAndSubtitle(CaseHeader),
     writeln('Informe o id do Caso de Teste: '),
     readNumber(CaseId), nl,
-    (validCaseId(CaseId) -> menuEditCase(ProjectId, SuiteId, CaseId));
-    (writeln('Id nao cadastrado para casos de teste.'),
-    writeln('Pressione qualquer tecla para continuar...'),
-    get_char(_),
-    suiteMenu(ProjectId, SuiteId)).
+<<<<<<< HEAD
+=======
+    testCase(ProjectId, SuiteId, CaseId, _, _, _, _) -> menuEditCase(ProjectId, SuiteId, CaseId);
+    writeln('Id nao cadastrado para casos de teste.').
+>>>>>>> master
 
 overwriteCase(ProjectId, SuiteId, CaseId):-
     testCase(ProjectId, SuiteId, CaseId, Name, Goal, Status, Preconditions),
@@ -261,16 +272,22 @@ menuEditCase(ProjectId, SuiteId, CaseId) :-
     writeln('(3) Voltar'),
     read_line_to_string(user_input, Selected), nl,
     atom_number(Selected, Option),
-    ((Option == 1 -> write('Editando Caso de Testes'), nl,
+<<<<<<< HEAD
+=======
+    (Option == 1 -> write('Editando Caso de Testes'), nl,
     writeln('Estado atual'),
-    listCase(ProjectId, SuiteId, CaseId), nl,
+    testCase(ProjectId, SuiteId, CaseId, Name, Goal, Status, Preconditions),
+        write('Nome: '), writeln(Name),
+        write('Objetivo: '), writeln(Goal),
+        write('Status: '), writeln(Status),
+        write('Pré-Condições: '), writeln(Preconditions), listSteps(ProjectId, CaseId, SuiteId),
     writeln('Estado novo'),
     overwriteCase(ProjectId, SuiteId, CaseId),
-    listCase(ProjectId, SuiteId, CaseId), nl),
-    saveAllTestCasesData();
+    saveAllTestCasesData());
     (Option == 2 -> menuChangeStatus(ProjectId, SuiteId, CaseId));
-    (Option == 3 -> suiteMenu(ProjectId, SuiteId));
-    (write(invalid_option), suiteMenu(ProjectId, SuiteId))).
+    (Option == 3 -> true);
+    write(invalid_option).
+>>>>>>> master
 
 menuChangeStatus(ProjectId, SuiteId, CaseId) :-
     constants:test_case_header(CaseHeader),
@@ -290,23 +307,26 @@ menuChangeStatus(ProjectId, SuiteId, CaseId) :-
     testCase(ProjectId, SuiteId, CaseId, Name, Goal, OldStatus, Preconditions),
     retract(testCase(ProjectId, SuiteId, CaseId, Name, Goal, OldStatus, Preconditions)),
     assertz(testCase(ProjectId, SuiteId, CaseId, Name, Goal, NewStatus, Preconditions)), saveAllTestCasesData());
-    (write('Opcao invalida.'), menuChangeStatus(ProjectId, SuiteId, CaseId)),
-    suiteMenu(ProjectId, SuiteId).
+<<<<<<< HEAD
+    (write('Opcao invalida.'), menuChangeStatus(ProjectId, SuiteId, CaseId)).
+>>>>>>> master
 
 deleteTestCase(ProjectId, SuiteId) :-
     constants:delete_case_header(CaseHeader),
     utils:printHeaderAndSubtitle(CaseHeader),
     writeln('Informe o id do caso de teste: '),
     readNumber(CaseId),
-    (validCaseId(CaseId) -> listCase(ProjectId, SuiteId, CaseId), write('Tem certeza que deseja excluir esse caso de testes? ((1)Sim/(2)Nao)'), nl,
+<<<<<<< HEAD=======
+    (testCase(ProjectId, SuiteId, CaseId, Name, Goal, OldStatus, Preconditions), listTestCases(ProjectId, SuiteId), write('Tem certeza que deseja excluir esse caso de testes? ((1)Sim/(2)Nao)'), nl,
+>>>>>>> master
     readNumber(Option),
     (((Option == 1) -> retract(testCase(ProjetId, SuiteId, CaseId, _, _, _, _)), writeln('Caso de testes excluido com sucesso.'), saveAllTestCasesData());
     (writeln('Caso de testes nao excluido.'))),
     suiteMenu(ProjectId, SuiteId));
     writeln('Id informado nao cadastrado.'),
-    writeln('Pressione qualquer tecla para continuar...'),
-    get_char(_),
-    suiteMenu(ProjectId, SuiteId).
+<<<<<<< HEAD=======
+    writeln('Pressione qualquer tecla para continuar...').
+>>>>>>> master
 
 increment(Number, Result):-
     Result is Number + 1.
@@ -341,4 +361,6 @@ calculateStatistics(ProjectId, SuiteId, StatSuite):-
     writeln(StatSuite).
 
 calculate(Passing, Executed, Result):-
+<<<<<<< HEAD=======
     Result is (Passing/Executed) * 100.0.
+>>>>>>> master

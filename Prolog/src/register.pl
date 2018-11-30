@@ -3,15 +3,16 @@
 :- use_module(authentication).
 :- use_module(constants).
 :- use_module(utils).
+:- use_module(model).
 
 saveUser(_, Username, _) :-
     constants:creation_failed(Msg),
-    authentication:user(_, Username, _),
+    model:userModel:user(_, Username, _),
     writeln(Msg),
     utils:systemPause.
 
 saveUser(Name, Username, Password) :-
-    (assertz(authentication:user(Name, Username, Password)),
+    (assertz(model:userModel:user(Name, Username, Password)),
     constants:user_registered(Msg),
     writeln(Msg)),
     utils:systemPause.
