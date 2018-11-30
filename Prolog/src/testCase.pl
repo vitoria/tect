@@ -107,7 +107,8 @@ executed('Erro na execucao').
 pass('Passou').
 
 printSuiteMenu():- 
-    utils:printHeader(),
+ /*   utils:printHeader(),
+ */
     constants: edit_suite_header(EditSuiteHeader),
     writeln(EditSuiteHeader),
     constants: test_Case_Menu(TestMenu),
@@ -125,15 +126,16 @@ selectOptionTestCase(Option, ProjectId, SuiteId):-
     Option == 3 -> searchTestCase(ProjectId, SuiteId);
     Option == 4 -> editTestCase(ProjectId, SuiteId);
     Option == 5 -> deleteTestCase(ProjectId, SuiteId);
-    Option == 6 -> write('Return to Project Menu');
+    Option == 6 -> write('Voltar para o menu de suites');
     writeln('Opcao invalida!')),
     writeln('Pressione qualquer tecla para continuar...'),
     get_char(_)),
     suiteMenu(ProjectId, SuiteId).
 
 createTestCase(ProjectId, SuiteId):-
-    constants:create_case_header(CaseHeader),
+/*    constants:create_case_header(CaseHeader),
     utils:printHeaderAndSubtitle(CaseHeader),
+*/
     getNumberOfTestCases(NumberOfCases),
     NewNumberOfCases is NumberOfCases + 1,
     createCase(ProjectId, SuiteId, NewNumberOfCases).
@@ -179,8 +181,10 @@ continueSteps(ProjectId, SuiteId, CaseId, StepId) :-
     suiteMenu(ProjectId, SuiteId)).
 
 listTestCases(ProjectId, SuiteId, CurrentCase) :-
+/*
     constants:test_case_header(CaseHeader),
     utils:printHeaderAndSubtitle(CaseHeader),
+*/
     getNumberOfTestCases(NumberOfCases),
     NewNumberOfCases is NumberOfCases + 1,
     ((CurrentCase < NewNumberOfCases) ->
@@ -205,8 +209,9 @@ listCase(ProjectId, SuiteId, CurrentCase) :-
     write(Status), nl.
 
 searchTestCase(ProjectId, SuiteId) :-
-    constants:search_case_header(Search),
+/*    constants:search_case_header(Search),
     utils:printHeaderAndSubtitle(Search),
+*/
     writeln('Informe o id do Caso de Teste: '),
     readNumber(CaseId),
     ((validCaseId(CaseId) ->
@@ -239,8 +244,9 @@ validCaseId(Id) :-
     Id < NewNumberOfCases.
 
 editTestCase(ProjectId, SuiteId) :-
-    constants:edit_case_header(CaseHeader),
+/*    constants:edit_case_header(CaseHeader),
     utils:printHeaderAndSubtitle(CaseHeader),
+*/
     writeln('Informe o id do Caso de Teste: '),
     readNumber(CaseId), nl,
     (validCaseId(CaseId) -> menuEditCase(ProjectId, SuiteId, CaseId));
@@ -266,7 +272,8 @@ menuEditCase(ProjectId, SuiteId, CaseId) :-
     listCase(ProjectId, SuiteId, CaseId), nl,
     writeln('Estado novo'),
     overwriteCase(ProjectId, SuiteId, CaseId),
-    listCase(ProjectId, SuiteId, CaseId), nl);
+    listCase(ProjectId, SuiteId, CaseId), nl),
+    saveAllTestCasesData();
     (Option == 2 -> menuChangeStatus(ProjectId, SuiteId, CaseId));
     (Option == 3 -> suiteMenu(ProjectId, SuiteId));
     (write(invalid_option), suiteMenu(ProjectId, SuiteId))).
@@ -288,18 +295,19 @@ menuChangeStatus(ProjectId, SuiteId, CaseId) :-
     (Option == 3 -> NewStatus = 'Erro na execucao')),
     testCase(ProjectId, SuiteId, CaseId, Name, Goal, OldStatus, Preconditions),
     retract(testCase(ProjectId, SuiteId, CaseId, Name, Goal, OldStatus, Preconditions)),
-    assertz(testCase(ProjectId, SuiteId, CaseId, Name, Goal, NewStatus, Preconditions)));
+    assertz(testCase(ProjectId, SuiteId, CaseId, Name, Goal, NewStatus, Preconditions)), saveAllTestCasesData());
     (write('Opcao invalida.'), menuChangeStatus(ProjectId, SuiteId, CaseId)),
     suiteMenu(ProjectId, SuiteId).
 
 deleteTestCase(ProjectId, SuiteId) :-
-    constants:delete_case_header(CaseHeader),
+/*    constants:delete_case_header(CaseHeader),
     utils:printHeaderAndSubtitle(CaseHeader),
+*/
     writeln('Informe o id do caso de teste: '),
     readNumber(CaseId),
     (validCaseId(CaseId) -> listCase(ProjectId, SuiteId, CaseId), write('Tem certeza que deseja excluir esse caso de testes? ((1)Sim/(2)Nao)'), nl,
     readNumber(Option),
-    (((Option == 1) -> retract(testCase(ProjetId, SuiteId, CaseId, _, _, _, _)), writeln('Caso de testes excluido com sucesso.'));
+    (((Option == 1) -> retract(testCase(ProjetId, SuiteId, CaseId, _, _, _, _)), writeln('Caso de testes excluido com sucesso.'), saveAllTestCasesData());
     (writeln('Caso de testes nao excluido.'))),
     suiteMenu(ProjectId, SuiteId));
     writeln('Id informado nao cadastrado.'),
@@ -330,3 +338,14 @@ getNumberOfPassingTests(ProjectId, SuiteId, CaseId, AuxNumber, Number):-
         (pass(Status) -> getNumberOfPassingTests(ProjectId, SuiteId, NewCaseId, NewNumber, Number);
     getNumberOfPassingTests(ProjectId, SuiteId, NewCaseId, AuxNumber, Number)));
     Number is AuxNumber.
+
+calculateStatistics(ProjectId, SuiteId, StatSuite):-
+    getNumberOfExecutedTests(ProjectId, SuiteId, 1, 0, Executed),
+    getNumberOfPassingTests(ProjectId, SuiteId, 1, 0, Passing),
+    ((Executed == 0) -> StatSuite is 0;
+        calculate(Passing, Executed, StatSuite)),
+    writeln('Resultado na funcao'),
+    writeln(StatSuite).
+
+calculate(Passing, Executed, Result):-
+    Result is (Passing/Executed) * 100.0.
