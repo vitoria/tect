@@ -178,10 +178,12 @@ caseTestMenu(Projeto):- tty_clear,
                     writeln(L),
                     writeln("Informe o ID da suite a ser gerenciada:"),
                     utils:readNumber(SuiteId),
+                    ((model:testSuiteModel:suite(SuiteId, _, _, Projeto),
                     writeln(" "),
-                    write("O id da suite a ser chamada é: "), write(SuiteId),
-                    write(" e o id do projeto é "), writeln(Projeto),
-                    testCase:testCaseMenu(Projeto, SuiteId).
+                    testCase:testCaseMenu(Projeto, SuiteId));
+                    (constants:suite_not_found(Nf),
+                    utils:showPausedMsg(Nf))),
+                    suiteMenu(Projeto).
 
 choose_action(1, Projeto):- createSuite(Projeto).
 choose_action(2, Projeto):- listSuite(Projeto).
