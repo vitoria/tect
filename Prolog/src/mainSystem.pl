@@ -37,7 +37,9 @@ manageProject(LoggedUser):-
 printSystemMenu():-
     tty_clear,
     constants:header(Header),
+    constants:main_header(Subheader),
     writeln(Header),
+    writeln(Subheader),
     constants:main_menu(MainMenu),
     writeln(MainMenu).
 
