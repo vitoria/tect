@@ -48,8 +48,8 @@ getProjectIdToupleList(X):- findall([I,J], project:project(I, J, _, _), X).
 chooseStatisticsAction(Option) :-
     getProjectIdList(Result),
     getProjectIdToupleList(Result2),
-    (Option =:= "1" -> getProjectsStatistics(Result2);
-    Option =:= "2" -> statisticsFromAProject(Result);
+    (Option =:= 1 -> getProjectsStatistics(Result2);
+    Option =:= 2 -> statisticsFromAProject(Result);
     write("Opção Inválida")).
     
 
@@ -90,6 +90,6 @@ statisticsMenu(LoggedUser) :-
     write("Informe a opção desejada: "),
     readNumber(Entrada),
     (isOptionValidStat(Entrada) ->
-           (Entrada =:= "3" -> write("Retornando ao menu anterior..."), mainSystem:systemMenu(LoggedUser);
+           (Entrada =:= 3 -> write("Retornando ao menu anterior..."), mainSystem:systemMenu(LoggedUser);
                                 (tty_clear, chooseStatisticsAction(Entrada))));                
     write("Opção Inválida"), statisticsMenu(LoggedUser).
