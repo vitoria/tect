@@ -162,10 +162,7 @@ continueSteps(ProjectId, SuiteId, CaseId, StepId) :-
     ((Option == 1) -> continueSteps(ProjectId, SuiteId, CaseId, NewStepId);
     (Option == 2) -> writeln('Pressione qualquer tecla para continuar...'), get_char(_), saveAllTestCasesData(), suiteMenu(ProjectId, SuiteId);
     writeln('Opcao invalida. Nenhum passo a mais será adicionado. Redirecionando para o menu da suite de testes...'),
-    saveAllTestCasesData(),
-    writeln('Pressione qualquer tecla para continuar...'),
-    get_char(_),
-    suiteMenu(ProjectId, SuiteId)).
+    saveAllTestCasesData().
 
 
 listTestCases(ProjectId, SuiteId):-
