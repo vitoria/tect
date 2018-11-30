@@ -13,14 +13,16 @@ listProject():- project:listProject().
 requestAccess(LoggedUser):-
     constants:request_access_header(RequestAccessHeader),
     utils:printHeaderAndSubtitle(RequestAccessHeader),
-    writeln("Informe o ID do projeto:"),
+    constants:get_proj_id(GetProjId),
+    writeln(GetProjId),
     utils:readNumber(Id),
     model:projectModel:project(Id, _, _, _) -> project:requestAccess(Id, LoggedUser); writeln("Id informado inválido.").
 
 manageProject(LoggedUser):-
     constants:manage_project_header(RequestAccessHeader),
     utils:printHeaderAndSubtitle(RequestAccessHeader),
-    writeln("Informe o ID do projeto:"),
+    constants:get_proj_id(GetProjId),
+    writeln(GetProjId),
     utils:readNumber(Id),
     model:projectModel:project(Id, _, _, _) -> (project:projectMenu(LoggedUser, Id)); writeln("Id informado inválido.").
 
@@ -29,8 +31,7 @@ printSystemMenu():-
     utils:printHeaderAndSubtitle(MainMenu).
 
 selectOption(Option, LoggedUser):- option(Option, LoggedUser),
-    model:projectModel:saveAllProjectData, writeln("Pressione qualquer tecla para continuar..."),
-    get_char(_).
+    model:projectModel:saveAllProjectData, utils:systemPause.
 
 option(1, LoggedUser):- write("MEU USUARIO: "), writeln(LoggedUser).
 option(2, LoggedUser):- createProject(LoggedUser).

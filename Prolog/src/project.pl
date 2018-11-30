@@ -110,8 +110,7 @@ removeProject(Id):-
 
 selectOptionOwner(Option, Id):- optionOwner(Option, Id),
     model:projectModel:saveAllProjectData, (Option == 5; Option == 7;
-    writeln("Pressione qualquer tecla para continuar..."),
-    get_char(_)).
+    utils:systemPause).
 
 optionOwner(1, Id):- projectInfo(Id).
 optionOwner(2, Id):- editProjectName(Id).
@@ -122,8 +121,7 @@ optionOwner(6, Id):- writeln(Id), writeln("GERENCIAR SUITES").
 optionOwner(_, _):- writeln("Opção inválida!").
 
 selectOptionUser(1, Id):- optionUser(Option, Id), writeln(Option),
-    writeln("Pressione qualquer tecla para continuar..."),
-    get_char(_).
+    utils:systemPause.
 
 optionUser(1, Id):- writeln(Id), writeln("GERENCIAR SUITES").
 optionUser(_, _):- writeln("Opção inválida!").    

@@ -152,3 +152,5 @@ success_login("Login efetuado com sucesso!").
 string_not_empty(" não pode ser vazio.").
 login_failed("Login incorreto!").
 welcome(", seja bem-vindo(a)!").
+
+get_proj_id("Informe o ID do projeto:").
