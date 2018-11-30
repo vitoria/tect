@@ -4,7 +4,7 @@
 :- use_module(testSuite).
 :- use_module(constants).
 :- use_module(project).
-
+:- use_module(mainSystem).
 :- use_module(testCase).
 
 isOptionValidStst(1).
@@ -84,6 +84,7 @@ generateStatisticsString(ProjectId,[Id, Name,_,_|Suites]):-
         write(Id), write(" - "), write(Name), write(" - "), 
         testCase:calculateStatiscs(ProjectId, Id, StatSuite), write(StatSuite),nl,
         generateStatisticsString(ProjectId, Suites).
+
 
 
 showStatisticsMenu() :-
