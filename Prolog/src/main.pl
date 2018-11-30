@@ -1,3 +1,5 @@
 :- initialization(main).
 
-main :- writeln("Hello world").
+:- use_module(authentication).
+
+main :- authentication:initialization.
