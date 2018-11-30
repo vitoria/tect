@@ -2,17 +2,28 @@
 
 :- use_module(util).
 
+isOptionValidStst("1").
+isOptionValidStat("2").
+isOptionValidStat("3").
+
 sumStatisticsProject(_,[], Result):- Result is 0.
-sumStatisticsProject(ProjectId,[Id|List], Result) :-  sumStatisticsProject(ProjectId,List, Result2), 
+sumStatisticsProject(ProjectId,[Id|List], Result) :-  sumStatisticsProject(ProjectId,List, Result2),
                     testCase:calculateStatiscs(ProjectId, Id, StatSuite), Result is Result2 + StatSuite.
 
-calculateMediumStatisticsProject(ProjectId, [H|T],Result) :- sumStatisticsProject(ProjectId, [H|T],Z), Y is util:length_1(Z,[H|T]), Result is Z/Y.
+
+getSuitesList(Projeto, X):- findall(I, testSuite:suite(I, _, _, Projeto), X). 
+getAllSuites(Projeto, X):- findall([I,J,K,Projeto],project(I, J, K, Projeto), X). 
+
+length_1([], 0).
+length_1([H|T], N) :- length_1(T, N1), N is N1 + 1.
+
+calculateMediumStatisticsProject(ProjectId, [H|T],Result) :- sumStatisticsProject(ProjectId, [H|T],Z), length_1([H|T], Y), Result is Z/Y.
 
 
 getProjectResume([]).
 getProjectResume([[Id, Name]|ProjectsTouple]):- write(Id), write(" - "), write(Name), write(" - "), 
-                    Suites is getSuitesList(Id),    
-                    Media is calculateMediumStatisticsProject(Id,Suites),
+                   getSuitesList(Id, Suites),    
+                   calculateMediumStatisticsProject(Id,Suites, Media),
                     write(Media),nl, 
                     getProjectResume(ProjectsTouple).
 
@@ -22,13 +33,17 @@ getProjectsStatistics([ProjectsTouple]) :-
     getProjectResume(ProjectsTouple).
 
 
-getProjectId([], []).
-getProjectId([(Id,Name)|List]) :- [Id|getProjectId(List)].
 
-chooseStatisticsAction(Option, [(X,Y)]) :-
-    (Option =:= "1" -> getProjectsStatistics([(X,Y)]);
-    Option =:= "2" -> statisticsFromAProject(getProjectId([(X,Y)]);
-    write("Opção Inválida"))).
+
+getProjectIdList(X):- findall(I, testSuite:suite(I, _, _, _), X). 
+getProjectIdToupleList(X):- findall([I,J], testSuite:suite(I, J, _, _), X). 
+
+chooseStatisticsAction(Option) :-
+    getProjectIdList(Result),
+    getProjectIdToupleList(Result2),
+    (Option =:= "1" -> getProjectsStatistics(Result2);
+    Option =:= "2" -> statisticsFromAProject(Result);
+    write("Opção Inválida")).
     
 
 
@@ -41,36 +56,33 @@ statisticsFromAProject(projectsId):-
     write("#--------------# ESTATÍSTICAS #------------#"),
     write("Informe o ID de um projeto para visualizar seu relatório:"),
     read_line_to_codes(user_input, ProjectId),
-    (validation:isStringNumeric(ProjectId) = true -> 
-        (validation:isValidProjId(ProjectId,projectsId) = true -> 
+    (validation:isValidProjId(ProjectId,projectsId) = true -> 
         tty_clear,
-                    Suites is getSuitesList(ProjectId),
-                    Saida is generateStatisticsString(ProjectId, Suites),
-                    write("#--------------# ESTATÍSTICAS #------------#"),nl,
-                    write("SUITE ID - NOME DA SUITE - TAXA DE TESTES QUE PASSARAM"),nl,
-                    write(Saida);
-                    write("Não existe projeto com o ID informado."));
-    write("O ID informado é inválido.")).
+        getAllSuites(ProjectId, Suites),
+        write("#--------------# ESTATÍSTICAS #------------#"),nl,
+        write("SUITE ID - NOME DA SUITE - TAXA DE TESTES QUE PASSARAM"),nl,
+        generateStatisticsString(ProjectId, Suites);
+    write("Não existe projeto com o ID informado.")).
 
-generateStatisticsString(_,[], []).
-generateStatisticsString(ProjectId,[Id, Name,_,_|Suites]):- 
+generateStatisticsString(_,[]).
+generateStatisticsString(ProjectId,[Id, Name,_,_|Suites]):-
         write(Id), write(" - "), write(Name), write(" - "), 
-        testCase:calculateStatiscs(ProjectId, Id, StatSuite),nl, 
+        testCase:calculateStatiscs(ProjectId, Id, StatSuite), write(StatSuite),nl,
         generateStatisticsString(ProjectId, Suites).
 
 
-getSuitesList(projId) = 0.
-
 showStatisticsMenu() :-
-    generalPrints:printHeaderWithSubtitle(statistics_menu).
+    write("(1) Visualizar estatísticas de projeto"),nl,
+    write("(2) Visualizar estatísticas de suite de testes de um projeto"),nl,
+    write("(3) Voltar").
 
-statisticsMenu([Id, Y]) :-
+
+statisticsMenu() :-
     showStatisticsMenu(),
+
     write("Informe a opção desejada: "),
     read_line_to_codes(user_input, Entrada),
-    (validation:isOptionValid(Entrada, "1", "3") = true ->
-            Option is Entrada, (Option =:= "3" -> write("Retornando ao menu anterior...");
-            tty_clear, chooseStatisticsAction(Option, [Id,Y]), generalPrints:systemPause(), statisticsMenu([Id,Y]));                
-    write("Opção Inválida"),
-    generalPrints:systemPause(),
-    statisticsMenu([Id,Y])).
+    (isOptionValidStat(Entrada) ->
+           (Entrada =:= "3" -> write("Retornando ao menu anterior...");
+                                (tty_clear, chooseStatisticsAction(Entrada))));                
+    write("Opção Inválida"), statisticsMenu().
