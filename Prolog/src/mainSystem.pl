@@ -43,16 +43,18 @@ selectOption(Option, LoggedUser):- option(Option, LoggedUser),
     project:saveAllProjectData, writeln("Pressione qualquer tecla para continuar..."),
     get_char(_).
 
-option(1, LoggedUser):- writeln("MEU USUARIO").
+option(1, LoggedUser):- write("MEU USUARIO: "), writeln(LoggedUser).
 option(2, LoggedUser):- createProject(LoggedUser).
 option(3, LoggedUser):- requestAccess(LoggedUser).
 option(4, _):- listProject().
 option(5, LoggedUser):- manageProject(LoggedUser).
-option(6, LoggedUser):- writeln("GERAR RELATORIOS").
-option(7, LoggedUser):- writeln("LOGOUT").
+option(6, LoggedUser):- write("MEU USUARIO: "), writeln(LoggedUser), writeln("GERAR RELATORIOS").
+option(7, LoggedUser):- write("MEU USUARIO: "), writeln(LoggedUser), writeln("LOGOUT").
+option(8, _):- halt.
 option(_,_):- writeln("Opção inválida!").
 
 systemMenu(LoggedUser):-
     printSystemMenu,
     utils:readNumber(Option),
-    Option =\= 8 -> selectOption(Option, LoggedUser), systemMenu(LoggedUser); writeln("Encerrando programa...").
+    selectOption(Option, LoggedUser),
+    systemMenu(LoggedUser).

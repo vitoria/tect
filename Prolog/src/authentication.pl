@@ -4,6 +4,7 @@
 :- use_module(register).
 :- use_module(login).
 :- use_module(utils).
+:- use_module(mainSystem).
 
 :- dynamic user/3.
 
@@ -34,8 +35,7 @@ readUser(Stream) :-
 
 handleAfterLogin(true, UserName) :-
     saveUsers,
-    write(UserName),
-    writeln(" Should go to the main menu").
+    mainSystem:systemMenu(UserName).
 handleAfterLogin(false, _) :- authenticationMenu.
 
 chooseProcedure(1):- login:login(Logged, UserName), handleAfterLogin(Logged, UserName).
