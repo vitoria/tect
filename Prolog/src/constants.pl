@@ -152,5 +152,5 @@ success_login("Login efetuado com sucesso!").
 string_not_empty(" não pode ser vazio.").
 login_failed("Login incorreto!").
 welcome(", seja bem-vindo(a)!").
-
+password_change_success("Alteração de senha foi efetuada com sucesso").
 get_proj_id("Informe o ID do projeto:").

@@ -4,6 +4,7 @@
 :- use_module(constants).
 :- use_module(project).
 :- use_module(utils).
+:- use_module(profile).
 :- use_module(model).
 
 createProject(LoggedUser):- project:createProject(LoggedUser).
@@ -33,7 +34,8 @@ printSystemMenu():-
 selectOption(Option, LoggedUser):- option(Option, LoggedUser),
     model:projectModel:saveAllProjectData, utils:systemPause.
 
-option(1, LoggedUser):- write("MEU USUARIO: "), writeln(LoggedUser).
+
+option(1, LoggedUser):- profile:profileMenu(LoggedUser).
 option(2, LoggedUser):- createProject(LoggedUser).
 option(3, LoggedUser):- requestAccess(LoggedUser).
 option(4, _):- listProject().
