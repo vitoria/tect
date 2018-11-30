@@ -1,20 +1,17 @@
 :- module(register, []).
 
+:- use_module(authentication).
 :- use_module(constants).
 :- use_module(utils).
 
-:- dynamic user/4.
-
-user(waza, waza, waza).
-
 saveUser(_, Username, _) :-
     constants:creation_failed(Msg),
-    user(_, Username, _),
+    authentication:user(_, Username, _),
     writeln(Msg),
     utils:systemPause.
 
 saveUser(Name, Username, Password) :-
-    (assertz(user(Name, Username, Password)),
+    (assertz(authentication:user(Name, Username, Password)),
     constants:user_registered(Msg),
     writeln(Msg)),
     utils:systemPause.

@@ -5,6 +5,10 @@
 :- use_module(login).
 :- use_module(utils).
 
+:- dynamic user/4.
+
+user(waza, waza, waza).
+
 handleAfterLogin(true, UserName) :-
     tty_clear,
     write(UserName),

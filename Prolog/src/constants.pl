@@ -136,3 +136,5 @@ user_already_registered("Usuário já cadastrado! Por favor, informe um usuário
 user_registered("Usuário cadastrado com sucesso!").
 success_login("Login efetuado com sucesso!").
 string_not_empty(" não pode ser vazio.").
+login_failed("Login incorreto!").
+welcome(", seja bem-vindo(a)!").
