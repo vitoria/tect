@@ -107,8 +107,7 @@ executed('Erro na execucao').
 pass('Passou').
 
 printSuiteMenu():- 
- /*   utils:printHeader(),
- */
+    utils:printHeader(),
     constants: edit_suite_header(EditSuiteHeader),
     writeln(EditSuiteHeader),
     constants: test_Case_Menu(TestMenu),
@@ -133,9 +132,8 @@ selectOptionTestCase(Option, ProjectId, SuiteId):-
     suiteMenu(ProjectId, SuiteId).
 
 createTestCase(ProjectId, SuiteId):-
-/*    constants:create_case_header(CaseHeader),
+    constants:create_case_header(CaseHeader),
     utils:printHeaderAndSubtitle(CaseHeader),
-*/
     getNumberOfTestCases(NumberOfCases),
     NewNumberOfCases is NumberOfCases + 1,
     createCase(ProjectId, SuiteId, NewNumberOfCases).
@@ -181,10 +179,8 @@ continueSteps(ProjectId, SuiteId, CaseId, StepId) :-
     suiteMenu(ProjectId, SuiteId)).
 
 listTestCases(ProjectId, SuiteId, CurrentCase) :-
-/*
     constants:test_case_header(CaseHeader),
     utils:printHeaderAndSubtitle(CaseHeader),
-*/
     getNumberOfTestCases(NumberOfCases),
     NewNumberOfCases is NumberOfCases + 1,
     ((CurrentCase < NewNumberOfCases) ->
@@ -209,9 +205,8 @@ listCase(ProjectId, SuiteId, CurrentCase) :-
     write(Status), nl.
 
 searchTestCase(ProjectId, SuiteId) :-
-/*    constants:search_case_header(Search),
+    constants:search_case_header(Search),
     utils:printHeaderAndSubtitle(Search),
-*/
     writeln('Informe o id do Caso de Teste: '),
     readNumber(CaseId),
     ((validCaseId(CaseId) ->
@@ -244,9 +239,8 @@ validCaseId(Id) :-
     Id < NewNumberOfCases.
 
 editTestCase(ProjectId, SuiteId) :-
-/*    constants:edit_case_header(CaseHeader),
+    constants:edit_case_header(CaseHeader),
     utils:printHeaderAndSubtitle(CaseHeader),
-*/
     writeln('Informe o id do Caso de Teste: '),
     readNumber(CaseId), nl,
     (validCaseId(CaseId) -> menuEditCase(ProjectId, SuiteId, CaseId));
@@ -300,9 +294,8 @@ menuChangeStatus(ProjectId, SuiteId, CaseId) :-
     suiteMenu(ProjectId, SuiteId).
 
 deleteTestCase(ProjectId, SuiteId) :-
-/*    constants:delete_case_header(CaseHeader),
+    constants:delete_case_header(CaseHeader),
     utils:printHeaderAndSubtitle(CaseHeader),
-*/
     writeln('Informe o id do caso de teste: '),
     readNumber(CaseId),
     (validCaseId(CaseId) -> listCase(ProjectId, SuiteId, CaseId), write('Tem certeza que deseja excluir esse caso de testes? ((1)Sim/(2)Nao)'), nl,
