@@ -46,6 +46,7 @@ createSuite(Id, Nome, Descricao, Projeto):-
                     writeln("Descrição: "),
                     read_line_to_string(user_input, Descricao), 
                     assertz(suite(Id, Nome, Descricao, Projeto)),
+                    saveTestSuite,
                     writeln("Suite criada com sucesso"),
                     writeln(" "),
                     writeln("Pressione enter para continuar..."),
@@ -193,22 +194,21 @@ caseTestMenu(Projeto):- tty_clear,
 goBack():- writeln("Retornar para o menu anterior").
 
 choose_action(Option, Projeto):-
-                    ((Option =:= "1" -> (createSuite(_, _, _, Projeto)));
+                    (Option =:= "1" -> (createSuite(_, _, _, Projeto)));
                     (Option =:= "2" -> (listSuite(Projeto)));
                     (Option =:= "3" -> (searchSuite(Projeto)));
                     (Option =:= "4" -> (editSuite(Projeto)));
                     (Option =:= "5" -> (deleteSuite(Projeto)));
                     (Option =:= "6" -> (caseTestMenu(Projeto)));
-                    (Option =:= "7" -> (goBack)),
-                    saveTestSuite).
+                    (Option =:= "7" -> (goBack)).
     
 
 suiteMenu(Projeto):-
                     showSuiteMenu,
-                    readSuiteFromFile,
                     writeln("Informe a opção desejada: "),
                     read_line_to_string(user_input, Option),
                     (isOptionValidSuit(Option),
+                    
                     choose_action(Option, Projeto));
                     (tty_clear,
                     constants:header(H),
@@ -241,9 +241,9 @@ readSuiteFromFile():-
 
 readSuite(InStream):- at_end_of_stream(InStream).
 readSuite(InStream):- readLine(InStream, Id),
-                    readLine(Strem, Nome),
-                    readLine(Strem, Descricao),
-                    readLine(Strem, Projeto),
+                    readLine(InStream, Nome),
+                    readLine(InStream, Descricao),
+                    readLine(InStream, Projeto),
                     string_to_atom(Id, AtomId),
                     atom_number(AtomId, NumberId),
                     string_to_atom(Projeto, AtomProjeto),
@@ -252,13 +252,9 @@ readSuite(InStream):- readLine(InStream, Id),
                     readSuite(InStream).
 
 readLine(InStream, Line):-
-                    writeln("Antes do getO"),
                     get0(InStream,Char),
-                    writeln(Char),
-                    writeln("Depois do getO"),
                     checkCharAndReadRest(Char,Chars,InStream),
-                    atom_chars(Line,Chars),
-                    writeln("Terminou a execução").
+                    atom_chars(Line,Chars).
                 
 checkCharAndReadRest(10,[],_) :- !.  % Return
 checkCharAndReadRest(-1,[],_) :- !.  % End of Stream
