@@ -1,14 +1,21 @@
 :- initialization(main).
 
-:- use_module(util).
+:- use_module("util").
+:- use_module("testSuite").
+:- use_module("constants").
+:- use_module("project").
+
 
 isOptionValidStst("1").
 isOptionValidStat("2").
 isOptionValidStat("3").
 
+readNumber(Number):- read_line_to_codes(user_input, Codes), string_to_atom(Codes, Atom), atom_number(Atom, Number).
+
+
 sumStatisticsProject(_,[], Result):- Result is 0.
-sumStatisticsProject(ProjectId,[Id|List], Result) :-  sumStatisticsProject(ProjectId,List, Result2),
-                    testCase:calculateStatiscs(ProjectId, Id, StatSuite), Result is Result2 + StatSuite.
+sumStatisticsProject(ProjectId,[IdSuite|List], Result) :-  sumStatisticsProject(ProjectId,List, Result2),
+                    testCase:calculateStatiscs(ProjectId, IdSuite, StatSuite), Result is Result2 + StatSuite.
 
 
 getSuitesList(Projeto, X):- findall(I, testSuite:suite(I, _, _, Projeto), X). 
@@ -52,11 +59,11 @@ isValidProjId(TestedId, [Id|ProjectsId]):-
     (TestedId =:= Id -> true;
     isValidProjId(TestedId, ProjectsId)).
 
-statisticsFromAProject(projectsId):-
+statisticsFromAProject(ProjectsId):-
     write("#--------------# ESTATÍSTICAS #------------#"),
     write("Informe o ID de um projeto para visualizar seu relatório:"),
-    read_line_to_codes(user_input, ProjectId),
-    (validation:isValidProjId(ProjectId,projectsId) = true -> 
+    readNumber(ProjectId),
+    (isValidProjId(ProjectId,ProjectsId) -> 
         tty_clear,
         getAllSuites(ProjectId, Suites),
         write("#--------------# ESTATÍSTICAS #------------#"),nl,
@@ -77,12 +84,12 @@ showStatisticsMenu() :-
     write("(3) Voltar").
 
 
-statisticsMenu() :-
+statisticsMenu(LoggedUser) :-
     showStatisticsMenu(),
 
     write("Informe a opção desejada: "),
-    read_line_to_codes(user_input, Entrada),
+    readNumber(Entrada),
     (isOptionValidStat(Entrada) ->
-           (Entrada =:= "3" -> write("Retornando ao menu anterior...");
+           (Entrada =:= "3" -> write("Retornando ao menu anterior..."), mainSystem:systemMenu(LoggedUser);
                                 (tty_clear, chooseStatisticsAction(Entrada))));                
-    write("Opção Inválida"), statisticsMenu().
+    write("Opção Inválida"), statisticsMenu(LoggedUser).
