@@ -1,7 +1,7 @@
 :- module(project, [projectMenu/2]).
 
-:- use_module("constants").
-:- use_module("utils").
+:- use_module(constants).
+:- use_module(utils).
 
 % Project(id, name, description, owner)
 :- dynamic project/4, projectUser/2, request/2, nextProjectId/1.
@@ -148,9 +148,8 @@ requestAccess(ProjectId, User):- project(ProjectId, _, _, Owner), User == Owner 
     assertz(request(ProjectId, User)), writeln("Acesso solicitado com sucesso."))).
 
 printProjectOwnerMenu():-
-    tty_clear,
-    constants:header(Header),
-    writeln(Header),
+    constants:project_menu_owner_header(ProjectMenuOwnerHeader),
+    utils:printHeaderAndSubtitle(ProjectMenuOwnerHeader),
     constants:project_menu_owner(ProjectMenuOwner),
     writeln(ProjectMenuOwner).
 

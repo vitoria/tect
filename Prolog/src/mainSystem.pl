@@ -1,8 +1,8 @@
 :- module(mainSystem, [systemMenu/1]).
 
-:- use_module("constants").
-:- use_module("project").
-:- use_module("utils").
+:- use_module(constants).
+:- use_module(project).
+:- use_module(utils).
 
 createProject(LoggedUser):-
     tty_clear,
