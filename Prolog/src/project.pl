@@ -116,10 +116,8 @@ defineNextProjectId(NewId):-
     assertz(nextProjectId(NewId))) ; true.
 
 createProject(LoggedUser):-
-    constants:header(Header),
-    writeln(Header),
     constants:create_project_header(CreateProjectHeader),
-    writeln(CreateProjectHeader),
+    utils:printHeaderAndSubtitle(CreateProjectHeader),
     nextProjectId(Id),
     writeln("Nome do projeto:"),
     read_line_to_string(user_input, Name),
@@ -131,10 +129,8 @@ createProject(LoggedUser):-
     writeln("Projeto criado com sucesso!").
 
 listProject():-
-    constants:header(Header),
-    writeln(Header),
     constants:list_project_header(ListProjectHeader),
-    writeln(ListProjectHeader),
+    utils:printHeaderAndSubtitle(ListProjectHeader),
     constants:list_projects_table_header(ListProjectsTableHeader),
     writeln(ListProjectsTableHeader),
     project(Id, Name, _, Owner),
@@ -148,24 +144,20 @@ requestAccess(ProjectId, User):- project(ProjectId, _, _, Owner), User == Owner 
     assertz(request(ProjectId, User)), writeln("Acesso solicitado com sucesso."))).
 
 printProjectOwnerMenu():-
-    constants:project_menu_owner_header(ProjectMenuOwnerHeader),
-    utils:printHeaderAndSubtitle(ProjectMenuOwnerHeader),
+    constants:project_menu_header(ProjectMenuHeader),
+    utils:printHeaderAndSubtitle(ProjectMenuHeader),
     constants:project_menu_owner(ProjectMenuOwner),
     writeln(ProjectMenuOwner).
 
 printProjectUserMenu():-
-    tty_clear,
-    constants:header(Header),
-    writeln(Header),
+    constants:project_menu_header(ProjectMenuHeader),
+    utils:printHeaderAndSubtitle(ProjectMenuHeader),
     constants:project_menu_user(ProjectMenuUser),
     writeln(ProjectMenuUser).
 
 projectInfo(Id):-
-    tty_clear,
-    constants:header(Header),
-    writeln(Header),
     constants:project_detais_header(ProjectDetailsHeader),
-    writeln(ProjectDetailsHeader),
+    utils:printHeaderAndSubtitle(ProjectDetailsHeader),
     project(Id, Name, Desc, Owner),
     write("ID: "),
     writeln(Id),
@@ -178,11 +170,8 @@ projectInfo(Id):-
     
 
 editProjectName(Id):-
-    tty_clear,
-    constants:header(Header),
-    writeln(Header),
     constants:edit_project_header(EditProjectHeader),
-    writeln(EditProjectHeader),
+    utils:printHeaderAndSubtitle(EditProjectHeader),
     project(Id, Name, Desc, Owner),
     write("Nome anterior: "),
     writeln(Name),
@@ -193,11 +182,8 @@ editProjectName(Id):-
     writeln("Projeto editado com sucesso!").
 
 editProjectDesc(Id):-
-    tty_clear,
-    constants:header(Header),
-    writeln(Header),
     constants:edit_project_header(EditProjectHeader),
-    writeln(EditProjectHeader),
+    utils:printHeaderAndSubtitle(EditProjectHeader),
     project(Id, Name, Desc, Owner),
     write("Descrição anterior: "),
     writeln(Desc),
@@ -208,6 +194,8 @@ editProjectDesc(Id):-
     writeln("Projeto editado com sucesso!").
 
 verifyPermissions(Id):-
+    constants:project_permissions_header(PermissionsHeader),
+    utils:printHeaderAndSubtitle(PermissionsHeader),
     (request(Id, _),
     foreach(request(Id, User), ((projectUser(Id, User), writeln("O usuário já possui permissão no projeto."));(
         write("Deseja dar permissão de acesso a "),
@@ -221,11 +209,8 @@ verifyPermissions(Id):-
         )))); writeln("Não existem solicitações para o projeto.").
 
 removeProject(Id):-
-    tty_clear,
-    constants:header(Header),
-    writeln(Header),
     constants:remove_project_header(RemoveProjectHeader),
-    writeln(RemoveProjectHeader),
+    utils:printHeaderAndSubtitle(RemoveProjectHeader),
     writeln("Realmente deseja remover o projeto atual? (S/N)"),
     read_line_to_string(user_input, Response),
     (Response == "S"; Response == "s") -> (
