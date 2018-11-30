@@ -3,6 +3,7 @@
 :- use_module(constants).
 :- use_module(project).
 :- use_module(utils).
+:- use_module(profile).
 
 createProject(LoggedUser):-
     tty_clear,
@@ -43,7 +44,7 @@ selectOption(Option, LoggedUser):- option(Option, LoggedUser),
     project:saveAllProjectData, writeln("Pressione qualquer tecla para continuar..."),
     get_char(_).
 
-option(1, LoggedUser):- writeln("MEU USUARIO").
+option(1, LoggedUser):- profile:profileMenu(LoggedUser).
 option(2, LoggedUser):- createProject(LoggedUser).
 option(3, LoggedUser):- requestAccess(LoggedUser).
 option(4, _):- listProject().
