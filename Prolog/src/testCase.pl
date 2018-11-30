@@ -160,7 +160,7 @@ continueSteps(ProjectId, SuiteId, CaseId, StepId) :-
     writeln('Deseja inserir outro passo ((1)Sim, (2)Não)?'),
     readNumber(Option),
     ((Option == 1) -> continueSteps(ProjectId, SuiteId, CaseId, NewStepId);
-    (Option == 2) -> writeln('Pressione qualquer tecla para continuar...'), get_char(_), saveAllTestCasesData(), suiteMenu(ProjectId, SuiteId);
+    (Option == 2) -> true;
     writeln('Opcao invalida. Nenhum passo a mais será adicionado. Redirecionando para o menu da suite de testes...'),
     saveAllTestCasesData()).
 

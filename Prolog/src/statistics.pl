@@ -5,7 +5,7 @@
 :- use_module(constants).
 :- use_module(project).
 :- use_module(mainSystem).
-:- use_module(testCases).
+:- use_module(testCase).
 :- use_module(model).
 
 isOptionValidStst(1).
@@ -19,7 +19,7 @@ readNumber(Number):-
 sumStatisticsProject(_,[], 0).
 sumStatisticsProject(ProjectId,[IdSuite|List], Result) :-  
                     sumStatisticsProject(ProjectId,List, Result2),
-                    model:testCases:calculateStatiscs(ProjectId, IdSuite, StatSuite), Result is (Result2 + StatSuite).
+                    model:testCase:calculateStatiscs(ProjectId, IdSuite, StatSuite), Result is (Result2 + StatSuite).
 
 
 getSuitesList(Projeto, X):- 
@@ -84,7 +84,7 @@ statisticsFromAProject(ProjectsId):-
 generateStatisticsString(_,[]).
 generateStatisticsString(ProjectId,[Id, Name,_,_|Suites]):-
         write(Id), write(" - "), write(Name), write(" - "), 
-        model:testCases:calculateStatiscs(ProjectId, Id, StatSuite), write(StatSuite),nl,
+        model:testCase:calculateStatiscs(ProjectId, Id, StatSuite), write(StatSuite),nl,
         generateStatisticsString(ProjectId, Suites).
 
 
