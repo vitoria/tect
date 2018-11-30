@@ -3,6 +3,7 @@
 :- use_module(constants).
 :- use_module(project).
 :- use_module(utils).
+:- use_module(model).
 
 createProject(LoggedUser):-
     tty_clear,
@@ -20,7 +21,7 @@ requestAccess(LoggedUser):-
     writeln(RequestAccessHeader),
     writeln("Informe o ID do projeto:"),
     utils:readNumber(Id),
-    project:project(Id, _, _, _) -> project:requestAccess(Id, LoggedUser); writeln("Id informado inválido.").
+    model:projectModel:project(Id, _, _, _) -> project:requestAccess(Id, LoggedUser); writeln("Id informado inválido.").
 
 manageProject(LoggedUser):-
     tty_clear,
@@ -30,7 +31,7 @@ manageProject(LoggedUser):-
     writeln(ManageProjectHeader),
     writeln("Informe o ID do projeto:"),
     utils:readNumber(Id),
-    project:project(Id, _, _, _) -> (project:projectMenu(LoggedUser, Id)); writeln("Id informado inválido.").
+    model:projectModel:project(Id, _, _, _) -> (project:projectMenu(LoggedUser, Id)); writeln("Id informado inválido.").
 
 printSystemMenu():-
     tty_clear,
@@ -40,7 +41,7 @@ printSystemMenu():-
     writeln(MainMenu).
 
 selectOption(Option, LoggedUser):- option(Option, LoggedUser),
-    project:saveAllProjectData, writeln("Pressione qualquer tecla para continuar..."),
+    model:projectModel:saveAllProjectData, writeln("Pressione qualquer tecla para continuar..."),
     get_char(_).
 
 option(1, LoggedUser):- write("MEU USUARIO: "), writeln(LoggedUser).
