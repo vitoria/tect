@@ -17,14 +17,14 @@ headerCreate:-
                     writeln(" ").
 
 verifyId(Projeto, Id):-
-                    writeln("Id:"),    
-                    utils:readNumber(ReadId),
-                    ((model:testSuiteModel:suite(ReadId, _, _, Projeto), 
-                    writeln("Id já cadastrado, por favor informe outro."),
-                    verifyId(Projeto, Id));
-                    Id = ReadId).
+                    (model:testSuiteModel:nextId(Id, Projeto);
+                    Id is 1),
+                    NextId is Id+1, 
+                    (retract(model:testSuiteModel:nextId(_, Projeto)); true),
+                    assertz(model:testSuiteModel:nextId(NextId, Projeto)),
+                    testSuiteModel:saveNextId.
 
-createSuite(Id, Nome, Descricao, Projeto):- 
+createSuite(Projeto):- 
                     headerCreate,
                     verifyId(Projeto, Id), 
                     writeln("Nome: "),
@@ -183,7 +183,7 @@ caseTestMenu(Projeto):- tty_clear,
                     write(" e o id do projeto é "), writeln(Projeto),
                     testCase:testCaseMenu(Projeto, SuiteId).
 
-choose_action(1, Projeto):- createSuite(_, _, _, Projeto).
+choose_action(1, Projeto):- createSuite(Projeto).
 choose_action(2, Projeto):- listSuite(Projeto).
 choose_action(3, Projeto):- searchSuite(Projeto).
 choose_action(4, Projeto):- editSuite(Projeto).
@@ -194,11 +194,7 @@ choose_action(_, Projeto):- tty_clear,
                         constants:header(H),
                         writeln(H),
                         constants:invalid_option(X),
-                        writeln(" "),
-                        writeln(X),
-                        writeln(" "),
-                        writeln("Pressione enter para voltar para o Menu de Suite..."),
-                        read_line_to_string(user_input, _),
+                        utils:showPausedMsg(X),
                         suiteMenu(Projeto).
 
 
