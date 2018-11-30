@@ -107,6 +107,7 @@ executed('Erro na execucao').
 pass('Passou').
 
 printSuiteMenu():- 
+    utils:printHeader(),
     constants: edit_suite_header(EditSuiteHeader),
     writeln(EditSuiteHeader),
     constants: test_Case_Menu(TestMenu),
@@ -131,8 +132,8 @@ selectOptionTestCase(Option, ProjectId, SuiteId):-
     suiteMenu(ProjectId, SuiteId).
 
 createTestCase(ProjectId, SuiteId):-
-    constants: create_case_header(CreateTestCase),
-    writeln(CreateTestCase),
+    constants:create_case_header(CaseHeader),
+    utils:printHeaderAndSubtitle(CaseHeader),
     getNumberOfTestCases(NumberOfCases),
     NewNumberOfCases is NumberOfCases + 1,
     createCase(ProjectId, SuiteId, NewNumberOfCases).
@@ -178,6 +179,8 @@ continueSteps(ProjectId, SuiteId, CaseId, StepId) :-
     suiteMenu(ProjectId, SuiteId)).
 
 listTestCases(ProjectId, SuiteId, CurrentCase) :-
+    constants:test_case_header(CaseHeader),
+    utils:printHeaderAndSubtitle(CaseHeader),
     getNumberOfTestCases(NumberOfCases),
     NewNumberOfCases is NumberOfCases + 1,
     ((CurrentCase < NewNumberOfCases) ->
@@ -203,7 +206,7 @@ listCase(ProjectId, SuiteId, CurrentCase) :-
 
 searchTestCase(ProjectId, SuiteId) :-
     constants:search_case_header(Search),
-    writeln(Search),
+    utils:printHeaderAndSubtitle(Search),
     writeln('Informe o id do Caso de Teste: '),
     readNumber(CaseId),
     ((validCaseId(CaseId) ->
@@ -237,7 +240,7 @@ validCaseId(Id) :-
 
 editTestCase(ProjectId, SuiteId) :-
     constants:edit_case_header(CaseHeader),
-    writeln(CaseHeader),
+    utils:printHeaderAndSubtitle(CaseHeader),
     writeln('Informe o id do Caso de Teste: '),
     readNumber(CaseId), nl,
     (validCaseId(CaseId) -> menuEditCase(ProjectId, SuiteId, CaseId));
@@ -252,7 +255,6 @@ overwriteCase(ProjectId, SuiteId, CaseId):-
     createCase(ProjectId, SuiteId, CaseId).
 
 menuEditCase(ProjectId, SuiteId, CaseId) :-
-    constants:edit_case_header(CaseHeader),
     writeln(CaseHeader),
     writeln('(1) Editar Dados do Caso de Teste'),
     writeln('(2) Editar Status do Caso de Teste'),
@@ -291,8 +293,8 @@ menuChangeStatus(ProjectId, SuiteId, CaseId) :-
     suiteMenu(ProjectId, SuiteId).
 
 deleteTestCase(ProjectId, SuiteId) :-
-    constants:test_case_header(CaseHeader),
-    writeln(CaseHeader),
+    constants:delete_case_header(CaseHeader),
+    utils:printHeaderAndSubtitle(CaseHeader),
     writeln('Informe o id do caso de teste: '),
     readNumber(CaseId),
     (validCaseId(CaseId) -> listCase(ProjectId, SuiteId, CaseId), write('Tem certeza que deseja excluir esse caso de testes? ((1)Sim/(2)Nao)'), nl,
