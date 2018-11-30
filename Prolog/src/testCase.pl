@@ -110,7 +110,7 @@ testCaseMenu(ProjectId, SuiteId) :-
     (Option =\= 6, selectOptionTestCase(Option, ProjectId, SuiteId), testCaseMenu(ProjectId, SuiteId)); true.
 
 selectOptionTestCase(Option, ProjectId, SuiteId):-
-    constants:test_case_header(CaseHeader),
+    % constants:test_case_header(CaseHeader),
     ((Option == 1 -> createTestCase(ProjectId, SuiteId);
     Option == 2 -> listTestCases(ProjectId, SuiteId);
     Option == 3 -> searchTestCase(ProjectId, SuiteId);
@@ -150,7 +150,7 @@ continueSteps(ProjectId, SuiteId, CaseId, StepId) :-
     writeln(CaseId),
     constants:case_step_description(CaseDesc),
     constants:case_step_expected_result(CaseResult),
-    constants:case_step_continue_message(CaseContinueMsg),
+    % constants:case_step_continue_message(CaseContinueMsg),
     NewStepId is StepId + 1,
     writeln(CaseDesc),
     read_line_to_string(user_input, Description), 
@@ -174,10 +174,6 @@ listTestCases(ProjectId, SuiteId):-
     write(CaseId), write("  -  "),
     write(Name), write("  -  "), 
     writeln(Status), fail; true.
-/*
-
-
-    */
 
 searchTestCase(ProjectId, SuiteId) :-
     constants:search_case_header(Search),
@@ -194,7 +190,7 @@ searchTestCase(ProjectId, SuiteId) :-
 getNumberOfSteps(Count):-
     aggregate_all(count, step(_,_,_,_), Count).
 
-listSteps(ProjectId, CaseId, SuiteId):-
+listSteps(_, CaseId, _):-
     step(StepId, CaseId, Details, ExpectedResult) ->   
         write('Passo '), writeln(StepId),
         write('Descricao: '), writeln(Details),
