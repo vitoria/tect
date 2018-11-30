@@ -41,11 +41,8 @@ getProjectResume([[Id, Name]|ProjectsTouple]):-
 getProjectsStatistics(ProjectsTouple) :-
     constants:statistics_header(X),
     utils:printHeaderAndSubtitle(X),
-    write(" ID - NOME DO PROJETO - MÉDIA DAS ESTATÍSTICAS DO PROJETO"),nl,
+    writeln(" ID - NOME DO PROJETO - MÉDIA DAS ESTATÍSTICAS DO PROJETO"),
     getProjectResume(ProjectsTouple).
-
-
-
 
 getProjectIdList(X):- 
     findall(I, model:projectModel:project(I, _, _, _), X). 
@@ -71,9 +68,9 @@ statisticsFromAProject():-
         generateStatisticsString(ProjectId, Suites);
     write("Não existe projeto com o ID informado.")).
 
-generateStatisticsString(_,[]).
+generateStatisticsString(_,[]). 
 generateStatisticsString(ProjectId,[[Id, Name,_,_]|Suites]):-
-    model:testCase:calculateStatistics(ProjectId, Id, StatSuite),
+    testCase:calculateStatistics(ProjectId, Id, StatSuite),
     write(Id), write(" - "), write(Name), write(" - "), write(StatSuite), writeln("%"),
     generateStatisticsString(ProjectId, Suites).
 

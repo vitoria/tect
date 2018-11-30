@@ -142,13 +142,12 @@ createCase(ProjectId, SuiteId, CaseId) :-
     read_line_to_string(user_input, Goal), nl,
     writeln(PreConst),
     read_line_to_string(user_input, Preconditions), nl,
-    assertz(testCase(ProjectId, SuiteId, CaseId, Name, Goal, 'Nao executado',  Preconditions)),
+    assertz(testCase(ProjectId, SuiteId, CaseId, Name, Goal, "Nao executado",  Preconditions)),
     writeln(Steps),
     stepCount(StepId),
     continueSteps(ProjectId, SuiteId, CaseId, StepId).
 
 continueSteps(ProjectId, SuiteId, CaseId, StepId) :-
-    writeln(CaseId),
     constants:case_step_description(CaseDesc),
     constants:case_step_expected_result(CaseResult),
     % constants:case_step_continue_message(CaseContinueMsg),
@@ -234,7 +233,7 @@ menuEditCase(ProjectId, SuiteId, CaseId) :-
 
 menuChangeStatus(ProjectId, SuiteId, CaseId) :-
     constants:test_case_header(CaseHeader),
-    printHeaderAndSubtitle(CaseHeader),
+    utils:printHeaderAndSubtitle(CaseHeader),
     writeln('- Editando Caso de Testes'),
     writeln('Estado atual'),
     testCase(ProjectId, SuiteId, CaseId, Name, Goal, OldStatus, Preconditions),
@@ -244,9 +243,9 @@ menuChangeStatus(ProjectId, SuiteId, CaseId) :-
     writeln('(3) Erro na execucao'),
     writeln('(4) Voltar'),
     readNumber(Option),
-    (((Option == 1 -> NewStatus = 'Passou');
-    (Option == 2 -> NewStatus = 'Nao passou');
-    (Option == 3 -> NewStatus = 'Erro na execucao')),
+    (((Option == 1 -> NewStatus = "Passou");
+    (Option == 2 -> NewStatus = "Nao passou");
+    (Option == 3 -> NewStatus = "Erro na execucao")),
     testCase(ProjectId, SuiteId, CaseId, Name, Goal, OldStatus, Preconditions),
     retract(testCase(ProjectId, SuiteId, CaseId, Name, Goal, OldStatus, Preconditions)),
     assertz(testCase(ProjectId, SuiteId, CaseId, Name, Goal, NewStatus, Preconditions)), saveAllTestCasesData());
@@ -260,8 +259,7 @@ deleteTestCase(ProjectId, SuiteId) :-
     (testCase(ProjectId, SuiteId, CaseId, Name, Goal, OldStatus, Preconditions), listTestCases(ProjectId, SuiteId), write('Tem certeza que deseja excluir esse caso de testes? ((1)Sim/(2)Nao)'), nl,
     readNumber(Option),
     (((Option == 1) -> retract(testCase(ProjetId, SuiteId, CaseId, _, _, _, _)), writeln('Caso de testes excluido com sucesso.'), saveAllTestCasesData());
-    (writeln('Caso de testes nao excluido.'))),
-    suiteMenu(ProjectId, SuiteId));
+    (writeln('Caso de testes nao excluido.'))));
     writeln('Id informado nao cadastrado.'),
     writeln('Pressione qualquer tecla para continuar...').
 
@@ -279,6 +277,21 @@ getNumberOfExecutedTests(ProjectId, SuiteId, CaseId, AuxNumber, Number):-
     writeln(''),
     Number is AuxNumber.
 
+getNumberOfExecutedTestsNew(_, _, [], 0).
+getNumberOfExecutedTestsNew(ProjectId, SuiteId, [Status|List], Number):-
+    getNumberOfExecutedTestsNew(ProjectId, SuiteId, List, Number2),
+    (Status \= "Nao executado" -> (Number is (Number2 + 1)); (Number is Number2)).
+
+getNumberOfPassingTestsNew(_, _, [], 0).
+getNumberOfPassingTestsNew(ProjectId, SuiteId, [Status|List], Number):-
+    getNumberOfPassingTestsNew(ProjectId, SuiteId, List, Number2),
+    (Status = "Passou" -> (Number is (Number2 + 1)); (Number is Number2)).
+
+getStatusList(ProjectId, SuiteId, List):- findall(Status, testCase(ProjectId, SuiteId, _, _, _, Status, _), List).
+
+printStatusList([]).
+printStatusList([H|List]):- writeln(H), printStatusList(List).
+
 getNumberOfPassingTests(ProjectId, SuiteId, CaseId, AuxNumber, Number):-
     getNumberOfTestCases(CasesNumber),
     increment(CasesNumber, NewCasesNumber),
@@ -290,10 +303,19 @@ getNumberOfPassingTests(ProjectId, SuiteId, CaseId, AuxNumber, Number):-
     Number is AuxNumber.
 
 calculateStatistics(ProjectId, SuiteId, StatSuite):-
-    getNumberOfExecutedTests(ProjectId, SuiteId, 1, 0, Executed),
-    getNumberOfPassingTests(ProjectId, SuiteId, 1, 0, Passing),
-    ((Executed == 0) -> StatSuite is 0;
+    getStatusList(ProjectId, SuiteId, List),
+    % printStatusList(StatSuite),
+    getNumberOfExecutedTestsNew(ProjectId, SuiteId, List, Executed),
+    getNumberOfPassingTestsNew(ProjectId, SuiteId, List, Passing),
+    % writeln(Executed), writeln(Passing),
+    % writeln(ProjectId), writeln(SuiteId),
+    ((Executed == 0) -> (StatSuite is 0);
         calculate(Passing, Executed, StatSuite)).
 
 calculate(Passing, Executed, Result):-
-    Result is (Passing/Executed) * 100.0.
+    % writeln("Bla"),
+    % writeln(Passing),
+    % write(Executed),
+    % write(Result),
+    Div is (Passing/Executed),
+    Result is (Div * 100.0).
