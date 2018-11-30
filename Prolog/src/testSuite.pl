@@ -4,6 +4,7 @@
 :- use_module(utils).
 :- use_module(model).
 :- use_module(project).
+:- use_module(testCase).
 
 factToList(Projeto, X):- findall(I, model:testSuiteModel:suite(I, _, _, Projeto), X).
 
@@ -180,7 +181,7 @@ caseTestMenu(Projeto):- tty_clear,
                     writeln(" "),
                     write("O id da suite a ser chamada é: "), write(SuiteId),
                     write(" e o id do projeto é "), writeln(Projeto),
-                    writeln("CHAMAR O MÉTODO AQUI DO MENU DO CASO DE TESTE").
+                    testCase:testCaseMenu(Projeto, SuiteId).
 
 choose_action(1, Projeto):- createSuite(Projeto).
 choose_action(2, Projeto):- listSuite(Projeto).
