@@ -1,13 +1,17 @@
 :- module(testCases, [suiteMenu/2]).
 
-:- use_module("Constants").
+:- use_module(constants).
+:- use_module(utils).
 /*testCase(projectId, suiteId, caseId, name, goals, status, preconditions).
 step(stepId, caseId, details, expectedResult).
 */
 :- dynamic testCase/7.
 :- dynamic step/4.
 
+:-initialization(main).
+
 main:-
+    loadAllTestCasesData,
     writeln('Digite o id do projeto:'),
     readNumber(ProjectId),
     writeln('Digite o id da suite de testes: '),
@@ -58,29 +62,29 @@ readStepsFromFile():-
 
 readSteps(Stream):- at_end_of_stream(Stream).
 readSteps(Stream):-
-    readLine(Stream, StepId),
-    readLine(Stream, CaseId),
-    readLine(Stream, Details),
-    readLine(Stream, ExpectedResult),
+    utils:readLine(Stream, StepId),
+    utils:readLine(Stream, CaseId),
+    utils:readLine(Stream, Details),
+    utils:readLine(Stream, ExpectedResult),
     string_to_atom(StepId, AtomId1),
     atom_number(AtomId1, StepNumberId),
     string_to_atom(CaseId, AtomId2),
     atom_number(AtomId2, CaseNumberId),
     string_to_atom(StringDetails, Details),
     string_to_atom(StringExpectedResult, ExpectedResult),
-    assertz(step(StepId, CaseId, StringDetails, StringExpectedResult)),
+    assertz(step(StepNumberId, CaseNumberId, StringDetails, StringExpectedResult)),
     readSteps(Stream).
     
 
 readTestCase(Stream):- at_end_of_stream(Stream).
 readTestCase(Stream):-
-    readLine(Stream, ProjectId),
-    readLine(Stream, SuiteId),
-    readLine(Stream, CaseId),
-    readLine(Stream, Name),
-    readLine(Stream, Goals),
-    readLine(Stream, Status),
-    readLine(Stream, Preconditions),
+    utils:readLine(Stream, ProjectId),
+    utils:readLine(Stream, SuiteId),
+    utils:readLine(Stream, CaseId),
+    utils:readLine(Stream, Name),
+    utils:readLine(Stream, Goals),
+    utils:readLine(Stream, Status),
+    utils:readLine(Stream, Preconditions),
     string_to_atom(ProjectId, AtomId1),
     atom_number(AtomId1, ProjectNumberId),
     string_to_atom(SuiteId, AtomId2),
@@ -91,7 +95,7 @@ readTestCase(Stream):-
     string_to_atom(StringGoals, Goals),
     string_to_atom(StringStatus, Status),
     string_to_atom(StringPreconditions, Preconditions),
-    assertz(testCase(ProjectId, SuiteId, CaseId, StringName, StringGoals, StringStatus, StringPreconditions)),
+    assertz(testCase(ProjectNumberId, SuiteNumberId, CaseNumberId, StringName, StringGoals, StringStatus, StringPreconditions)),
     readTestCase(Stream).
 
 stepCount(0).
@@ -101,8 +105,6 @@ executed('Nao passou').
 executed('Erro na execucao').
 
 pass('Passou').
-
-:-initialization(main).
 
 printSuiteMenu():- 
     constants: edit_suite_header(EditSuiteHeader),
