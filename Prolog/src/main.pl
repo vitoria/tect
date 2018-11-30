@@ -2,4 +2,4 @@
 
 :- use_module(authentication).
 
-main :- authentication:authenticationMenu.
+main :- authentication:initialization.

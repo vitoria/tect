@@ -9,11 +9,35 @@
 
 user(waza, waza, waza).
 
+saveUsers() :-
+    constants:data_folder_path(DataFolder),
+    constants:users_file_path(UserFilePath),
+    utils:createDirectory(DataFolder),
+    open(UserFilePath, write, Stream),   
+    forall(user(Name, Username, Password),(
+    writeln(Stream, Name), writeln(Stream, Username), writeln(Stream, Password))),
+    close(Stream).
+
+loadUsers() :-
+    constants:users_file_path(UserFilePath),
+    exists_file(UserFilePath) -> (
+    open(UserFilePath, read, Stream),
+    readUser(Stream),
+    close(Stream));
+    true.
+
+readUser(Stream) :- at_end_of_stream(Stream).
+readUser(Stream) :-
+    utils:readLine(Stream, NameAtom), atom_string(NameAtom, Name),
+    utils:readLine(Stream, UsernameAtom), atom_string(UsernameAtom, Username),
+    utils:readLine(Stream, PasswordAtom), atom_string(PasswordAtom, Password),
+    assertz(user(Name, Username, Password)),
+    readUser(Stream).
+
 handleAfterLogin(true, UserName) :-
-    tty_clear,
+    saveUsers,
     write(UserName),
-    writeln(", seja bem-vindo(a)!"),
-    utils:systemPause.
+    writeln(" Should go to the main menu").
 handleAfterLogin(false, _) :- authenticationMenu.
 
 chooseProceedure(1):- login:login(Logged, UserName), handleAfterLogin(Logged, UserName).
@@ -34,4 +58,6 @@ authenticationMenu():-
     showAuthenticationMenu,
     utils:readOption(Option),
     chooseProceedure(Option).
+
+initialization() :- loadUsers, authenticationMenu.
     

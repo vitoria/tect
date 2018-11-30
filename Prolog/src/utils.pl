@@ -48,3 +48,19 @@ readNumber(Number) :-
     read_line_to_codes(user_input, Codes),
     string_to_atom(Codes, Atom),
     atom_number(Atom, Number).
+
+readLine(Stream, Line):-
+    get0(Stream, Char),
+    checkCharAndReadRest(Char, Chars, Stream),
+    atom_chars(Line, Chars).
+
+checkCharAndReadRest(10, [], _) :- !.  % Return
+checkCharAndReadRest(-1, [], _) :- !.  % End of Stream
+checkCharAndReadRest(end_of_file, [], _) :- !.
+checkCharAndReadRest(Char, [Char|Chars], Stream) :-
+    get0(Stream, NextChar),
+    checkCharAndReadRest(NextChar, Chars, Stream).
+
+createDirectory(Directory) :-
+    exists_directory(Directory) -> true;
+    make_directory(Directory).
