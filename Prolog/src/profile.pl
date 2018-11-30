@@ -8,8 +8,10 @@
 showProfile(LoggedUser):-
                     model:userModel:user(Name, LoggedUser, _),
                     headerMyUser,
-                    write("Nome: "), writeln(Name),
-                    write("Username: "), writeln(LoggedUser),
+                    constants:name_const(N),
+                    constants:username_const(U),
+                    write(N), writeln(Name),
+                    write(U), writeln(LoggedUser),
                     writeln(" "),
                     utils:systemPause,
                     profileMenu(LoggedUser).
@@ -19,36 +21,37 @@ editPassword(LoggedUser):-
                     model:userModel:user(_, LoggedUser, Password),
                     constants:old_password(O),
                     writeln(O),
-                    (read_line_to_string(user_input, Password) -> 
-                        (editPasswordAux(LoggedUser)));
+                    (utils:readString(Password) -> 
+                        (editPasswordAux(LoggedUser),
+                        profileMenu(LoggedUser)));
                     writeln(" "),
                     constants:password_incorrect(S),
-                    writeln(S),
-                    utils:systemPause,
+                    utils:showPausedMsg(S),
                     profileMenu(LoggedUser).
 
 editPasswordAux(LoggedUser):-
                     constants:new_password(N),
                     writeln(N),
-                    read_line_to_string(user_input, Password),
+                    utils:readString(Password) ,
                     constants:repeat_new_password(C),
                     writeln(C),
-                    (read_line_to_string(user_input, Password) ->
+                    (utils:readString(Password)  ->
                         (retract(model:userModel:user(Name, LoggedUser, _)),
                         assertz(model:userModel:user(Name, LoggedUser, Password)),
                         model:userModel:saveUsers,
-                        writeln("Alteração de senha foi efetuada com sucesso")));
+                        constants:password_change_success(S),
+                        utils:showPausedMsg(S)));
                     writeln(" "),
                     constants:passwords_not_match(M),
-                    writeln(M),
-                    utils:systemPause,
+                    utils:showPausedMsg(M),
                     editPasswordAux(LoggedUser).
 
 chooseOption(1, LoggedUser):- showProfile(LoggedUser).
 chooseOption(2, LoggedUser):- editPassword(LoggedUser).
 chooseOption(3, _):- true.
 chooseOption(_, LoggedUser):- 
-                utils:showPausedMsg("Opção Inválida!"),
+                constants:invalid_option(I),
+                utils:showPausedMsg(I),
                 profileMenu(LoggedUser).
 
 profileMenu(LoggedUser):- 
