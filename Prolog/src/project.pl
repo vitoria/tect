@@ -1,13 +1,12 @@
 :- module(project, [projectMenu/2]).
 
 :- use_module("constants").
+:- use_module("utils").
 
 % Project(id, name, description, owner)
 :- dynamic project/4, projectUser/2, request/2, nextProjectId/1.
 
 nextProjectId(1).
-
-readNumber(Number):- read_line_to_codes(user_input, Codes), string_to_atom(Codes, Atom), atom_number(Atom, Number).
 
 createDirectory(Directory):- exists_directory(Directory) -> true; make_directory(Directory).
 
@@ -77,10 +76,10 @@ readRequestsFromFile():-
 
 readProject(Stream):- at_end_of_stream(Stream).
 readProject(Stream):-
-    readLine(Stream, Id),
-    readLine(Stream, Name),
-    readLine(Stream, Desc),
-    readLine(Stream, Owner),
+    utils:readLine(Stream, Id),
+    utils:readLine(Stream, Name),
+    utils:readLine(Stream, Desc),
+    utils:readLine(Stream, Owner),
     string_to_atom(Id, AtomId),
     atom_number(AtomId, NumberId),
     string_to_atom(StringName, Name),
@@ -92,8 +91,8 @@ readProject(Stream):-
 
 readProjectUser(Stream) :- at_end_of_stream(Stream).
 readProjectUser(Stream):-
-    readLine(Stream, Id),
-    readLine(Stream, User),
+    utils:readLine(Stream, Id),
+    utils:readLine(Stream, User),
     string_to_atom(Id, AtomId),
     atom_number(AtomId, NumberId),
     string_to_atom(StringUser, User),
@@ -102,25 +101,13 @@ readProjectUser(Stream):-
 
 readRequest(Stream):- at_end_of_stream(Stream).
 readRequest(Stream):-
-    readLine(Stream, Id),
-    readLine(Stream, User),
+    utils:readLine(Stream, Id),
+    utils:readLine(Stream, User),
     string_to_atom(Id, AtomId),
     atom_number(AtomId, NumberId),
     string_to_atom(StringUser, User),
     assertz(request(NumberId, StringUser)),
     readRequest(Stream).
-
-readLine(Stream, Line):-
-    get0(Stream,Char),
-    checkCharAndReadRest(Char,Chars,Stream),
-    atom_chars(Line,Chars).
-
-checkCharAndReadRest(10,[],_) :- !.  % Return
-checkCharAndReadRest(-1,[],_) :- !.  % End of Stream
-checkCharAndReadRest(end_of_file,[],_) :- !.
-checkCharAndReadRest(Char,[Char|Chars],Stream) :-
-    get0(Stream,NextChar),
-    checkCharAndReadRest(NextChar,Chars,Stream).
 
 defineNextProjectId(NewId):-
     nextProjectId(Id),
@@ -271,12 +258,12 @@ optionUser(_, _):- writeln("Opção inválida!").
 
 ownerProjectMenu(Id):-
     printProjectOwnerMenu,
-    readNumber(Option),
+    utils:readNumber(Option),
     ((Option =\= 7, selectOptionOwner(Option, Id), (Option == 5; ownerProjectMenu(Id))); true).
 
 userProjectMenu(Id):-
     printProjectUserMenu,
-    readNumber(Option),
+    utils:readNumber(Option),
     ((Option =\= 2, selectOptionUser(Option, Id), userProjectMenu(Id)); true).
 
 projectMenu(LoggedUser, Id):-

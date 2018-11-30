@@ -2,8 +2,7 @@
 
 :- use_module("constants").
 :- use_module("project").
-
-readNumber(Number):- read_line_to_codes(user_input, Codes), string_to_atom(Codes, Atom), atom_number(Atom, Number).
+:- use_module("utils").
 
 createProject(LoggedUser):-
     tty_clear,
@@ -20,7 +19,7 @@ requestAccess(LoggedUser):-
     constants:request_access_header(RequestAccessHeader),
     writeln(RequestAccessHeader),
     writeln("Informe o ID do projeto:"),
-    readNumber(Id),
+    utils:readNumber(Id),
     project:project(Id, _, _, _) -> project:requestAccess(Id, LoggedUser); writeln("Id informado inválido.").
 
 manageProject(LoggedUser):-
@@ -30,7 +29,7 @@ manageProject(LoggedUser):-
     constants:manage_project_header(ManageProjectHeader),
     writeln(ManageProjectHeader),
     writeln("Informe o ID do projeto:"),
-    readNumber(Id),
+    utils:readNumber(Id),
     project:project(Id, _, _, _) -> (project:projectMenu(LoggedUser, Id)); writeln("Id informado inválido.").
 
 printSystemMenu():-
@@ -55,5 +54,5 @@ option(_,_):- writeln("Opção inválida!").
 
 systemMenu(LoggedUser):-
     printSystemMenu,
-    readNumber(Option),
+    utils:readNumber(Option),
     Option =\= 8 -> selectOption(Option, LoggedUser), systemMenu(LoggedUser); writeln("Encerrando programa...").
