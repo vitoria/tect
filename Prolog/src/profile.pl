@@ -2,13 +2,8 @@
 
 :- use_module(constants).
 :- use_module(utils).
-:- use_module(mainSystem).
 :- use_module(authentication).
 :- use_module(model).
-
-validOptionMyUser(1).
-validOptionMyUser(2).
-validOptionMyUser(3).
 
 showProfile(LoggedUser):-
                     model:userModel:user(Name, LoggedUser, _),
@@ -49,20 +44,20 @@ editPasswordAux(LoggedUser):-
                     utils:systemPause,
                     editPasswordAux(LoggedUser).
 
-chooseOption(Option, LoggedUser):-
-                    (Option =:= 1 -> (showProfile(LoggedUser)));
-                    (Option =:= 2 -> (editPassword(LoggedUser)));
-                    (Option =:= 3 -> (mainSystem:systemMenu(LoggedUser))).
+chooseOption(1, LoggedUser):- showProfile(LoggedUser).
+chooseOption(2, LoggedUser):- editPassword(LoggedUser).
+chooseOption(3, _):- true.
+chooseOption(_, LoggedUser):- 
+                utils:showPausedMsg("Opção Inválida!"),
+                profileMenu(LoggedUser).
 
 profileMenu(LoggedUser):- 
                     headerMyUser,
                     constants:my_user_menu(U),
                     writeln(U),
                     utils:readOption(Option),
-                    (validOptionMyUser(Option),
-                    chooseOption(Option, LoggedUser));
-                    utils:showPausedMsg("Opção Inválida!"),
-                    profileMenu(LoggedUser).
+                    chooseOption(Option, LoggedUser).
+                    
 
 headerMyUser:-
                     tty_clear,    
