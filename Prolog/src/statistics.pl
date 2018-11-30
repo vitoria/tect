@@ -8,10 +8,6 @@
 :- use_module(testCase).
 :- use_module(model).
 
-isOptionValidStst(1).
-isOptionValidStat(2).
-isOptionValidStat(3).
-
 readNumber(Number):- 
     read_line_to_codes(user_input, Codes), string_to_atom(Codes, Atom), atom_number(Atom, Number).
 
@@ -19,17 +15,17 @@ readNumber(Number):-
 sumStatisticsProject(_,[], 0).
 sumStatisticsProject(ProjectId,[IdSuite|List], Result) :-  
                     sumStatisticsProject(ProjectId,List, Result2),
-                    model:testCase:calculateStatiscs(ProjectId, IdSuite, StatSuite), Result is (Result2 + StatSuite).
+                    testCase:calculateStatistics(ProjectId, IdSuite, StatSuite), Result is (Result2 + StatSuite).
 
 
 getSuitesList(Projeto, X):- 
-    findall(I, model:testSuite:suite(I, _, _, Projeto), X). 
+    findall(I, model:testSuiteModel:suite(I, _, _, Projeto), X). 
 
 getAllSuites(Projeto, X):- 
-    findall([I,J,K,Projeto],model:project:project(I, J, K, Projeto), X). 
+    findall([I,J,K,Projeto], model:testSuiteModel:suite(I, J, K, Projeto), X). 
 
 getNumberOfSuites(Count) :- 
-    aggregate_all(count, testSuite:suite(_, _, _, _), Count).
+    aggregate_all(count, model:testSuiteModel:suite(_, _, _, _), Count).
 
 calculateMediumStatisticsProject(ProjectId, [H|T],Result) :- 
     sumStatisticsProject(ProjectId, [H|T],Z), getNumberOfSuites(Y), Result is Z/Y.
@@ -37,10 +33,9 @@ calculateMediumStatisticsProject(ProjectId, [H|T],Result) :-
 
 getProjectResume([]).
 getProjectResume([[Id, Name]|ProjectsTouple]):- 
-                write(Id), write(" - "), write(Name), write(" - "), 
                 getSuitesList(Id, Suites),    
                 calculateMediumStatisticsProject(Id,Suites, Media),
-                write(Media),nl, 
+                write(Id), write(" - "), write(Name), write(" - "), writeln(Media),
                 getProjectResume(ProjectsTouple).
 
 getProjectsStatistics(ProjectsTouple) :-
@@ -52,51 +47,48 @@ getProjectsStatistics(ProjectsTouple) :-
 
 
 getProjectIdList(X):- 
-    findall(I, model:project:project(I, _, _, _), X). 
+    findall(I, model:projectModel:project(I, _, _, _), X). 
 getProjectIdToupleList(X):- 
-    findall([I,J], model:project:project(I, J, _, _), X). 
-
-chooseStatisticsAction(Option) :-
-    getProjectIdList(Result),
-    getProjectIdToupleList(Result2),
-    (Option =:= 1 -> getProjectsStatistics(Result2);
-    Option =:= 2 -> statisticsFromAProject(Result)).
-    
-
+    findall([I,J], model:projectModel:project(I, J, _, _), X). 
 
 isValidProjId(_,[]).
 isValidProjId(TestedId, [Id|ProjectsId]):-
     (TestedId =:= Id -> true;
     isValidProjId(TestedId, ProjectsId)).
 
-statisticsFromAProject(ProjectsId):-
-    constants:statistics_header(X), write(X),
+statisticsFromAProject():-
+    constants:statistics_header(Header),
+    utils:printHeaderAndSubtitle(Header),
     write("Informe o ID de um projeto para visualizar seu relatório:"),
     readNumber(ProjectId),
     (model:projectModel:project(ProjectId, _, _, _) -> 
         tty_clear,
         getAllSuites(ProjectId, Suites),
-        write(X),nl,
+        constants:statistics_header(Header),
+        utils:printHeaderAndSubtitle(Header),
         write("SUITE ID - NOME DA SUITE - TAXA DE TESTES QUE PASSARAM"),nl,
         generateStatisticsString(ProjectId, Suites);
     write("Não existe projeto com o ID informado.")).
 
 generateStatisticsString(_,[]).
-generateStatisticsString(ProjectId,[Id, Name,_,_|Suites]):-
-        write(Id), write(" - "), write(Name), write(" - "), 
-        model:testCase:calculateStatiscs(ProjectId, Id, StatSuite), write(StatSuite),nl,
-        generateStatisticsString(ProjectId, Suites).
-
-
+generateStatisticsString(ProjectId,[[Id, Name,_,_]|Suites]):-
+    model:testCase:calculateStatistics(ProjectId, Id, StatSuite),
+    write(Id), write(" - "), write(Name), write(" - "), write(StatSuite), writeln("%"),
+    generateStatisticsString(ProjectId, Suites).
 
 showStatisticsMenu() :-
+    constants:statistics_header(Header),
+    utils:printHeaderAndSubtitle(Header),
     constants:statistics_menu(X),write(X).
 
+selectOption(Option):- chooseStatisticsAction(Option),
+    utils:systemPause.
 
 statisticsMenu(LoggedUser) :-
     showStatisticsMenu(),
-    write("Informe a opção desejada: "),
-    readNumber(Entrada),
-    (isOptionValidStat(Entrada) ->
-           (Entrada =:= 3 -> true;(tty_clear, chooseStatisticsAction(Entrada))));                
-    write("Opção Inválida\n"), model:utils:systemPause(), statisticsMenu(LoggedUser).
+    utils:readOption(Option),
+    ((Option =\= 3, selectOption(Option), statisticsMenu(LoggedUser)); true).
+
+chooseStatisticsAction(1) :- getProjectIdToupleList(Result), getProjectsStatistics(Result); true.
+chooseStatisticsAction(2) :- statisticsFromAProject(); true.
+chooseStatisticsAction(_) :- writeln("Opção inválida").

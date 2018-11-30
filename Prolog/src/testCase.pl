@@ -214,9 +214,8 @@ menuEditCase(ProjectId, SuiteId, CaseId) :-
     writeln('(1) Editar Dados do Caso de Teste'),
     writeln('(2) Editar Status do Caso de Teste'),
     writeln('(3) Voltar'),
-    read_line_to_string(user_input, Selected), nl,
-    atom_number(Selected, Option),
-    (Option == 1 -> write('Editando Caso de Testes'), nl,
+    utils:readNumber(Option),
+    (Option == 1 -> (write('Editando Caso de Testes'), nl,
     writeln('Estado atual'),
     testCase(ProjectId, SuiteId, CaseId, Name, Goal, Status, Preconditions),
         write('Nome: '), writeln(Name),
@@ -226,9 +225,9 @@ menuEditCase(ProjectId, SuiteId, CaseId) :-
     writeln('Estado novo'),
     overwriteCase(ProjectId, SuiteId, CaseId),
     saveAllTestCasesData());
-    (Option == 2 -> menuChangeStatus(ProjectId, SuiteId, CaseId));
+    (Option == 2 -> menuChangeStatus(ProjectId, SuiteId, CaseId);
     (Option == 3 -> true);
-    write(invalid_option).
+    write("Opção inválida"))).
 
 
 menuChangeStatus(ProjectId, SuiteId, CaseId) :-
@@ -236,7 +235,7 @@ menuChangeStatus(ProjectId, SuiteId, CaseId) :-
     writeln(CaseHeader),
     writeln('- Editando Caso de Testes'),
     writeln('Estado atual'),
-    listCase(ProjectId, SuiteId, CaseId), nl,
+    testCase(ProjectId, SuiteId, CaseId, Name, Goal, OldStatus, Preconditions),
     writeln('-- Alterar status do Caso de Testes'),
     writeln('(1) Passou'),
     writeln('(2) Nao passou'),
@@ -292,9 +291,7 @@ calculateStatistics(ProjectId, SuiteId, StatSuite):-
     getNumberOfExecutedTests(ProjectId, SuiteId, 1, 0, Executed),
     getNumberOfPassingTests(ProjectId, SuiteId, 1, 0, Passing),
     ((Executed == 0) -> StatSuite is 0;
-        calculate(Passing, Executed, StatSuite)),
-    writeln('Resultado na funcao'),
-    writeln(StatSuite).
+        calculate(Passing, Executed, StatSuite)).
 
 calculate(Passing, Executed, Result):-
     Result is (Passing/Executed) * 100.0.
