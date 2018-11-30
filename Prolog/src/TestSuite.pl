@@ -205,10 +205,10 @@ choose_action(Option, Projeto):-
 
 suiteMenu(Projeto):-
                     showSuiteMenu,
+                    readSuiteFromFile,
                     writeln("Informe a opção desejada: "),
                     read_line_to_string(user_input, Option),
                     (isOptionValidSuit(Option),
-                    
                     choose_action(Option, Projeto));
                     (tty_clear,
                     constants:header(H),
