@@ -6,46 +6,32 @@
 :- use_module(utils).
 :- use_module(model).
 
-createProject(LoggedUser):-
-    tty_clear,
-    project:createProject(LoggedUser).
+createProject(LoggedUser):- project:createProject(LoggedUser).
 
-listProject():-
-    tty_clear,
-    project:listProject().
+listProject():- project:listProject().
 
 requestAccess(LoggedUser):-
-    tty_clear,
-    constants:header(Header),
-    writeln(Header),
     constants:request_access_header(RequestAccessHeader),
-    writeln(RequestAccessHeader),
-    writeln("Informe o ID do projeto:"),
+    utils:printHeaderAndSubtitle(RequestAccessHeader),
+    constants:get_proj_id(GetProjId),
+    writeln(GetProjId),
     utils:readNumber(Id),
     model:projectModel:project(Id, _, _, _) -> project:requestAccess(Id, LoggedUser); writeln("Id informado inválido.").
 
 manageProject(LoggedUser):-
-    tty_clear,
-    constants:header(Header),
-    writeln(Header),
-    constants:manage_project_header(ManageProjectHeader),
-    writeln(ManageProjectHeader),
-    writeln("Informe o ID do projeto:"),
+    constants:manage_project_header(RequestAccessHeader),
+    utils:printHeaderAndSubtitle(RequestAccessHeader),
+    constants:get_proj_id(GetProjId),
+    writeln(GetProjId),
     utils:readNumber(Id),
     model:projectModel:project(Id, _, _, _) -> (project:projectMenu(LoggedUser, Id)); writeln("Id informado inválido.").
 
 printSystemMenu():-
-    tty_clear,
-    constants:header(Header),
-    constants:main_header(Subheader),
-    writeln(Header),
-    writeln(Subheader),
     constants:main_menu(MainMenu),
-    writeln(MainMenu).
+    utils:printHeaderAndSubtitle(MainMenu).
 
 selectOption(Option, LoggedUser):- option(Option, LoggedUser),
-    model:projectModel:saveAllProjectData, writeln("Pressione qualquer tecla para continuar..."),
-    get_char(_).
+    model:projectModel:saveAllProjectData, utils:systemPause.
 
 option(1, LoggedUser):- write("MEU USUARIO: "), writeln(LoggedUser).
 option(2, LoggedUser):- createProject(LoggedUser).
