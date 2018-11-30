@@ -1,4 +1,4 @@
 :- initialization(main).
-:- use_module("MainSystem").
+:- use_module("mainSystem").
 
-main :- mainSystem:project:loadAllProjectData, mainSystem:systemMenu("Mateus").
+main :- mainSystem:project:loadAllProjectData, mainSystem:systemMenu("Douglas").

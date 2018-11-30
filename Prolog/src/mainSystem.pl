@@ -1,7 +1,7 @@
 :- module(mainSystem, [systemMenu/1]).
 
-:- use_module("Constants").
-:- use_module("Project").
+:- use_module("constants").
+:- use_module("project").
 
 readNumber(Number):- read_line_to_codes(user_input, Codes), string_to_atom(Codes, Atom), atom_number(Atom, Number).
 

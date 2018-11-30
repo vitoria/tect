@@ -1,6 +1,6 @@
 :- module(project, [projectMenu/2]).
 
-:- use_module("Constants").
+:- use_module("constants").
 
 % Project(id, name, description, owner)
 :- dynamic project/4, projectUser/2, request/2, nextProjectId/1.
@@ -18,22 +18,28 @@ saveAllProjectData():-
     saveRequests.
 
 saveProjectsToFile():-
-    createDirectory('data'),
-    open('data/projects.dat', write, Stream),   
+    constants:data_folder_path(FolderPath),
+    createDirectory(FolderPath),
+    constants:projects_file_path(ProjectsFilePath),
+    open(ProjectsFilePath, write, Stream),   
     forall(project(Id, Name, Desc, Owner),(
     writeln(Stream, Id), writeln(Stream, Name), writeln(Stream, Desc), writeln(Stream, Owner))),
     close(Stream).
 
 saveProjectUsers():-
-    createDirectory('data'),
-    open('data/project_users.dat', write, Stream),   
+    constants:data_folder_path(FolderPath),
+    createDirectory(FolderPath),
+    constants:project_users_file_path(ProjectUsersFilePath),
+    open(ProjectUsersFilePath, write, Stream),   
     forall(projectUser(Id, User),(
     writeln(Stream, Id), writeln(Stream, User))),
     close(Stream).
 
 saveRequests():-
-    createDirectory('data'),
-    open('data/requests.dat', write, Stream),   
+    constants:data_folder_path(FolderPath),
+    createDirectory(FolderPath),
+    constants:requests_file_path(RequestsFilePath),
+    open(RequestsFilePath, write, Stream),
     forall(request(Id, User),(
     writeln(Stream, Id), writeln(Stream, User))),
     close(Stream).
@@ -44,8 +50,9 @@ loadAllProjectData():-
     readRequestsFromFile.
 
 readProjectsFromFile():-
-    exists_file('data/projects.dat') ->(
-    open('data/projects.dat', read, Stream),
+    constants:projects_file_path(ProjectsFilePath),
+    exists_file(ProjectsFilePath) ->(
+    open(ProjectsFilePath, read, Stream),
     readProject(Stream),
     close(Stream),
     nextProjectId(MaxId),
@@ -54,15 +61,17 @@ readProjectsFromFile():-
     true.
 
 readProjectUsersFromFile():-
-    exists_file('data/project_users.dat') ->(
-    open('data/project_users.dat', read, Stream),
+    constants:project_users_file_path(ProjectUsersFilePath),
+    exists_file(ProjectUsersFilePath) ->(
+    open(ProjectUsersFilePath, read, Stream),
     readProjectUser(Stream),
     close(Stream));
     true.
 
 readRequestsFromFile():-
-    exists_file('data/requests.dat') ->(
-    open('data/requests.dat', read, Stream),
+    constants:requests_file_path(RequestsFilePath),
+    exists_file(RequestsFilePath) ->(
+    open(RequestsFilePath, read, Stream),
     readRequest(Stream),
     close(Stream));
     true.

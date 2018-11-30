@@ -105,6 +105,9 @@ go_back_test_cases(6).
 
 /*Paths*/
 data_folder_path("data").
+projects_file_path("data/projects.dat").
+project_users_file_path("data/project_users.dat").
+requests_file_path("data/requests.dat").
 suites_file_path("suites.dat").
 users_file_path("data/users.dat").
 logged_user_file_path("data/logged.dat").
