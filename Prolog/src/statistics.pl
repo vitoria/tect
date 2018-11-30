@@ -6,6 +6,7 @@
 :- use_module(project).
 :- use_module(mainSystem).
 :- use_module(testCases).
+:- use_module(model).
 
 isOptionValidStst(1).
 isOptionValidStat(2).
@@ -15,14 +16,15 @@ readNumber(Number):-
     read_line_to_codes(user_input, Codes), string_to_atom(Codes, Atom), atom_number(Atom, Number).
 
 
-sumStatisticsProject(_,[], Result):- Result is 0.
+sumStatisticsProject(_,[], 0).
 sumStatisticsProject(ProjectId,[IdSuite|List], Result) :-  
                     sumStatisticsProject(ProjectId,List, Result2),
-                    model:testCases:calculateStatiscs(ProjectId, IdSuite, StatSuite), Result is Result2 + StatSuite.
+                    model:testCases:calculateStatiscs(ProjectId, IdSuite, StatSuite), Result is (Result2 + StatSuite).
 
 
 getSuitesList(Projeto, X):- 
     findall(I, model:testSuite:suite(I, _, _, Projeto), X). 
+
 getAllSuites(Projeto, X):- 
     findall([I,J,K,Projeto],model:project:project(I, J, K, Projeto), X). 
 
@@ -41,7 +43,7 @@ getProjectResume([[Id, Name]|ProjectsTouple]):-
                 write(Media),nl, 
                 getProjectResume(ProjectsTouple).
 
-getProjectsStatistics([ProjectsTouple]) :-
+getProjectsStatistics(ProjectsTouple) :-
     constants:statistics_header(X), write(X),nl,
     write(" ID - NOME DO PROJETO - MÉDIA DAS ESTATÍSTICAS DO PROJETO"),nl,
     getProjectResume(ProjectsTouple).
@@ -71,7 +73,7 @@ statisticsFromAProject(ProjectsId):-
     constants:statistics_header(X), write(X),
     write("Informe o ID de um projeto para visualizar seu relatório:"),
     readNumber(ProjectId),
-    (isValidProjId(ProjectId,ProjectsId) -> 
+    (model:projectModel:project(ProjectId, _, _, _) -> 
         tty_clear,
         getAllSuites(ProjectId, Suites),
         write(X),nl,
@@ -96,6 +98,5 @@ statisticsMenu(LoggedUser) :-
     write("Informe a opção desejada: "),
     readNumber(Entrada),
     (isOptionValidStat(Entrada) ->
-           (Entrada =:= 3 -> write("Retornando ao menu anterior..."),model:utils:systemPause(), model:mainSystem:systemMenu(LoggedUser);
-                                (tty_clear, chooseStatisticsAction(Entrada))));                
+           (Entrada =:= 3 -> true;(tty_clear, chooseStatisticsAction(Entrada))));                
     write("Opção Inválida\n"), model:utils:systemPause(), statisticsMenu(LoggedUser).

@@ -6,6 +6,7 @@
 :- use_module(utils).
 :- use_module(profile).
 :- use_module(model).
+:- use_module(statistics).
 
 createProject(LoggedUser):- project:createProject(LoggedUser).
 
@@ -41,7 +42,7 @@ option(2, LoggedUser):- createProject(LoggedUser).
 option(3, LoggedUser):- requestAccess(LoggedUser).
 option(4, _):- listProject().
 option(5, LoggedUser):- manageProject(LoggedUser).
-option(6, LoggedUser):- write("MEU USUARIO: "), writeln(LoggedUser), writeln("GERAR RELATORIOS").
+option(6, LoggedUser):- writeln("GERAR RELATORIOS"), model:statistics:statisticsMenu(LoggedUser).
 option(7, _):- model:loggedModel:logout, authentication:authenticationMenu.
 option(8, _):- halt.
 option(_,_):- writeln("Opção inválida!").
