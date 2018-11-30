@@ -3,10 +3,11 @@
 :- use_module(constants).
 :- use_module(authentication).
 :- use_module(utils).
+:- use_module(model).
 
 isLoginValid(Username, Password, true) :-
     constants:welcome(Msg),
-    authentication:user(Name, Username, Password),
+    model:userModel:user(Name, Username, Password),
     write(Name),
     utils:showPausedMsg(Msg).
 isLoginValid(_, _, false) :-
