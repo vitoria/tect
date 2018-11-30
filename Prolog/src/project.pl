@@ -132,11 +132,11 @@ listProject():-
     constants:list_project_header(ListProjectHeader),
     utils:printHeaderAndSubtitle(ListProjectHeader),
     constants:list_projects_table_header(ListProjectsTableHeader),
-    writeln(ListProjectsTableHeader),
+    % writeln(ListProjectsTableHeader),
+    writef('%2l | %25l | %15l\n' , ["ID", "Nome", "Dono"]),
     project(Id, Name, _, Owner),
-    write(Id), write("  -  "),
-    write(Name), write("  -  "), 
-    writeln(Owner), fail; true.
+    writef('%3c | %25l | %15l\n', [Id, Name, Owner]),
+    fail; true.
 
 requestAccess(ProjectId, User):- project(ProjectId, _, _, Owner), User == Owner -> writeln("Você é o dono deste projeto!");(
     ((projectUser(ProjectId, User), writeln("Você já possui permissão de acesso à este projeto!"));
@@ -167,7 +167,6 @@ projectInfo(Id):-
     writeln(Desc),
     write("Proprietário: "),
     writeln(Owner).
-    
 
 editProjectName(Id):-
     constants:edit_project_header(EditProjectHeader),
