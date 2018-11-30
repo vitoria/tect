@@ -9,6 +9,7 @@
 
 handleAfterLogin(true, UserName) :-
     model:userModel:saveUsers,
+    model:loggedModel:login(UserName),
     mainSystem:systemMenu(UserName).
 handleAfterLogin(false, _) :- authenticationMenu.
 
@@ -31,5 +32,12 @@ authenticationMenu():-
     utils:readOption(Option),
     chooseProcedure(Option).
 
-initialization() :- model:initialization(), authenticationMenu().
+isLogged() :- 
+    constants:welcome(Msg),
+    model:loggedModel:logged(Username),
+    model:userModel:user(Name, Username, _),
+    write(Name), utils:showPausedMsg(Msg),
+    mainSystem:systemMenu(Username).
+
+initialization() :- model:initialization(), (isLogged; authenticationMenu()).
     
