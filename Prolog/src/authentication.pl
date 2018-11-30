@@ -34,8 +34,10 @@ authenticationMenu():-
 
 isLogged() :- 
     constants:welcome(Msg),
+    constants:authentication_header(AuthenticationHeader),
     model:loggedModel:logged(Username),
     model:userModel:user(Name, Username, _),
+    utils:printHeaderAndSubtitle(AuthenticationHeader),
     write(Name), utils:showPausedMsg(Msg),
     mainSystem:systemMenu(Username).
 

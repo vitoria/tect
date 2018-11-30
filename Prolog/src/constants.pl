@@ -1,8 +1,6 @@
 :- module(constants, []).
 
-
 /*Header*/
-
 header("#-----------------# TecT #-----------------#").
 main_header("#-------------# MENU PRINCIPAL #-----------#\n").
 my_user_header("#--------------# MEU USUARIO #-------------#").
