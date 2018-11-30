@@ -3,6 +3,7 @@
 :- use_module(constants).
 :- use_module(utils).
 :- use_module(model).
+:- use_module(testSuite).
 
 createProject(LoggedUser):-
     constants:header(Header),
@@ -136,7 +137,7 @@ optionOwner(2, Id):- editProjectName(Id).
 optionOwner(3, Id):- editProjectDesc(Id).
 optionOwner(4, Id):- verifyPermissions(Id).
 optionOwner(5, Id):- removeProject(Id).
-optionOwner(6, Id):- writeln(Id), writeln("GERENCIAR SUITES").
+optionOwner(6, Id):- testSuite:suiteMenu(Id).
 optionOwner(_, _):- writeln("Opção inválida!").
 
 selectOptionUser(1, Id):- optionUser(Option, Id), writeln(Option),
