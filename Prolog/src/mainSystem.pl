@@ -29,7 +29,9 @@ manageProject(LoggedUser):-
 
 printSystemMenu():-
     constants:main_menu(MainMenu),
-    utils:printHeaderAndSubtitle(MainMenu).
+    constants:main_header(MainHeader),
+    utils:printHeaderAndSubtitle(MainHeader),
+    writeln(MainMenu).
 
 selectOption(Option, LoggedUser):- option(Option, LoggedUser),
     model:projectModel:saveAllProjectData, utils:systemPause.
@@ -47,6 +49,6 @@ option(_,_):- writeln("Opção inválida!").
 
 systemMenu(LoggedUser):-
     printSystemMenu,
-    utils:readNumber(Option),
+    utils:readOption(Option),
     selectOption(Option, LoggedUser),
     systemMenu(LoggedUser).
