@@ -4,4 +4,7 @@
 :- use_module(userModel).
 :- use_module(projectModel).
 
-loadModels() :- true.
+initialization() :-
+    userModel:loadUsers,
+    projectModel:loadAllProjectData.
+

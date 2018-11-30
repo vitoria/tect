@@ -31,5 +31,5 @@ authenticationMenu():-
     utils:readOption(Option),
     chooseProcedure(Option).
 
-initialization() :- model:userModel:loadUsers, authenticationMenu.
+initialization() :- model:initialization(), authenticationMenu().
     
