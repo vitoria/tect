@@ -1,11 +1,11 @@
-:- module(statistics).
+:- module(statistics, [statisticsMenu/1]).
 
 :- use_module(utils).
 :- use_module(testSuite).
 :- use_module(constants).
 :- use_module(project).
 :- use_module(mainSystem).
-:- use_module(testCase).
+:- use_module(testCases).
 
 isOptionValidStst(1).
 isOptionValidStat(2).
@@ -18,7 +18,7 @@ readNumber(Number):-
 sumStatisticsProject(_,[], Result):- Result is 0.
 sumStatisticsProject(ProjectId,[IdSuite|List], Result) :-  
                     sumStatisticsProject(ProjectId,List, Result2),
-                    model:testCase:calculateStatiscs(ProjectId, IdSuite, StatSuite), Result is Result2 + StatSuite.
+                    model:testCases:calculateStatiscs(ProjectId, IdSuite, StatSuite), Result is Result2 + StatSuite.
 
 
 getSuitesList(Projeto, X):- 
@@ -82,7 +82,7 @@ statisticsFromAProject(ProjectsId):-
 generateStatisticsString(_,[]).
 generateStatisticsString(ProjectId,[Id, Name,_,_|Suites]):-
         write(Id), write(" - "), write(Name), write(" - "), 
-        model:testCase:calculateStatiscs(ProjectId, Id, StatSuite), write(StatSuite),nl,
+        model:testCases:calculateStatiscs(ProjectId, Id, StatSuite), write(StatSuite),nl,
         generateStatisticsString(ProjectId, Suites).
 
 
@@ -96,6 +96,6 @@ statisticsMenu(LoggedUser) :-
     write("Informe a opção desejada: "),
     readNumber(Entrada),
     (isOptionValidStat(Entrada) ->
-           (Entrada =:= 3 -> write("Retornando ao menu anterior..."),model:util:systemPause(), model:mainSystem:systemMenu(LoggedUser);
+           (Entrada =:= 3 -> write("Retornando ao menu anterior..."),model:utils:systemPause(), model:mainSystem:systemMenu(LoggedUser);
                                 (tty_clear, chooseStatisticsAction(Entrada))));                
-    write("Opção Inválida"), model:util:systemPause(), statisticsMenu(LoggedUser).
+    write("Opção Inválida\n"), model:utils:systemPause(), statisticsMenu(LoggedUser).
