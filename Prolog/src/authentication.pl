@@ -5,9 +5,7 @@
 :- use_module(login).
 :- use_module(utils).
 
-:- dynamic user/4.
-
-user(waza, waza, waza).
+:- dynamic user/3.
 
 saveUsers() :-
     constants:data_folder_path(DataFolder),
