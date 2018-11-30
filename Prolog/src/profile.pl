@@ -4,13 +4,14 @@
 :- use_module(utils).
 :- use_module(mainSystem).
 :- use_module(authentication).
+:- use_module(model).
 
 validOptionMyUser(1).
 validOptionMyUser(2).
 validOptionMyUser(3).
 
 showProfile(LoggedUser):-
-                    authentication:user(Name, LoggedUser, _),
+                    model:userModel:user(Name, LoggedUser, _),
                     headerMyUser,
                     write("Nome: "), writeln(Name),
                     write("Username: "), writeln(LoggedUser),
@@ -20,7 +21,7 @@ showProfile(LoggedUser):-
 
 editPassword(LoggedUser):-
                     headerMyUser,
-                    authentication:user(_, LoggedUser, Password),
+                    model:userModel:user(_, LoggedUser, Password),
                     constants:old_password(O),
                     writeln(O),
                     (read_line_to_string(user_input, Password) -> 
@@ -38,16 +39,15 @@ editPasswordAux(LoggedUser):-
                     constants:repeat_new_password(C),
                     writeln(C),
                     (read_line_to_string(user_input, Password) ->
-                        (retract(authentication:user(Name, LoggedUser, _)),
-                        assertz(authentication:user(Name, LoggedUser, N)),
+                        (retract(model:userModel:user(Name, LoggedUser, _)),
+                        assertz(model:userModel:user(Name, LoggedUser, Password)),
+                        model:userModel:saveUsers,
                         writeln("Alteração de senha foi efetuada com sucesso")));
                     writeln(" "),
                     constants:passwords_not_match(M),
                     writeln(M),
                     utils:systemPause,
                     editPasswordAux(LoggedUser).
-
-                    
 
 chooseOption(Option, LoggedUser):-
                     (Option =:= 1 -> (showProfile(LoggedUser)));
